@@ -48,7 +48,6 @@ public class HomeScreen : BaseScreen
     protected override void DrawContent()
     {
         if (IsSplashStarted) return;
-        
         IsSplashStarted = true;
         Splash();
     }
@@ -78,7 +77,7 @@ public class HomeScreen : BaseScreen
             ConsoleKey.X => Command.Exit,
             _ => Command.Nothing
         };
-        
+
         return !IsSplashFinished || command != Command.Exit;
     }
 }

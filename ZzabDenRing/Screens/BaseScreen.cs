@@ -6,9 +6,9 @@ namespace ZzabDenRing.Screens;
 public abstract class BaseScreen : IScreen
 {
     protected bool ClearScreenWhenRedraw = true;
-    
-    public int Width = 100;
-    public int Height = 20;
+
+    public int Width = 150;
+    public int Height = 30;
     public int Left = 0;
     public int Top = 0;
 
@@ -30,7 +30,7 @@ public abstract class BaseScreen : IScreen
             DrawWindow();
             SetCursorPosition(ContentLeft, ContentTop);
             DrawContent();
-            
+
             Views.ForEach(v => { v.Draw(); });
         } while (ManageInput());
     }
