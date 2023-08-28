@@ -5,6 +5,7 @@ namespace ZzabDenRing;
 
 public class ScreenDisplay
 {
+    public Dictionary<string, object> NavArgs = new(10);
     private Stack<ScreenType> _backStack = new(10);
     internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
 
@@ -42,5 +43,10 @@ public enum ScreenType
 public enum Command
 {
     Exit,
+    MoveTop,
+    MoveRight,
+    MoveBottom,
+    MoveLeft,
+    Interaction,
     Nothing
 }

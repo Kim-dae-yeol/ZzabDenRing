@@ -1,4 +1,3 @@
-using ZzabDenRing.Input;
 using ZzabDenRing.View;
 using static System.Console;
 
@@ -6,11 +5,10 @@ namespace ZzabDenRing.Screens;
 
 public abstract class BaseScreen : IScreen
 {
-    protected ReadKeyManager InputManager = new();
     protected bool ClearScreenWhenRedraw = true;
-
+    
     public int Width = 100;
-    public int Height = 30;
+    public int Height = 20;
     public int Left = 0;
     public int Top = 0;
 
@@ -34,7 +32,7 @@ public abstract class BaseScreen : IScreen
             DrawContent();
             
             Views.ForEach(v => { v.Draw(); });
-        } while (InputManager.ReadCommand() != Command.Exit);
+        } while (ManageInput());
     }
 
     private void DrawWindow()
@@ -70,4 +68,11 @@ public abstract class BaseScreen : IScreen
     {
         SetCursorPosition(addedLeft + Left, addedTop + CursorTop);
     }
+
+    protected void SetCursorPositionToContentBlock()
+    {
+        SetCursorPosition(ContentLeft, ContentTop);
+    }
+
+    protected abstract bool ManageInput();
 }
