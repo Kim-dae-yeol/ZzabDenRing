@@ -33,6 +33,7 @@ public static class Extensions
     {
         return t switch
         {
+            ItemType.Helm => "투구",
             ItemType.Weapon => "무기",
             ItemType.Armor => "갑옷",
             ItemType.Necklace => "목걸이",
@@ -43,4 +44,34 @@ public static class Extensions
             _ => ""
         };
     }
+
+    public static bool IsEmptyItem(this Item i) => string.IsNullOrEmpty(i.Name);
+
+    public static ItemType ToItemType(this EquipmentSlot slot) => slot switch
+    {
+        EquipmentSlot.Helm => ItemType.Armor,
+        EquipmentSlot.Necklace => ItemType.Necklace,
+        EquipmentSlot.Weapon => ItemType.Weapon,
+        EquipmentSlot.Armor => ItemType.Armor,
+        EquipmentSlot.SubWeapon => ItemType.SubWeapon,
+        EquipmentSlot.Pants => ItemType.Pants,
+        EquipmentSlot.Ring1 => ItemType.Ring,
+        EquipmentSlot.Ring2 => ItemType.Ring,
+        EquipmentSlot.Boots => ItemType.Boots,
+        _ => throw new ArgumentOutOfRangeException(nameof(slot), slot, null)
+    };
+
+    public static String ToEmoji(this ItemType t) => t switch
+    {
+        ItemType.Helm => "🎩",
+        ItemType.Weapon => "🗡️",
+        ItemType.Armor => "🥋",
+        ItemType.Necklace => "📿",
+        ItemType.SubWeapon => "🛡️",
+        ItemType.Pants => "👖",
+        ItemType.Ring => "💍",
+        ItemType.Boots => "🥾",
+        ItemType.Nothing => "",
+        _ => throw new ArgumentOutOfRangeException(nameof(t), t, null)
+    };
 }

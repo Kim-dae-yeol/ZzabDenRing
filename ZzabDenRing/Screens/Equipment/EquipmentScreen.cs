@@ -14,6 +14,7 @@ public class EquipmentScreen : BaseScreen
     private const int InventoryWidth = 50;
     private int InventoryHeight => Height - 2;
     private const ConsoleColor SelectedSlotColor = ConsoleColor.Blue;
+    private const ConsoleColor HoveredSlotColor = ConsoleColor.Green;
 
     private int EquipmentWidth => WidthPerSlot * EquipmentViewModel.SlotCols;
     private int EquipmentHeight => WidthPerSlot * EquipmentViewModel.SlotRows;
@@ -22,9 +23,9 @@ public class EquipmentScreen : BaseScreen
     {
         _popBackStack = popBackStack;
         Height = HeightPerSlot * EquipmentViewModel.SlotRows + 2;
-        Width = WidthPerSlot * EquipmentViewModel.SlotCols + 2 + InventoryWidth;
+        Width = WidthPerSlot * EquipmentViewModel.SlotCols + 2 + InventoryWidth + 40;
         // border of window AND EquipmentBorder AND ItemCount
-        _vm = new(inventorySlots: Height - 2 - 2 - 1); 
+        _vm = new(inventorySlots: Height - 2 - 2 - 1);
     }
 
     protected override void DrawContent()
@@ -41,16 +42,16 @@ public class EquipmentScreen : BaseScreen
             var rowAndCol = _vm.GetRowAndCol(slot);
             var row = rowAndCol.Item1;
             var col = rowAndCol.Item2;
-            var selected = row == _vm.CurY && col == _vm.CurX;
+            var isHover = row == _vm.CurY && col == _vm.CurX;
             var item = _vm.GetEquippedItem(slot);
-            // var item = Game.Items[0];
-
+            var isSelected = _vm.SelectedSlot == slot;
             DrawEquipmentSlot(
                 row: row,
                 col: col,
-                isSelected: selected,
+                isCursorHover: isHover,
                 slot: slot,
-                item: item);
+                item: item,
+                isSelected: isSelected);
         }
     }
 
@@ -59,12 +60,17 @@ public class EquipmentScreen : BaseScreen
         int col,
         EquipmentSlot slot,
         Item item,
+        bool isCursorHover = false,
         bool isSelected = false
     )
     {
         if (isSelected)
         {
             ForegroundColor = SelectedSlotColor;
+        }
+        else if (isCursorHover)
+        {
+            ForegroundColor = HoveredSlotColor;
         }
 
         var left = col * WidthPerSlot + 1;
@@ -115,15 +121,15 @@ public class EquipmentScreen : BaseScreen
         else
         {
             //todo 착용한 아이템이 존재하는 경우 출력하기
-            var name = $"•{item.Name}";
-            var type = $"•{item.Type.String()}";
+            var emoji = item.Type.ToEmoji();
+            var name = $"{emoji}{item.Name}";
             // var grade = $"•{}";
             var atk = $"•Atk : {item.Atk}";
             var def = $"•Def : {item.Def}";
             var cri = $"•Cri : {item.Critical}";
             var hp = $"•H p : {item.Hp}";
 
-            var texts = new string[] { name, type, atk, def, cri, hp };
+            var texts = new string[] { name, atk, def, cri, hp };
             var itemCursorLeft = CursorLeft;
             foreach (var line in texts)
             {
@@ -185,7 +191,7 @@ public class EquipmentScreen : BaseScreen
         SetCursorPosition(left + 1, top);
         if (isSelected)
         {
-            ForegroundColor = SelectedSlotColor;
+            ForegroundColor = HoveredSlotColor;
             Write("->");
         }
         else

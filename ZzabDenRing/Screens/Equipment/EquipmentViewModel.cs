@@ -64,6 +64,7 @@ public class EquipmentViewModel
     public int CurY => _state.CurY;
 
     public bool IsCursorInInventorySlot => CurX >= SlotCols;
+
     private readonly int _maxVisibleInventorySlots;
 
     public int CurInventorySlot => _state.CurInventoryIdx >= _maxVisibleInventorySlots
@@ -72,6 +73,8 @@ public class EquipmentViewModel
 
     public int TotalItemCount => _state.Character.Inventory.Count;
     public int CurrentItemIdx => _state.CurInventoryIdx;
+
+    public EquipmentSlot? SelectedSlot => _state.SelectedSlot;
 
     public void OnCommand(Command command)
     {
@@ -87,6 +90,8 @@ public class EquipmentViewModel
             {
                 var item = _state.Character.Inventory[_state.CurInventoryIdx];
                 if (item.IsEmptyItem()) return;
+                if (SelectedSlot?.ToItemType() == item.Type) return;
+
 
                 switch (item.Type)
                 {
@@ -128,9 +133,22 @@ public class EquipmentViewModel
             else
             {
                 // todo unEquip or( move to inventory and show only selected slot)
-                // 1. unEquip
-                // 2. Equip SelectedSlot
-                // so add selectedSlot state to viewModel 
+                var currentSlot = GetCurrentSlot(_state.CurY, _state.CurX);
+                var equipped = GetEquippedItem(currentSlot);
+                if (equipped.IsEmptyItem())
+                {
+                    // 2. Equip SelectedSlot
+                    // so add selectedSlot state to viewModel
+                    _state = _state with
+                    {
+                        SelectedSlot = currentSlot,
+                        CurX = MaxX
+                    };
+                }
+                else
+                {
+                    UnEquip(currentSlot);
+                }
             }
         }
     }
@@ -156,6 +174,7 @@ public class EquipmentViewModel
                         newState = _state with { CurY = CurY - 1 };
                     }
                 }
+
                 break;
             case Command.MoveRight:
                 if (CurX < MaxX)
@@ -193,20 +212,19 @@ public class EquipmentViewModel
 
                 break;
             case Command.MoveLeft:
-                if (CurX > 0)
+                if (IsCursorInInventorySlot)
                 {
-                    if (IsCursorInInventorySlot)
+                    newState = _state with
                     {
-                        newState = _state with
-                        {
-                            CurX = CurX - 1,
-                            CurY = 0
-                        };
-                    }
-                    else
-                    {
-                        newState = _state with { CurX = CurX - 1 };
-                    }
+                        CurX = CurX - 1,
+                        CurY = 0,
+                        CurInventoryIdx = 0,
+                        SelectedSlot = null
+                    };
+                }
+                else if (CurX > 0)
+                {
+                    newState = _state with { CurX = CurX - 1 };
                 }
 
                 break;
@@ -228,8 +246,28 @@ public class EquipmentViewModel
         }
         else if (CurY == 1 && CurX == 0)
         {
-            // from weapon to top
+            // from weapon to up or top
             _state = newState with { CurX = CurX + 1 };
+        }
+        else if (CurY == 3 && CurX == 0)
+        {
+            //ring1 to up
+            _state = newState with { CurX = CurX + 1 };
+        }
+        else if (CurY == 2 && CurX == 1)
+        {
+            //pants to left or right
+            _state = newState with { CurY = CurY + 1 };
+        }
+        else if (CurY == 3 && CurX == 2)
+        {
+            //ring2 to up
+            _state = newState with { CurX = CurX - 1 };
+        }
+        else if (CurY == 1 && CurX == 2)
+        {
+            //subWeapon to down
+            _state = newState with { CurX = CurX - 1 };
         }
         else
         {
@@ -269,7 +307,7 @@ public class EquipmentViewModel
         return new Tuple<int, int>(y, x);
     }
 
-    public EquipmentSlot? GetCurrentSlot(int row, int col)
+    public EquipmentSlot GetCurrentSlot(int row, int col)
     {
         return row switch
         {
@@ -281,7 +319,7 @@ public class EquipmentViewModel
             2 when col == 0 => EquipmentSlot.Ring1,
             2 when col == 1 => EquipmentSlot.Boots,
             2 when col == 2 => EquipmentSlot.Ring2,
-            _ => null
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 
@@ -294,7 +332,11 @@ public class EquipmentViewModel
     private void EquipItem(EquipmentSlot slot, Item item)
     {
         _state.Character.Inventory.RemoveAt(_state.CurInventoryIdx);
-        _state.Character.Equipment.Equip(slot: slot, item: item);
+        var unEquipped = _state.Character.Equipment.Equip(slot: slot, item: item);
+        if (!unEquipped.IsEmptyItem())
+        {
+            _state.Character.Inventory.Add(unEquipped);
+        }
     }
 
     private void UnEquip(EquipmentSlot slot)
