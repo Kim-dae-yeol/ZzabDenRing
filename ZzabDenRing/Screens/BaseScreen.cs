@@ -41,6 +41,7 @@ public abstract class BaseScreen : IScreen
                 DrawCommands();
             }
             Views.ForEach(v => { v.Draw(); });
+            SetCursorPositionToCommands();
         } while (ManageInput());
     }
 

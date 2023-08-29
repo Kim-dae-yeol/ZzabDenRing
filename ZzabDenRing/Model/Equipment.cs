@@ -2,6 +2,8 @@ namespace ZzabDenRing.Model;
 
 public class Equipment
 {
+    
+    
     public int AddedAtk()
     {
         return 0;

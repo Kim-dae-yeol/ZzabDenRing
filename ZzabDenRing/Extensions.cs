@@ -11,7 +11,7 @@ public static class Extensions
     public static int UnicodeCount(this string s) => s.Count(c => c.IsHanGul());
 
     public static int LengthToDisplay(this string s) => s.Length + s.UnicodeCount();
-    
+
     public static string String(this EquipmentSlot s)
     {
         return s switch
@@ -25,6 +25,21 @@ public static class Extensions
             EquipmentSlot.Ring1 => "반지1",
             EquipmentSlot.Ring2 => "반지2",
             EquipmentSlot.Boots => "신발",
+            _ => ""
+        };
+    }
+
+    public static string String(this ItemType t)
+    {
+        return t switch
+        {
+            ItemType.Weapon => "무기",
+            ItemType.Armor => "갑옷",
+            ItemType.Necklace => "목걸이",
+            ItemType.SubWeapon => "보조무기",
+            ItemType.Pants => "바지",
+            ItemType.Ring => "반지",
+            ItemType.Boots => "신발",
             _ => ""
         };
     }

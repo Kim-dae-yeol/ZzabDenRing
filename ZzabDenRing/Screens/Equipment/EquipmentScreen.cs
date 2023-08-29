@@ -1,3 +1,4 @@
+using System.Text;
 using ZzabDenRing.Model;
 using static System.Console;
 
@@ -11,6 +12,7 @@ public class EquipmentScreen : BaseScreen
     private const int WidthPerSlot = 20 + 2; // 2 is border
     private const int HeightPerSlot = 5 + 2; // 2 is border
     private const int InventoryWidth = 50;
+    private int InventoryHeight => Height - 2;
     private const ConsoleColor SelectedSlotColor = ConsoleColor.Blue;
 
     private int EquipmentWidth => WidthPerSlot * EquipmentViewModel.SlotCols;
@@ -27,6 +29,7 @@ public class EquipmentScreen : BaseScreen
     protected override void DrawContent()
     {
         DrawEquipmentSlots();
+        DrawInventorySlots(_vm.VisibleItems);
     }
 
     private void DrawEquipmentSlots()
@@ -99,7 +102,7 @@ public class EquipmentScreen : BaseScreen
         {
             //center aligned
             var text = $"•{slot.String()}";
-            
+
             SetCursorPosition(
                 left: CursorLeft - 1 + WidthPerSlot / 2 - text.LengthToDisplay() / 2,
                 top: CursorTop + HeightPerSlot / 2 - 1
@@ -108,8 +111,100 @@ public class EquipmentScreen : BaseScreen
         }
         else
         {
+            //todo 착용한 아이템이 존재하는 경우 출력하기
         }
-        // 
+    }
+
+    private void DrawInventorySlots(IEnumerable<Item> items)
+    {
+        var left = EquipmentWidth + 1;
+        var top = ContentTop;
+        SetCursorPosition(left, top);
+        for (var i = 0; i < InventoryHeight; i++)
+        {
+            for (var j = 0; j < InventoryWidth; j++)
+            {
+                if (i == 0 || i == InventoryHeight - 1)
+                {
+                    if (j == 0 || j == InventoryWidth - 1)
+                    {
+                        Write("+");
+                    }
+                    else
+                    {
+                        Write("-");
+                    }
+                }
+                else if (j == 0 || j == InventoryWidth - 1)
+                {
+                    Write("|");
+                }
+                else
+                {
+                    Write(" ");
+                }
+            }
+
+            WriteLine();
+            SetCursorPosition(left, CursorTop);
+        }
+
+        SetCursorPosition(left, top + 1);
+        var idx = 0;
+        foreach (var item in items)
+        {
+            var isSelected = _vm.IsCursorInInventorySlot && ((idx++) == _vm.CurInventorySlot);
+            DrawInventoryItem(item, left, CursorTop, isSelected);
+        }
+    }
+
+    private void DrawInventoryItem(Item item, int left, int top, bool isSelected)
+    {
+        SetCursorPosition(left, top);
+        if (isSelected)
+        {
+            ForegroundColor = SelectedSlotColor;
+            Write("->");
+        }
+        else
+        {
+            Write("  ");
+        }
+
+        ResetColor();
+        var blankForName = item.Name.LengthToDisplay();
+        var nameBuilder = new StringBuilder(item.Name);
+        if (item.Enhancement > 0)
+        {
+            nameBuilder.Insert(0, $" [ + {item.Enhancement} ]");
+        }
+
+        for (var i = 0; i < 10 - blankForName; i++)
+        {
+            nameBuilder.Append(' ');
+        }
+
+        var typeString = item.Type.String();
+        var typeBuilder = new StringBuilder(typeString);
+        var blankForType = typeString.LengthToDisplay();
+
+        for (var i = 0; i < 10 - blankForType; i++)
+        {
+            typeBuilder.Append(' ');
+        }
+
+        var grade = "등급";
+        var gradeBuilder = new StringBuilder(grade);
+        var blankForGrade = grade.LengthToDisplay();
+        for (var i = 0; i < 10 - blankForGrade; i++)
+        {
+            gradeBuilder.Append(' ');
+        }
+
+        Write($"| {nameBuilder} |" +
+              $" {typeBuilder} | " +
+              $" {gradeBuilder}");
+        WriteLine();
     }
 
     protected override bool ManageInput()
