@@ -18,10 +18,13 @@ public class ScreenDisplay
     {
         IScreen screen = screenType switch
         {
-            ScreenType.Home => new HomeScreen(),
+            ScreenType.Home => new HomeScreen(
+                navToMain: () => { },
+                popBackStack: () => { _backStack.Pop(); }
+            ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
         };
-        
+
         screen.DrawScreen();
     }
 

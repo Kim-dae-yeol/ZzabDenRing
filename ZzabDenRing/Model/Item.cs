@@ -12,7 +12,8 @@ public class Item
     public int Hp;
     public int Price;
 
-    public Item(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp, int price)
+    public Item(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp,
+        int price)
     {
         Name = name;
         Desc = desc;
@@ -24,8 +25,19 @@ public class Item
         Hp = hp;
         Price = price;
     }
+
+    public static Item Empty = new("", "", 0, ItemType.Armor, 0, 0, 0, 0, 0);
 }
 
 public enum ItemType
 {
+    Helm,
+    Weapon,
+    Armor,
+    Necklace,
+    SubWeapon,
+    Pants,
+    Ring,
+    Boots,
+    Nothing
 }
