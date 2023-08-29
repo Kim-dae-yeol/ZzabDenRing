@@ -2,7 +2,6 @@ namespace ZzabDenRing.Model;
 
 public class Equipment
 {
-    
     public int AddedAtk()
     {
         return 0;
@@ -17,4 +16,19 @@ public class Equipment
     {
         return 0;
     }
+
+    
+}
+
+public enum EquipmentSlot
+{
+    Helm,
+    Necklace,
+    Weapon,
+    Armor,
+    SubWeapon,
+    Pants,
+    Ring1,
+    Ring2,
+    Boots
 }
