@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Console;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -10,6 +11,9 @@ namespace ZzabDenRing.Screens.Status
 {
     internal class StatusScreen : BaseScreen
     {
+        private Stack<ScreenType> _backStack = new(10);
+        internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
+
         public Character player;
         protected override void DrawContent()
         {
@@ -42,7 +46,40 @@ namespace ZzabDenRing.Screens.Status
 
         protected override bool ManageInput()
         {
-            throw new NotImplementedException();
+            var key = ReadKey();
+            var command = key.Key switch
+            {
+                ConsoleKey.X => Command.Exit,
+                _ => Command.Nothing
+            };
+            int selectedAction = CheckValidInput(0, 0);
+
+            switch (selectedAction)
+            {
+                case 0:
+                    _backStack.Push(ScreenType.Main);// 상태보기 화면으로 이동
+                    break;
+                
+            }
+
+            return true;
         }
+        static int CheckValidInput(int min, int max) //입력된 숫자가 valid한지를 체크
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+
+                bool parseSuccess = int.TryParse(input, out var ret);
+                if (parseSuccess)
+                {
+                    if (ret >= min && ret <= max)
+                        return ret;
+                }
+
+                Console.WriteLine("잘못된 입력입니다.");
+            }
+        }
+
     }
 }
