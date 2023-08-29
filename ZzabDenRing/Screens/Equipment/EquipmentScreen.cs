@@ -15,6 +15,7 @@ public class EquipmentScreen : BaseScreen
     private int InventoryHeight => Height - 2;
     private const ConsoleColor SelectedSlotColor = ConsoleColor.Blue;
     private const ConsoleColor HoveredSlotColor = ConsoleColor.Green;
+    private const ConsoleColor InvalidColor = ConsoleColor.Gray;
 
     private int EquipmentWidth => WidthPerSlot * EquipmentViewModel.SlotCols;
     private int EquipmentHeight => WidthPerSlot * EquipmentViewModel.SlotRows;
@@ -120,7 +121,6 @@ public class EquipmentScreen : BaseScreen
         }
         else
         {
-            //todo 착용한 아이템이 존재하는 경우 출력하기
             var emoji = item.Type.ToEmoji();
             var name = $"{emoji}{item.Name}";
             // var grade = $"•{}";
@@ -181,15 +181,16 @@ public class EquipmentScreen : BaseScreen
         var idx = 0;
         foreach (var item in items)
         {
-            var isSelected = _vm.IsCursorInInventorySlot && ((idx++) == _vm.CurInventorySlot);
-            DrawInventoryItem(item, left, CursorTop, isSelected);
+            var isCursorOn = _vm.IsCursorInInventorySlot && ((idx++) == _vm.CurInventorySlot);
+            var canEquip = _vm.SelectedSlot == null || _vm.SelectedSlot?.ToItemType() == item.Type;
+            DrawInventoryItem(item, left, CursorTop, isCursorOn, canEquip);
         }
     }
 
-    private void DrawInventoryItem(Item item, int left, int top, bool isSelected)
+    private void DrawInventoryItem(Item item, int left, int top, bool isCursorOn, bool canEquip = true)
     {
         SetCursorPosition(left + 1, top);
-        if (isSelected)
+        if (isCursorOn)
         {
             ForegroundColor = HoveredSlotColor;
             Write("->");
@@ -200,6 +201,12 @@ public class EquipmentScreen : BaseScreen
         }
 
         ResetColor();
+
+        if (!canEquip)
+        {
+            ForegroundColor = InvalidColor;
+        }
+
         var blankForName = item.Name.LengthToDisplay();
         var nameBuilder = new StringBuilder(item.Name);
         if (item.Enhancement > 0)
@@ -232,6 +239,7 @@ public class EquipmentScreen : BaseScreen
         Write($"{nameBuilder} |" +
               $" {typeBuilder} | " +
               $" {gradeBuilder}");
+        ResetColor();
         WriteLine();
     }
 

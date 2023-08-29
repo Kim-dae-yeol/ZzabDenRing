@@ -90,7 +90,7 @@ public class EquipmentViewModel
             {
                 var item = _state.Character.Inventory[_state.CurInventoryIdx];
                 if (item.IsEmptyItem()) return;
-                if (SelectedSlot?.ToItemType() == item.Type) return;
+                if (SelectedSlot != null && SelectedSlot?.ToItemType() != item.Type) return;
 
 
                 switch (item.Type)
@@ -132,7 +132,7 @@ public class EquipmentViewModel
             }
             else
             {
-                // todo unEquip or( move to inventory and show only selected slot)
+                // todo unEquip[V] or ( move to inventory and show only selected slot) [X]
                 var currentSlot = GetCurrentSlot(_state.CurY, _state.CurX);
                 var equipped = GetEquippedItem(currentSlot);
                 if (equipped.IsEmptyItem())
