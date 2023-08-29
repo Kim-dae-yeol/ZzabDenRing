@@ -33,20 +33,20 @@ public class MainScreen : BaseScreen
         Console.Clear();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("���� ȭ��");
+        Console.WriteLine("메인 화면");
         Console.ResetColor();
         Console.WriteLine();
 
-        Console.WriteLine("1. ���º���");
-        Console.WriteLine("2. �κ��丮");
-        Console.WriteLine("3. ���â");
-        Console.WriteLine("4. ����");
-        Console.WriteLine("5. ����");
+        Console.WriteLine("1. 상태 보기");
+        Console.WriteLine("2. 던전입장");
+        Console.WriteLine("3. 인벤토리");
+        Console.WriteLine("4. 상점");
+        Console.WriteLine("5. 장비창");
         Console.WriteLine();
-        Console.WriteLine("0. ����ȭ��");
+        Console.WriteLine("6. 시작화면");
         Console.WriteLine();
 
-        Console.WriteLine("���Ͻô� �ൿ�� �Է����ּ���.");
+        Console.WriteLine("원하는 행동을 입력해주세요.");
     }
 
     protected override bool ManageInput()
