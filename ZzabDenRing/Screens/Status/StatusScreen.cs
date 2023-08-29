@@ -68,11 +68,37 @@ namespace ZzabDenRing.Screens.Status
                 ConsoleKey.X => Command.Exit,
                 _ => Command.Nothing
             };
-            
+            //int selectedAction = CheckValidInput(0, 0);
 
-            return command != Command.Exit;
+            //switch (selectedAction)
+            //{
+            //    case 0:
+            //        _backStack.Push(ScreenType.Main); // 상태보기 화면으로 이동
+            //        break;
+
+            //}
+
+            return true;          
         }
-        
+        static int CheckValidInput(int min, int max) //입력된 숫자가 valid한지를 체크
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+
+                bool parseSuccess = int.TryParse(input, out var ret);
+                if (parseSuccess)
+                {
+                    if (ret >= min && ret <= max)
+                        return ret;
+                }
+
+
+                Console.WriteLine("잘못된 입력입니다.");
+            }
+
+
+        }
 
     }
 }
