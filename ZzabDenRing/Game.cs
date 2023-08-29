@@ -9,11 +9,13 @@ public class Game
     // todo database or file system
     private ScreenDisplay _display = new();
 
+    
     public void Start()
     {
         _display.Display();
     }
-
+    
+    
     public static Item[] Items =
     {
         new Item("롱소드", "긴 검이다.", 0, ItemType.Weapon, 20, 0, 0, 0, 1500),
