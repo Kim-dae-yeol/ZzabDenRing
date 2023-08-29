@@ -26,7 +26,7 @@ public class Item
         Price = price;
     }
 
-    public static Item Empty = new("", "", 0, ItemType.Armor, 0, 0, 0, 0, 0);
+    public static Item Empty = new("", "", 0, ItemType.Nothing, 0, 0, 0, 0, 0);
 }
 
 public enum ItemType
