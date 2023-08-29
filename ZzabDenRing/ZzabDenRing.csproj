@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <Folder Include="Di\" />
-      <Folder Include="Model\" />
       <Folder Include="Util\" />
     </ItemGroup>
 
