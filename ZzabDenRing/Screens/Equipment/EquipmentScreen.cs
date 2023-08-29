@@ -23,7 +23,8 @@ public class EquipmentScreen : BaseScreen
         _popBackStack = popBackStack;
         Height = HeightPerSlot * EquipmentViewModel.SlotRows + 2;
         Width = WidthPerSlot * EquipmentViewModel.SlotCols + 2 + InventoryWidth;
-        _vm = new();
+        // border of window AND EquipmentBorder AND ItemCount
+        _vm = new(inventorySlots: Height - 2 - 2 - 1); 
     }
 
     protected override void DrawContent()
@@ -41,7 +42,9 @@ public class EquipmentScreen : BaseScreen
             var row = rowAndCol.Item1;
             var col = rowAndCol.Item2;
             var selected = row == _vm.CurY && col == _vm.CurX;
-            var item = _vm.GetEquipedItem(slot);
+            var item = _vm.GetEquippedItem(slot);
+            // var item = Game.Items[0];
+
             DrawEquipmentSlot(
                 row: row,
                 col: col,
@@ -55,8 +58,8 @@ public class EquipmentScreen : BaseScreen
         int row,
         int col,
         EquipmentSlot slot,
-        bool isSelected = false,
-        Item? item = null
+        Item item,
+        bool isSelected = false
     )
     {
         if (isSelected)
@@ -98,11 +101,11 @@ public class EquipmentScreen : BaseScreen
 
         ResetColor();
         SetCursorPosition(left + 1, top + 1); //테두리 안쪽으로 커서 이동
-        if (item == null)
-        {
-            //center aligned
-            var text = $"•{slot.String()}";
 
+        if (item.IsEmptyItem())
+        {
+            var text = $"•{slot.String()}";
+            //center aligned
             SetCursorPosition(
                 left: CursorLeft - 1 + WidthPerSlot / 2 - text.LengthToDisplay() / 2,
                 top: CursorTop + HeightPerSlot / 2 - 1
@@ -112,6 +115,24 @@ public class EquipmentScreen : BaseScreen
         else
         {
             //todo 착용한 아이템이 존재하는 경우 출력하기
+            var name = $"•{item.Name}";
+            var type = $"•{item.Type.String()}";
+            // var grade = $"•{}";
+            var atk = $"•Atk : {item.Atk}";
+            var def = $"•Def : {item.Def}";
+            var cri = $"•Cri : {item.Critical}";
+            var hp = $"•H p : {item.Hp}";
+
+            var texts = new string[] { name, type, atk, def, cri, hp };
+            var itemCursorLeft = CursorLeft;
+            foreach (var line in texts)
+            {
+                SetCursorPosition(
+                    left: itemCursorLeft,
+                    top: CursorTop
+                );
+                WriteLine(line);
+            }
         }
     }
 
@@ -149,7 +170,8 @@ public class EquipmentScreen : BaseScreen
             SetCursorPosition(left, CursorTop);
         }
 
-        SetCursorPosition(left, top + 1);
+        SetCursorPosition(left + 1, top + 1);
+        WriteLine($"{$"{_vm.CurrentItemIdx + 1} / {_vm.TotalItemCount}",InventoryWidth - 4}");
         var idx = 0;
         foreach (var item in items)
         {
@@ -160,7 +182,7 @@ public class EquipmentScreen : BaseScreen
 
     private void DrawInventoryItem(Item item, int left, int top, bool isSelected)
     {
-        SetCursorPosition(left, top);
+        SetCursorPosition(left + 1, top);
         if (isSelected)
         {
             ForegroundColor = SelectedSlotColor;
@@ -201,7 +223,7 @@ public class EquipmentScreen : BaseScreen
             gradeBuilder.Append(' ');
         }
 
-        Write($"| {nameBuilder} |" +
+        Write($"{nameBuilder} |" +
               $" {typeBuilder} | " +
               $" {gradeBuilder}");
         WriteLine();
@@ -221,6 +243,12 @@ public class EquipmentScreen : BaseScreen
             ConsoleKey.X => Command.Exit,
             _ => Command.Nothing
         };
+
+        if (command == Command.Exit)
+        {
+            _popBackStack();
+        }
+
         _vm.OnCommand(command);
         return command != Command.Exit;
     }

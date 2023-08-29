@@ -4,89 +4,158 @@ namespace ZzabDenRing.Screens.Equipment;
 
 public class EquipmentViewModel
 {
+    public EquipmentViewModel(int inventorySlots = 19)
+    {
+        Character c = new Character("Kim",
+            "전사",
+            200,
+            200,
+            10,
+            1,
+            20,
+            2500,
+            0,
+            Game.Items.ToList(),
+            Game.Equipment
+        );
+        // todo character from repo
+        _state = new EquipmentState(
+            Character: c,
+            CurX: 1,
+            CurY: 0,
+            CurInventoryIdx: 0
+        );
+
+        _maxVisibleInventorySlots = inventorySlots;
+    }
+
     private bool[][] _slotMatrix =
     {
-        //장비창 ㅇ ㅇ ㅇ | 인벤토리 ㅇ x 10 rows
+        //장비창 ㅇ ㅇ ㅇ | 인벤토리 ㅇ x many rows
         new[] { false, true, true, true },
         new[] { true, true, true, true },
+        new[] { false, true, false, true },
         new[] { true, true, true, true }
     };
 
-    private Character c = new Character("Kim",
-        "전사",
-        200,
-        200,
-        10,
-        1,
-        20,
-        2500,
-        0,
-        Game.Items.ToList(),
-        Game.Equipment
-    );
+    // todo 여기서 사용 못하도록 수정 
+
 
     private EquipmentState _state;
 
-    private int SkipCount => _state.CurInventoryIdx >= MaxVisibleInventorySlots
-        ? _state.CurInventoryIdx + 1 - MaxVisibleInventorySlots
+    private int SkipCount => _state.CurInventoryIdx >= _maxVisibleInventorySlots
+        ? _state.CurInventoryIdx + 1 - _maxVisibleInventorySlots
         : 0;
 
-    public IEnumerable<Item> VisibleItems => _state.C.Inventory
+    public IEnumerable<Item> VisibleItems => _state.Character.Inventory
         .Skip(SkipCount)
-        .Take(MaxVisibleInventorySlots);
+        .Take(_maxVisibleInventorySlots);
 
-    public static int SlotRows => 3;
+    public static int SlotRows => 4;
     public static int SlotCols => 3;
 
     //x is zero-based 4칸
     private const int MaxX = 3;
 
     //y is zero-based 장비창에서는 4칸 인벤토리에서는 10칸
-    private int MaxY => _state.CurX < SlotCols ? SlotRows - 1 : _state.C.Inventory.Count - 1;
+    private int MaxY => _state.CurX < SlotCols ? SlotRows - 1 : _state.Character.Inventory.Count - 1;
 
     public int CurX => _state.CurX;
     public int CurY => _state.CurY;
 
     public bool IsCursorInInventorySlot => CurX >= SlotCols;
-    private const int MaxVisibleInventorySlots = 19;
+    private readonly int _maxVisibleInventorySlots;
 
-    public int CurInventorySlot => _state.CurInventoryIdx >= MaxVisibleInventorySlots
-        ? MaxVisibleInventorySlots - 1
+    public int CurInventorySlot => _state.CurInventoryIdx >= _maxVisibleInventorySlots
+        ? _maxVisibleInventorySlots - 1
         : _state.CurInventoryIdx;
 
-
-    public EquipmentViewModel()
-    {
-        // todo character from repo
-        _state = new EquipmentState(
-            C: c,
-            CurX: 1,
-            CurY: 0,
-            CurInventoryIdx: 0
-        );
-    }
+    public int TotalItemCount => _state.Character.Inventory.Count;
+    public int CurrentItemIdx => _state.CurInventoryIdx;
 
     public void OnCommand(Command command)
     {
-        EquipmentState newState = _state;
+        if (command >= Command.MoveTop && command <= Command.MoveLeft)
+        {
+            ControlMovement(command);
+            return;
+        }
 
-        // todo 이동 예외 처리 하기 다음 칸으로 이동하도록 ...  
+        if (command == Command.Interaction)
+        {
+            if (IsCursorInInventorySlot)
+            {
+                var item = _state.Character.Inventory[_state.CurInventoryIdx];
+                if (item.IsEmptyItem()) return;
+
+                switch (item.Type)
+                {
+                    case ItemType.Weapon:
+                        EquipItem(EquipmentSlot.Weapon, item);
+                        break;
+                    case ItemType.Armor:
+                        EquipItem(EquipmentSlot.Armor, item);
+                        break;
+                    case ItemType.Necklace:
+                        EquipItem(EquipmentSlot.Necklace, item);
+                        break;
+                    case ItemType.SubWeapon:
+                        EquipItem(EquipmentSlot.SubWeapon, item);
+                        break;
+                    case ItemType.Pants:
+                        EquipItem(EquipmentSlot.Pants, item);
+                        break;
+                    case ItemType.Ring:
+                        var equipped = _state.Character.Equipment.Equiped;
+                        if (equipped[EquipmentSlot.Ring1].IsEmptyItem() || !equipped[EquipmentSlot.Ring2].IsEmptyItem())
+                        {
+                            EquipItem(EquipmentSlot.Ring1, item);
+                        }
+                        else
+                        {
+                            EquipItem(EquipmentSlot.Ring2, item);
+                        }
+
+
+                        break;
+                    case ItemType.Boots:
+                        EquipItem(EquipmentSlot.Boots, item);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                // todo unEquip or( move to inventory and show only selected slot)
+                // 1. unEquip
+                // 2. Equip SelectedSlot
+                // so add selectedSlot state to viewModel 
+            }
+        }
+    }
+
+    private void ControlMovement(Command command)
+    {
+        // Todo [ Refactor ]2가지 경우로 나누면 좋을듯
+        // 1. 인벤토리에서 움직임
+        // 2. 장비창에서 움직임
+        EquipmentState newState = _state;
         switch (command)
         {
             case Command.MoveTop:
-                if (CurY > 0)
+                if (IsCursorInInventorySlot)
                 {
-                    if (IsCursorInInventorySlot)
-                    {
-                        var idx = CurInventorySlot > 0 ? CurInventorySlot - 1 : 0;
-                        newState = _state with { CurInventoryIdx = idx };
-                    }
-                    else
+                    var idx = _state.CurInventoryIdx > 0 ? _state.CurInventoryIdx - 1 : 0;
+                    newState = _state with { CurInventoryIdx = idx };
+                }
+                else
+                {
+                    if (CurY > 0)
                     {
                         newState = _state with { CurY = CurY - 1 };
                     }
                 }
-
                 break;
             case Command.MoveRight:
                 if (CurX < MaxX)
@@ -141,11 +210,6 @@ public class EquipmentViewModel
                 }
 
                 break;
-            case Command.Interaction:
-                //착용 또는 해제 
-                break;
-            case Command.Nothing:
-                break;
             default:
                 break;
         }
@@ -173,7 +237,6 @@ public class EquipmentViewModel
         }
     }
 
-
     /** first is row and second is column*/
     public Tuple<int, int> GetRowAndCol(EquipmentSlot slot)
     {
@@ -197,28 +260,53 @@ public class EquipmentViewModel
             EquipmentSlot.Weapon => 1,
             EquipmentSlot.Armor => 1,
             EquipmentSlot.SubWeapon => 1,
-            EquipmentSlot.Pants => 1,
-            EquipmentSlot.Ring1 => 2,
-            EquipmentSlot.Ring2 => 2,
-            EquipmentSlot.Boots => 2,
+            EquipmentSlot.Pants => 2,
+            EquipmentSlot.Ring1 => 3,
+            EquipmentSlot.Ring2 => 3,
+            EquipmentSlot.Boots => 3,
             _ => throw new ArgumentOutOfRangeException(nameof(slot), slot, null)
         };
         return new Tuple<int, int>(y, x);
     }
 
-    public Item? GetEquipedItem(EquipmentSlot slot)
+    public EquipmentSlot? GetCurrentSlot(int row, int col)
     {
-        var equip = c.Equipment;
-        return slot switch
+        return row switch
         {
-            //todo item from equip
+            0 when col == 1 => EquipmentSlot.Helm,
+            0 when col == 2 => EquipmentSlot.Necklace,
+            1 when col == 0 => EquipmentSlot.Weapon,
+            1 when col == 1 => EquipmentSlot.Armor,
+            1 when col == 2 => EquipmentSlot.SubWeapon,
+            2 when col == 0 => EquipmentSlot.Ring1,
+            2 when col == 1 => EquipmentSlot.Boots,
+            2 when col == 2 => EquipmentSlot.Ring2,
             _ => null
         };
+    }
+
+    public Item GetEquippedItem(EquipmentSlot slot)
+    {
+        var equip = _state.Character.Equipment;
+        return equip.Equiped[slot];
+    }
+
+    private void EquipItem(EquipmentSlot slot, Item item)
+    {
+        _state.Character.Inventory.RemoveAt(_state.CurInventoryIdx);
+        _state.Character.Equipment.Equip(slot: slot, item: item);
+    }
+
+    private void UnEquip(EquipmentSlot slot)
+    {
+        var item = _state.Character.Equipment.UnEquip(slot);
+        _state.Character.Inventory.Add(item);
     }
 }
 
 public record EquipmentState(
-    Character C,
+    Character Character,
     int CurX,
     int CurY,
-    int CurInventoryIdx);
+    int CurInventoryIdx,
+    EquipmentSlot? SelectedSlot = null);
