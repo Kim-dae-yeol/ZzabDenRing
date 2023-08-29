@@ -66,7 +66,7 @@ public abstract class BaseScreen : IScreen
     /** use this method when called WriteLine after. **/
     protected void SetCursorPositionToWritingLine(int addedLeft = 0, int addedTop = 0)
     {
-        SetCursorPosition(addedLeft + Left, addedTop + CursorTop);
+        SetCursorPosition(addedLeft + Left + 1, addedTop + CursorTop);
     }
 
     protected void SetCursorPositionToContentBlock()
