@@ -28,4 +28,11 @@ public class Item
 
 public enum ItemType
 {
+    Weapon,
+    Armor,
+    Necklace,
+    SubWeapon,
+    Pants,
+    Ring,
+    Boots
 }
