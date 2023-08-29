@@ -26,6 +26,7 @@ public class MainScreen : BaseScreen
         _navToDungeonEntrance = navToDungeonEntrance;
         _navToStatus = navToStatus;
         _navToEquipment = navToEquipment;
+        //Height = 20;
     }
 
     protected override void DrawContent()
@@ -46,7 +47,7 @@ public class MainScreen : BaseScreen
         Console.WriteLine("0. ����ȭ��");
         Console.WriteLine();
 
-        Console.WriteLine("���Ͻô� �ൿ�� �Է����ּ���.");
+        Console.WriteLine("안녕하세요.");
     }
 
     protected override bool ManageInput()
