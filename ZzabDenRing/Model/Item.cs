@@ -30,7 +30,5 @@ public class Item
 
 public enum ItemType
 {
-    무기,
-    방패,
-    옷
+    Weapon
 }

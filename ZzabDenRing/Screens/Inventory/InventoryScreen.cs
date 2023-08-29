@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using ZzabDenRing.Model;
 using static System.Console;
 
-
 namespace ZzabDenRing.Screens.Inventory
 {
     internal class InventoryScreen : BaseScreen
     {
+
+        static Item[] inventory;  
         
-        static Item[] inventory;
+
         protected override void DrawContent()
         {
             Console.Clear();
@@ -41,9 +42,9 @@ namespace ZzabDenRing.Screens.Inventory
         static void DataSetting()
         {
             inventory = new Item[10];
-            inventory[0] = new Item(name: "무쇠갑옷", desc: "무쇠로 만든 갑옷입니다.", enhancement: 1, type: ItemType.옷, atk: 0, def: 5, critical: 0, hp: 30, price: 100);
-            inventory[1] = new Item(name: "무쇠검", desc: "무쇠로 만든 검입니다.", enhancement: 1, type: ItemType.무기, atk: 5, def: 0, critical: 1, hp: 0, price: 50);
-            inventory[2] = new Item(name: "무쇠방패", desc: "무쇠로 만든 방패입니다.", enhancement: 1, type: ItemType.방패, atk: 0, def: 7, critical: 0, hp: 0, price: 50);
+            inventory[0] = new Item(name: "무쇠갑옷", desc: "무쇠로 만든 갑옷입니다.", enhancement: 1, type: ItemType.Weapon, atk: 0, def: 5, critical: 0, hp: 30, price: 100);
+            inventory[1] = new Item(name: "무쇠검", desc: "무쇠로 만든 검입니다.", enhancement: 1, type: ItemType.Weapon, atk: 5, def: 0, critical: 1, hp: 0, price: 50);
+            inventory[2] = new Item(name: "무쇠방패", desc: "무쇠로 만든 방패입니다.", enhancement: 1, type: ItemType.Weapon, atk: 0, def: 7, critical: 0, hp: 0, price: 50);
         }
         static void InventoryDisplay()
         {
