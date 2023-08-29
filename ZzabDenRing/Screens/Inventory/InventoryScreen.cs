@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace ZzabDenRing.Screens.Inventory
 {
@@ -10,20 +11,30 @@ namespace ZzabDenRing.Screens.Inventory
     {
         protected override void DrawContent()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+            InventoryDisplay();
         }
 
         protected override bool ManageInput()
         {
-            throw new NotImplementedException();
+            var key = Console.ReadKey();
+            var command = key.Key switch
+            {
+                ConsoleKey.UpArrow => Command.MoveTop,
+                ConsoleKey.RightArrow => Command.MoveRight,
+                ConsoleKey.DownArrow => Command.MoveBottom,
+                ConsoleKey.LeftArrow => Command.MoveLeft,
+                ConsoleKey.Enter => Command.Interaction,
+                ConsoleKey.X => Command.Exit,
+                _ => Command.Nothing
+            };
+
+            return command != Command.Exit;
         }
 
-        static void Main(string[] args)
-        {
-            InventoryDisplay();
-        }
+        
 
-        static void InventoryDisplay()
+        private void InventoryDisplay()
         {
             Console.WriteLine("######################################################################"); //  ########## * 7 
             Console.WriteLine("##                                                                  ##");
