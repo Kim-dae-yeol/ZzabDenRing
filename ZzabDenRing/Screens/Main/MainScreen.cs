@@ -18,6 +18,11 @@ public class MainScreen : BaseScreen
     {
         Console.Clear();
 
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("메인 화면");
+        Console.ResetColor();
+        Console.WriteLine();
+
         Console.WriteLine("1. 상태보기");
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 장비창");
@@ -25,6 +30,7 @@ public class MainScreen : BaseScreen
         Console.WriteLine("5. 던전");
         Console.WriteLine();
         Console.WriteLine("0. 시작화면");
+        Console.WriteLine();
 
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
