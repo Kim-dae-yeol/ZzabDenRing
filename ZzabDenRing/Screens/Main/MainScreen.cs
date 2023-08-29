@@ -1,4 +1,3 @@
-
 using static System.Console;
 using System;
 using System.Collections.Generic;
@@ -10,33 +9,44 @@ namespace ZzabDenRing.Screens.Main;
 
 public class MainScreen : BaseScreen
 {
-    private Stack<ScreenType> _backStack = new(10);
+    private Action _popBackStack;
+    private Action _navToShop;
+    private Action _navToDungeonEntrance;
+    private Action _navToStatus;
+    private Action _navToEquipment;
 
-    internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
+    public MainScreen(Action popBackStack,
+        Action navToShop,
+        Action navToDungeonEntrance,
+        Action navToStatus,
+        Action navToEquipment)
+    {
+        _popBackStack = popBackStack;
+        _navToShop = navToShop;
+        _navToDungeonEntrance = navToDungeonEntrance;
+        _navToStatus = navToStatus;
+        _navToEquipment = navToEquipment;
+    }
 
     protected override void DrawContent()
     {
         Console.Clear();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("¸ÞÀÎ È­¸é");
+        Console.WriteLine("ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½");
         Console.ResetColor();
         Console.WriteLine();
 
-        Console.WriteLine("1. »óÅÂº¸±â");
-        Console.WriteLine("2. ÀÎº¥Åä¸®");
-        Console.WriteLine("3. ÀåºñÃ¢");
-        Console.WriteLine("4. »óÁ¡");
-        Console.WriteLine("5. ´øÀü");
+        Console.WriteLine("1. ï¿½ï¿½ï¿½Âºï¿½ï¿½ï¿½");
+        Console.WriteLine("2. ï¿½Îºï¿½ï¿½ä¸®");
+        Console.WriteLine("3. ï¿½ï¿½ï¿½Ã¢");
+        Console.WriteLine("4. ï¿½ï¿½ï¿½ï¿½");
+        Console.WriteLine("5. ï¿½ï¿½ï¿½ï¿½");
         Console.WriteLine();
-        Console.WriteLine("0. ½ÃÀÛÈ­¸é");
+        Console.WriteLine("0. ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½");
         Console.WriteLine();
 
-        Console.WriteLine("¿øÇÏ½Ã´Â Çàµ¿À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
-
-        
-
-        
+        Console.WriteLine("ï¿½ï¿½ï¿½Ï½Ã´ï¿½ ï¿½àµ¿ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
     }
 
     protected override bool ManageInput()
@@ -44,43 +54,35 @@ public class MainScreen : BaseScreen
         var key = ReadKey();
         var command = key.Key switch
         {
-            ConsoleKey.X => Command.Exit,
-            _ => Command.Nothing
+            _ => Command.Exit
         };
 
-        if (command == Command.Exit)
+        switch (key.Key)
         {
-            return false; // Á¾·á ¸í·ÉÀÌ µé¾î¿ÔÀ» °æ¿ì, È­¸éÀ» ºüÁ®³ª°¡±â À§ÇØ false ¹ÝÈ¯
-        }
-
-        int selectedAction = CheckValidInput(0, 5); 
-
-        switch (selectedAction)
-        {
-            case 0:
-                _backStack.Push(ScreenType.Home); // ½ÃÀÛ È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D1:
+                _navToStatus();
                 break;
-            case 1:
-                // TODO: »óÅÂº¸±â È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D2:
+                _navToDungeonEntrance();
                 break;
-            case 2:
-                // TODO: ÀÎº¥Åä¸® È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D3:
+                //navTo();
                 break;
-            case 3:
-                // TODO: ÀåºñÃ¢ È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D4:
+                //();
                 break;
-            case 4:
-                // TODO: »óÁ¡ È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D5:
+                _navToEquipment();
                 break;
-            case 5:
-                // TODO: ´øÀü È­¸éÀ¸·Î ÀÌµ¿
+            case ConsoleKey.D6:
+                _popBackStack();
                 break;
         }
 
-        return true; 
+        return false;
     }
 
-    static int CheckValidInput(int min, int max) //ÀÔ·ÂµÈ ¼ýÀÚ°¡ validÇÑÁö¸¦ Ã¼Å©
+    private int CheckValidInput(int min, int max) //ï¿½Ô·Âµï¿½ ï¿½ï¿½ï¿½Ú°ï¿½ validï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
     {
         while (true)
         {
@@ -93,8 +95,7 @@ public class MainScreen : BaseScreen
                     return ret;
             }
 
-            Console.WriteLine("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
+            Console.WriteLine("failed");
         }
     }
-
 }

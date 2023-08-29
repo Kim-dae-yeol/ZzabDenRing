@@ -26,19 +26,19 @@ namespace ZzabDenRing.Screens.Dungeon
             return command != Command.Exit;
         }
 
-        public List<Monster> monsters = new List<Monster>();
+        private List<Monster> _monsters;
 
 
-        public DungeonBattleScreen()
+        public DungeonBattleScreen(List<Monster> monsters)
         {
-
+            _monsters = monsters;
         }
 
         private void DungeonBattleScreenShow()
         {
-            for (int i = 0; i < monsters.Count; i++)
+            for (int i = 0; i < _monsters.Count; i++)
             {
-                WriteLine($"1. Lv. {monsters[i].Level} {monsters[i].Name}  HP {monsters[i].Hp}");
+                WriteLine($"1. Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].Hp}");
             }
 
             WriteLine("[내정보]");
