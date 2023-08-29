@@ -119,5 +119,6 @@ public abstract class BaseScreen : IScreen
         SetCursorPosition(CommandLeft, CommandTop);
     }
 
+    /** return  true : 화면에서 계속 머무름 , false : 화면 전환 */
     protected abstract bool ManageInput();
 }

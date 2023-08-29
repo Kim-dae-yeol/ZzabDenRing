@@ -5,26 +5,25 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using ZzabDenRing.Model;
-using System.Reflection.Emit;
-using System.Xml.Linq;
+using  ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Status
 {
-    
     internal class StatusScreen : BaseScreen
     {
         private Stack<ScreenType> _backStack = new(10);
         internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
 
         public Character player;
+
         internal StatusScreen()
         {
-            player = new Character("이름","직업",100, 100, 10, 01, 5, 1500, 15, new List<Item>(),new Equipment());
+            player = new Character("이름", "직업", 100, 100, 10, 01, 5, 1500, 15, new List<Item>(),
+                new Model.Equipment());
         }
+
         protected override void DrawContent()
         {
-
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("상태 보기");
@@ -34,9 +33,9 @@ namespace ZzabDenRing.Screens.Status
             Console.WriteLine();
             Console.WriteLine("########################################");
             Console.WriteLine();
-            Console.WriteLine($"Lv.{player.Level} "); 
+            Console.WriteLine($"Lv.{player.Level} ");
             Console.WriteLine($"{player.Name}: ");
-            Console.WriteLine($"{player.Job}: ");         
+            Console.WriteLine($"{player.Job}: ");
             Console.WriteLine($"공격력 : {player.Atk}");
             Console.WriteLine($"방어력 : {player.Def}");
             Console.WriteLine($"체력 : {player.Hp}");
@@ -78,8 +77,9 @@ namespace ZzabDenRing.Screens.Status
 
             //}
 
-            return true;          
+            return true;
         }
+
         static int CheckValidInput(int min, int max) //입력된 숫자가 valid한지를 체크
         {
             while (true)
@@ -96,9 +96,6 @@ namespace ZzabDenRing.Screens.Status
 
                 Console.WriteLine("잘못된 입력입니다.");
             }
-
-
         }
-
     }
 }

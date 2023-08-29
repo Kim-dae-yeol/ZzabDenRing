@@ -12,6 +12,9 @@ namespace ZzabDenRing.Screens.Dungeon
 {
     public class DungeonEntranceScreen : BaseScreen
     {
+        private Action _navToBattle;
+        private Action _popBackStack;
+
         protected override void DrawContent()
         {
             DungeonEntranceScreenShow();
@@ -20,19 +23,40 @@ namespace ZzabDenRing.Screens.Dungeon
         protected override bool ManageInput()
         {
             var key = ReadKey();
-            var screenType = key.Key switch
+            var command = key.Key switch
             {
-                ConsoleKey.X => Command.Exit,
-                _ => Command.Nothing
+                ConsoleKey.D1 => Command.Interaction,
+                ConsoleKey.D2 => Command.Nothing,
+                ConsoleKey.D3 => Command.Exit,
+                _ => Command.Wrong
             };
-            return screenType != Command.Exit;
+
+            switch (command)
+            {
+                case Command.Interaction:
+                    _navToBattle();
+                    break;
+                case Command.Nothing:
+                    CreateMonsters();
+                    break;
+            }
+            
+            return command != Command.Exit && command != Command.Interaction;
         }
 
         public List<Monster> monsters = new List<Monster>();
 
-        public DungeonEntranceScreen() 
+        public DungeonEntranceScreen(Action navToBattle, Action popBackStack)
+        {
+            _navToBattle = navToBattle;
+            _popBackStack = popBackStack;
+            CreateMonsters();
+        }
+
+        private void CreateMonsters()
         {
             monsters.Clear();
+
             for (int i = 0; i < Random.Shared.Next(1, 4); i++)
             {
                 int a = Random.Shared.Next(1, 4);
@@ -55,6 +79,7 @@ namespace ZzabDenRing.Screens.Dungeon
                 WriteLine($"\t{monsters[i].Name}");
                 WriteLine($"\tHP {monsters[i].MaxHp}");
             }
+
             WriteLine("1. 전투하기");
             WriteLine("2. 다른 곳 둘러보기");
             WriteLine("3. 도망하기");
