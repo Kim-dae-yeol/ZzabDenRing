@@ -16,6 +16,8 @@ public class MainScreen : BaseScreen
 
     protected override void DrawContent()
     {
+        Console.Clear();
+
         Console.WriteLine("1. 상태보기");
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 장비창");
