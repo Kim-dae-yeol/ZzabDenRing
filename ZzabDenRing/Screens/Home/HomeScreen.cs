@@ -47,8 +47,9 @@ public class HomeScreen : BaseScreen
 
     protected override void DrawContent()
     {
-        if (IsSplashStarted) return;
+        if (IsSplashStarted && !IsSplashFinished) return;
         IsSplashStarted = true;
+        
         Splash();
     }
 

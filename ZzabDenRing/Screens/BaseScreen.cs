@@ -6,7 +6,6 @@ namespace ZzabDenRing.Screens;
 public abstract class BaseScreen : IScreen
 {
     protected bool ClearScreenWhenRedraw = true;
-
     public int Width = 150;
     public int Height = 30;
     public int Left = 0;
@@ -30,7 +29,6 @@ public abstract class BaseScreen : IScreen
             DrawWindow();
             SetCursorPosition(ContentLeft, ContentTop);
             DrawContent();
-
             Views.ForEach(v => { v.Draw(); });
         } while (ManageInput());
     }
@@ -67,6 +65,11 @@ public abstract class BaseScreen : IScreen
     protected void SetCursorPositionToWritingLine(int addedLeft = 0, int addedTop = 0)
     {
         SetCursorPosition(addedLeft + Left + 1, addedTop + CursorTop);
+    }
+
+    protected virtual void DrawCommands()
+    {
+        
     }
 
     protected void SetCursorPositionToContentBlock()
