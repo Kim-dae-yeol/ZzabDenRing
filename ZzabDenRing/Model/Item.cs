@@ -11,6 +11,7 @@ public class Item
     public int Critical;
     public int Hp;
     public int Price;
+    public bool isChoose;
 
     public Item(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp, int price)
     {
@@ -23,9 +24,13 @@ public class Item
         Critical = critical;
         Hp = hp;
         Price = price;
+        isChoose = false;
     }
 }
 
 public enum ItemType
 {
+    ¹«±â,
+    ¹æÆÐ,
+    ¿Ê
 }
