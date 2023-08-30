@@ -11,9 +11,9 @@ public class Item
     public int Critical;
     public int Hp;
     public int Price;
-    public bool isChoose;
 
-    public Item(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp, int price)
+    public Item(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp,
+        int price)
     {
         Name = name;
         Desc = desc;
@@ -24,11 +24,22 @@ public class Item
         Critical = critical;
         Hp = hp;
         Price = price;
-        isChoose = false;
     }
+
+    public static Item Empty = new("", "", 0, ItemType.Nothing, 0, 0, 0, 0, 0);
 }
 
 public enum ItemType
 {
-    Weapon
+    Helm,
+    Weapon,
+    Armor,
+    Necklace,
+    SubWeapon,
+    Pants,
+    Ring,
+    Boots,
+    Material,
+    Consumable,
+    Nothing
 }
