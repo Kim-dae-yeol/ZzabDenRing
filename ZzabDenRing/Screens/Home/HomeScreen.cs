@@ -10,6 +10,7 @@ public class HomeScreen : BaseScreen
 
     private bool _isSplashStarted;
     private bool _isSplashFinished;
+    private bool _isClearSplash;
 
     private const int CharacterSlotWidth = 30 + 2;
     private const int CharacterSlotHeight = 10 + 2;
@@ -17,13 +18,15 @@ public class HomeScreen : BaseScreen
     private const int ButtonHeight = 3;
     private const int ButtonWidth = 16;
 
-    private Action _navToMain;
-    private Action _popBackStack;
+    private readonly Action _navToMain;
+    private readonly Action _popBackStack;
+    private Action _navToCreateCharacter;
 
-    public HomeScreen(Action navToMain, Action popBackStack)
+    public HomeScreen(Action navToMain, Action popBackStack, Action navToCreateCharacter)
     {
         _navToMain = navToMain;
         _popBackStack = popBackStack;
+        _navToCreateCharacter = navToCreateCharacter;
         Height = 30;
         ClearScreenWhenRedraw = false;
         CommandsWidth = 36;
@@ -72,7 +75,15 @@ public class HomeScreen : BaseScreen
     {
         if (IsSplashFinished)
         {
-            DrawCharacters();
+            if (_vm.HomeState.CreateCharacter)
+            {
+            }
+            else
+            {
+                DrawCharacters();
+            }
+
+            _isClearSplash = true;
             return;
         }
 
@@ -125,9 +136,8 @@ public class HomeScreen : BaseScreen
         };
 
 
-        if (IsSplashFinished)
+        if (IsSplashFinished && _isClearSplash)
         {
-            // todo 현재 선택한 캐릭터로 진행함... navToMain에 인수 추가
             _vm.OnCommand(command);
             switch (command)
             {
@@ -135,7 +145,14 @@ public class HomeScreen : BaseScreen
                     _popBackStack();
                     break;
                 case Command.Interaction:
-                    _navToMain();
+                    if (_vm.HomeState.CreateCharacter)
+                    {
+                    }
+                    else
+                    {
+                        _navToMain();
+                    }
+
                     break;
             }
         }
@@ -298,13 +315,13 @@ public class HomeScreen : BaseScreen
                         break;
                 }
             }
+        }
 
-            if (isCursorOn)
-            {
-                var buttonLeft = startLeft + CharacterSlotWidth / 2 - ButtonWidth / 2;
-                var buttonTop = startTop + CharacterSlotHeight - 2 - ButtonHeight;
-                DrawSelectButton(buttonLeft, buttonTop, c != null);
-            }
+        if (isCursorOn)
+        {
+            var buttonLeft = startLeft + CharacterSlotWidth / 2 - ButtonWidth / 2;
+            var buttonTop = startTop + CharacterSlotHeight - 2 - ButtonHeight;
+            DrawSelectButton(buttonLeft, buttonTop, c != null);
         }
     }
 

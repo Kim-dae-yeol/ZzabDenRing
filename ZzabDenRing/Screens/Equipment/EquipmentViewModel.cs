@@ -48,6 +48,12 @@ public class EquipmentViewModel
         : 0;
 
     public IEnumerable<EquipItem> VisibleItems => _state.Character.Inventory
+        .Where(item => item is EquipItem)
+        .Select(it =>
+        {
+            EquipItem item = it as EquipItem;
+            return item;
+        })
         .Skip(SkipCount)
         .Take(_maxVisibleInventorySlots);
 
@@ -92,47 +98,50 @@ public class EquipmentViewModel
                 if (item.IsEmptyItem()) return;
                 if (SelectedSlot != null && SelectedSlot?.ToItemType() != item.Type) return;
 
-
-                switch (item.Type)
+                var equipItem = item as EquipItem;
+                if (equipItem != null)
                 {
-                    case ItemType.Weapon:
-                        EquipItem(EquipmentSlot.Weapon, item);
-                        break;
-                    case ItemType.Armor:
-                        EquipItem(EquipmentSlot.Armor, item);
-                        break;
-                    case ItemType.Necklace:
-                        EquipItem(EquipmentSlot.Necklace, item);
-                        break;
-                    case ItemType.SubWeapon:
-                        EquipItem(EquipmentSlot.SubWeapon, item);
-                        break;
-                    case ItemType.Pants:
-                        EquipItem(EquipmentSlot.Pants, item);
-                        break;
-                    case ItemType.Ring:
-                        var equipped = _state.Character.Equipment.Equiped;
-                        if (equipped[EquipmentSlot.Ring1].IsEmptyItem() || !equipped[EquipmentSlot.Ring2].IsEmptyItem())
-                        {
-                            EquipItem(EquipmentSlot.Ring1, item);
-                        }
-                        else
-                        {
-                            EquipItem(EquipmentSlot.Ring2, item);
-                        }
+                    switch (item.Type)
+                    {
+                        case ItemType.Weapon:
+                            EquipItem(EquipmentSlot.Weapon, equipItem);
+                            break;
+                        case ItemType.Armor:
+                            EquipItem(EquipmentSlot.Armor, equipItem);
+                            break;
+                        case ItemType.Necklace:
+                            EquipItem(EquipmentSlot.Necklace, equipItem);
+                            break;
+                        case ItemType.SubWeapon:
+                            EquipItem(EquipmentSlot.SubWeapon, equipItem);
+                            break;
+                        case ItemType.Pants:
+                            EquipItem(EquipmentSlot.Pants, equipItem);
+                            break;
+                        case ItemType.Ring:
+                            var equipped = _state.Character.Equipment.Equiped;
+                            if (equipped[EquipmentSlot.Ring1].IsEmptyItem() ||
+                                !equipped[EquipmentSlot.Ring2].IsEmptyItem())
+                            {
+                                EquipItem(EquipmentSlot.Ring1, equipItem);
+                            }
+                            else
+                            {
+                                EquipItem(EquipmentSlot.Ring2, equipItem);
+                            }
 
 
-                        break;
-                    case ItemType.Boots:
-                        EquipItem(EquipmentSlot.Boots, item);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                            break;
+                        case ItemType.Boots:
+                            EquipItem(EquipmentSlot.Boots, equipItem);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
             else
             {
-                // todo unEquip[V] or ( move to inventory and show only selected slot) [X]
                 var currentSlot = GetCurrentSlot(_state.CurY, _state.CurX);
                 var equipped = GetEquippedItem(currentSlot);
                 if (equipped.IsEmptyItem())
@@ -316,9 +325,10 @@ public class EquipmentViewModel
             1 when col == 0 => EquipmentSlot.Weapon,
             1 when col == 1 => EquipmentSlot.Armor,
             1 when col == 2 => EquipmentSlot.SubWeapon,
-            2 when col == 0 => EquipmentSlot.Ring1,
-            2 when col == 1 => EquipmentSlot.Boots,
-            2 when col == 2 => EquipmentSlot.Ring2,
+            2 when col == 1 => EquipmentSlot.Pants,
+            3 when col == 0 => EquipmentSlot.Ring1,
+            3 when col == 1 => EquipmentSlot.Boots,
+            3 when col == 2 => EquipmentSlot.Ring2,
             _ => throw new ArgumentOutOfRangeException()
         };
     }

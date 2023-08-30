@@ -5,27 +5,29 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using  ZzabDenRing.Model;
+using ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Status
 {
     internal class StatusScreen : BaseScreen
-    {        
+    {
         private Action _navToMain;
 
         public StatusScreen(Action navToMain)
-        {           
+        {
             _navToMain = navToMain;
-            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<EquipItem>(),
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<IItem>(),
                 new Model.Equipment());
         }
+
         public Character player;
 
         protected override void DrawContent()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\r\n _______ __          __               \r\n|     __|  |_.---.-.|  |_.--.--.-----.\r\n|__     |   _|  _  ||   _|  |  |__ --|\r\n|_______|____|___._||____|_____|_____|\r\n  \r\n");
+            Console.WriteLine(
+                "\r\n _______ __          __               \r\n|     __|  |_.---.-.|  |_.--.--.-----.\r\n|__     |   _|  _  ||   _|  |  |__ --|\r\n|_______|____|___._||____|_____|_____|\r\n  \r\n");
 
             Console.ResetColor(); //컬러 리셋
 
@@ -67,6 +69,7 @@ namespace ZzabDenRing.Screens.Status
                     _navToMain();
                     break;
             }
+
             return false;
         }
     }

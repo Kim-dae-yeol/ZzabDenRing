@@ -16,7 +16,7 @@ public class Game
     }
 
 
-    public static EquipItem[] Items =
+    public static IItem[] Items =
     {
         new EquipItem("롱소드", "긴 검이다.", 0, ItemType.Weapon, 20, 0, 0, 0, 1500),
         new EquipItem("나무방패", "나무로 된 방패다.", 0, ItemType.SubWeapon, 0, 10, 0, 0, 1500),
@@ -69,7 +69,7 @@ public class Game
         Items.ToList(),
         Equipment
     );
-    
+
     public static Character C2 = new Character(
         "C2",
         "마법사",
@@ -83,7 +83,7 @@ public class Game
         Items.ToList(),
         Equipment
     );
-    
+
     public static Character C3 = new Character(
         "C3",
         "궁수",

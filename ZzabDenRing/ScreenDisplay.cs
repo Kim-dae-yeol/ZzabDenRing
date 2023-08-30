@@ -1,9 +1,12 @@
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 using ZzabDenRing.Screens;
+using ZzabDenRing.Screens.CreateCharacter;
 using ZzabDenRing.Screens.Dungeon;
 using ZzabDenRing.Screens.Equipment;
 using ZzabDenRing.Screens.Home;
 using ZzabDenRing.Screens.Main;
+using ZzabDenRing.Screens.Shop;
 using ZzabDenRing.Screens.Status;
 
 namespace ZzabDenRing;
@@ -27,7 +30,8 @@ public class ScreenDisplay
         {
             ScreenType.Home => new HomeScreen(
                 navToMain: () => { _backStack.Push(ScreenType.Main); },
-                popBackStack: () => { _backStack.Pop(); }
+                popBackStack: () => { _backStack.Pop(); },
+                navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
             ScreenType.Main => new MainScreen(
                 popBackStack: () => { _backStack.Pop(); },
@@ -36,7 +40,7 @@ public class ScreenDisplay
                 navToStatus: () => { _backStack.Push(ScreenType.Status); },
                 navToEquipment: () => { _backStack.Push(ScreenType.Equipment); }
             ),
-            ScreenType.Shop => throw new NotImplementedException(),
+            ScreenType.Shop => new ShopScreen(popBackStack: () => { _backStack.Pop(); }),
             ScreenType.Status => new StatusScreen(navToMain: () => { }),
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
@@ -48,6 +52,10 @@ public class ScreenDisplay
             ),
             ScreenType.DungeonBattle => new DungeonBattleScreen(
                 monsters: _dungeonEntranceScreen?.monsters ?? new()
+            ),
+            ScreenType.CrateCharacter => new CreateCharacterScreen(
+                navToMain: () => { _backStack.Push(ScreenType.Main); },
+                popBackStack: () => { _backStack.Pop(); }
             ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
         };
@@ -75,6 +83,7 @@ public enum ScreenType
     Inventory,
     DungeonEntrance,
     DungeonBattle,
+    CrateCharacter,
 }
 
 public enum Command

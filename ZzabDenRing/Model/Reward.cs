@@ -3,9 +3,9 @@ namespace ZzabDenRing.Model;
 public class Reward
 {
     public int Gold;
-    public EquipItem[] Items;
+    public IItem[] Items;
 
-    public Reward(int gold, EquipItem[] items)
+    public Reward(int gold, IItem[] items)
     {
         Gold = gold;
         Items = items;

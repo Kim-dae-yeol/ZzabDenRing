@@ -10,7 +10,7 @@ public class HomeViewModel
     private HomeState _homeState;
     private Repository _repo;
     public HomeState HomeState => _homeState;
-
+    public bool IsLoading => !_repo.IsTaskComplete;
 
     public HomeViewModel()
     {
@@ -57,7 +57,13 @@ public class HomeViewModel
 
                 break;
             case Command.Interaction:
-                //todo 캐릭터 생성 or 캐릭터 선택하도록 메모리 변경 
+                //todo 캐릭터 생성 or 캐릭터 선택하도록 메모리 변경
+                _repo.SelectCharacter(_homeState.CurX);
+                if (_repo.Character == null)
+                {
+                    _homeState = _homeState with { CreateCharacter = true };
+                }
+
                 break;
         }
     }
@@ -71,4 +77,5 @@ public record HomeSplashState(
 
 public record HomeState(
     int CurX,
-    IReadOnlyCollection<Character> Characters);
+    IReadOnlyCollection<Character> Characters,
+    bool CreateCharacter = false);
