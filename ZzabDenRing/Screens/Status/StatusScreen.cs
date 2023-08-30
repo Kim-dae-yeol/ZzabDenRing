@@ -25,7 +25,8 @@ namespace ZzabDenRing.Screens.Status
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("상태 보기");
+            Console.WriteLine("\r\n _______ __          __               \r\n|     __|  |_.---.-.|  |_.--.--.-----.\r\n|__     |   _|  _  ||   _|  |  |__ --|\r\n|_______|____|___._||____|_____|_____|\r\n  \r\n");
+
             Console.ResetColor(); //컬러 리셋
 
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
