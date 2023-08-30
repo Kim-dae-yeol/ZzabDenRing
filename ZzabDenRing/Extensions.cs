@@ -1,4 +1,5 @@
 using ZzabDenRing.Model;
+using ZzabDenRing.Screens;
 
 namespace ZzabDenRing;
 
@@ -74,4 +75,37 @@ public static class Extensions
         ItemType.Nothing => "",
         _ => throw new ArgumentOutOfRangeException(nameof(t), t, null)
     };
+
+    public static void DrawBorder(this BaseScreen s,int left, int top, int width, int height)
+    {
+        Console.SetCursorPosition(left, top);
+        for (var i = 0; i < height; i++)
+        {
+            for (var j = 0; j < width; j++)
+            {
+                if (i == 0 || i == height - 1)
+                {
+                    if (j == 0 || j == width - 1)
+                    {
+                        Console.Write("+");
+                    }
+                    else
+                    {
+                        Console.Write("-");
+                    }
+                }else if (j == 0 || j == width - 1)
+                {
+                    Console.Write("|");
+                }
+                else
+                {
+                    Console.Write(" ");
+                }
+                
+            }
+
+            Console.WriteLine();
+            Console.SetCursorPosition(left, Console.CursorTop);
+        }
+    }
 }
