@@ -12,17 +12,22 @@ namespace ZzabDenRing.Screens.Dungeon
     public class DungeonRewardScreen : BaseScreen
     {
         public Character player;
-        public Reward items;
-        public Reward reward;
-
+        public Reward reward;   
+        
         private Action _navToDungeonEntrance;
         private Action _navToMain;
         public DungeonRewardScreen(Action navToDungeonEntrance,
-        Action navToMain)       
+        Action navToMain)
         {
             _navToMain = navToMain;
-            _navToDungeonEntrance = navToDungeonEntrance;            
-        }
+            _navToDungeonEntrance = navToDungeonEntrance;
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<Item>(),
+                new Model.Equipment());      
+            Item[] items = new Item[0];
+            reward = new Reward(1500, items);
+
+
+    }
         protected override void DrawContent()
         {
             Console.Clear();
@@ -32,15 +37,17 @@ namespace ZzabDenRing.Screens.Dungeon
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Victory");
+            Console.WriteLine("Victory!");
             Console.ResetColor();
+            Console.WriteLine();
 
             Console.WriteLine($"남은 체력 : {player.Hp}");
-            Console.WriteLine($"획득 아이템 :{items.Items} ");
-            Console.WriteLine($"획득 골드 : {reward.Gold}");
+            Console.WriteLine($"획득 아이템 :{reward.Items} ");
+            Console.WriteLine($"획득 골드 : {reward.Gold} G");
+            Console.WriteLine();
 
-            Console.WriteLine("1. 마을로");
-            Console.WriteLine("2. 계속 전투");
+            Console.WriteLine("1. 계속 전투");
+            Console.WriteLine("2. 마을로");
         }
 
         protected override bool ManageInput()
@@ -54,10 +61,10 @@ namespace ZzabDenRing.Screens.Dungeon
             switch (key.Key)
             {
                 case ConsoleKey.D1:
-                    _navToMain();
+                    _navToDungeonEntrance();
                     break;
                 case ConsoleKey.D2:
-                    _navToDungeonEntrance();
+                    _navToMain();
                     break;              
             }
 
