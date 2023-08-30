@@ -3,6 +3,7 @@
 using ZzabDenRing;
 using ZzabDenRing.Screens.Dungeon;
 using ZzabDenRing.Screens.Equipment;
+using ZzabDenRing.Screens.Shop;
 using ZzabDenRing.Screens.Status;
 
 public class Program
@@ -11,6 +12,6 @@ public class Program
     {
         var game = new Game();
         game.Start();
-        // new EquipmentScreen(() => { }).DrawScreen();
+        // new ShopScreen(() => { }).DrawScreen();
     }
 }

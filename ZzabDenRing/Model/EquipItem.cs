@@ -8,7 +8,7 @@ public class EquipItem : IItem
     private ItemGrade _grade;
 
     public int Enhancement;
-    public ItemType Type;
+    private ItemType _type;
     public int Atk;
     public int Def;
     public int Critical;
@@ -20,7 +20,7 @@ public class EquipItem : IItem
         _name = name;
         _desc = desc;
         Enhancement = enhancement;
-        Type = type;
+        _type = type;
         Atk = atk;
         Def = def;
         Critical = critical;
@@ -33,6 +33,7 @@ public class EquipItem : IItem
     public string Name => _name;
     public string Desc => _desc;
     public int Price => _price;
+    public ItemType Type => _type;
     public ItemGrade Grade => _grade;
 }
 

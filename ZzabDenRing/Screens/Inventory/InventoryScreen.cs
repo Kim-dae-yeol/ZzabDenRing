@@ -11,7 +11,7 @@ namespace ZzabDenRing.Screens.Inventory
     internal class InventoryScreen : BaseScreen
     {
         private Character _character;
-        private List<EquipItem> inventory;
+        private List<IItem> inventory;
         private int _selectedIndex = -1;
 
         protected override void DrawContent()
@@ -45,11 +45,11 @@ namespace ZzabDenRing.Screens.Inventory
             _character = new Character(
                 "name",
                 "job",
-                100, 
-                100, 
-                10, 
+                100,
+                100,
+                10,
                 1,
-                100, 
+                100,
                 10_000,
                 10,
                 Game.Items.Take(10).ToList(),
@@ -83,8 +83,6 @@ namespace ZzabDenRing.Screens.Inventory
 
                 if (_selectedIndex == i)
                 {
-                    WriteLine(
-                        $"( 강화: +{inventory[i].Enhancement}, 종류: {inventory[i].Type}, 공격력: {inventory[i].Atk}, 방어력: {inventory[i].Def}, 치명타: {inventory[i].Critical}, 체력: {inventory[i].Hp}, 골드: {inventory[i].Price})\n");
                 }
             }
 

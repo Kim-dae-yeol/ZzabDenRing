@@ -46,7 +46,7 @@ public static class Extensions
         };
     }
 
-    public static bool IsEmptyItem(this EquipItem i) => string.IsNullOrEmpty(i.Name);
+    public static bool IsEmptyItem(this IItem i) => string.IsNullOrEmpty(i.Name);
 
     public static ItemType ToItemType(this EquipmentSlot slot) => slot switch
     {

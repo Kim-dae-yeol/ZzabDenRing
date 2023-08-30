@@ -22,7 +22,6 @@ public class ShopScreen : BaseScreen
         "장비", "소모품", "재료", "강화"
     };
 
-    private ShopTabs[] _shopTabs = Enum.GetValues<ShopTabs>();
 
     public ShopScreen(Action popBackStack)
     {
@@ -101,12 +100,10 @@ public class ShopScreen : BaseScreen
 
         SetCursorPosition(left, top + TabHeight + 1);
         WriteLine("|      이름     |     부위    |    등급    |   가격  ");
-        var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx : 0;
-
+        var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows : 0;
         var visibleItems = _vm.ShopItems
             .Skip(skip)
             .Take(ItemRows);
-
         DrawItems(left + 1, CursorTop, items: visibleItems, true);
     }
 
@@ -115,7 +112,7 @@ public class ShopScreen : BaseScreen
         SetCursorPosition(left, top);
         for (var i = 0; i < texts.Length; i++)
         {
-            var x = isShopTabs ? i : i + _shopTabs.Length;
+            var x = isShopTabs ? i : i + _vm.ShopTabItems.Length;
 
             var isCursorOn = !_vm.IsInInventoryWindow &&
                              !_vm.IsInShopWindow &&
@@ -159,11 +156,19 @@ public class ShopScreen : BaseScreen
             .ToArray();
         DrawTabs(left, top + 1, tabs, isShopTabs: false);
         SetCursorPosition(left, top + TabHeight + 1);
+
+        SetCursorPosition(
+            left: left + tabs.Length * TabWidth + 2,
+            top: top + TabHeight / 2 + TabHeight % 2
+        );
+        Write($"{_vm.CurrentInventoryIdx + 1}/{_vm.TotalShopItems}");
+        SetCursorPosition(left, top + TabHeight + 1);
+
         WriteLine("|      이름     |     부위    |    등급    |   가격  ");
         DrawItems(left + 1, CursorTop, _vm.CurrentPageInventoryItems, false);
     }
 
-    private void DrawItems(int left, int top, IEnumerable<EquipItem> items, bool isShopItem)
+    private void DrawItems(int left, int top, IEnumerable<IItem> items, bool isShopItem)
     {
         foreach (var pair in items.Select((value, i) => new { i, value }))
         {
@@ -173,14 +178,14 @@ public class ShopScreen : BaseScreen
 
             if (isShopItem)
             {
-                if (_vm.IsInShopWindow && _vm.CurrentShopIdx == i)
+                if (_vm.IsInShopWindow && _vm.CurrentShopCursorIdx == i)
                 {
                     isCursorOn = true;
                 }
             }
             else
             {
-                if (_vm.IsInInventoryWindow && _vm.CurrentInventoryIdx == i)
+                if (_vm.IsInInventoryWindow && _vm.CurrentInventoryCursorIdx == i)
                 {
                     isCursorOn = true;
                 }
@@ -191,17 +196,17 @@ public class ShopScreen : BaseScreen
             //todo align ~~~ 
             if (isCursorOn)
             {
-                ForegroundColor = ConsoleColor.Blue;
-                Write("☞");
+                ForegroundColor = ConsoleColor.Cyan;
+                Write("☞☞☞");
                 ResetColor();
             }
             else
             {
-                Write(" ");
+                Write("   ");
             }
 
             WriteLine($"{item.Name}" +
-                      $"     {item.Type.String()}    |" +
+                      $"     {item.Desc}    |" +
                       $"    등급    |   {item.Price:N0}  ");
         }
     }

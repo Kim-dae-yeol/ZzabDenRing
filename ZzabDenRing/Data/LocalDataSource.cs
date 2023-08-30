@@ -53,4 +53,9 @@ public class LocalDataSource : IDataSource
 
         return characters;
     }
+
+    public void SaveData(Character[] characters)
+    {
+        //todo json file 에 저장해서 사용하기
+    }
 }

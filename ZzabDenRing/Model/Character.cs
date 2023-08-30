@@ -17,7 +17,7 @@ public class Character
     public int Gold;
     public int Critical;
 
-    public List<EquipItem> Inventory;
+    public List<IItem> Inventory;
     public Equipment Equipment;
 
     public Character(string name,
@@ -29,7 +29,7 @@ public class Character
         int def,
         int gold,
         int critical,
-        List<EquipItem> inventory,
+        List<IItem> inventory,
         Equipment equipment)
     {
         Name = name;
