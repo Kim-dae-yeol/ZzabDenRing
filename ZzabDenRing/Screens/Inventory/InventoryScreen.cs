@@ -11,7 +11,7 @@ namespace ZzabDenRing.Screens.Inventory
     internal class InventoryScreen : BaseScreen
     {
         private Character _character;
-        private List<Item> inventory;
+        private List<EquipItem> inventory;
         private int _selectedIndex = -1;
 
         protected override void DrawContent()

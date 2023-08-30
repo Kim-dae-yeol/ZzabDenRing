@@ -1,4 +1,5 @@
 using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Shop;
@@ -12,7 +13,7 @@ public class ShopViewModel
 
     // todo where 문 추가하기 type 을 넣어서 ... !!  + skip + take 적용하기
     // 로직 생각하고 다시 정리하자. 장비창에서 했던 것과 같은 기능이니까 한번 다시 보고 정리 !!
-    public IReadOnlyList<Item> ShopItems => _state.SellingItems;
+    public IReadOnlyList<EquipItem> ShopItems => _state.SellingItems;
 
     public int CurX => _state.CurX;
     public int CurY => _state.CurY;
@@ -25,7 +26,7 @@ public class ShopViewModel
     public int MaxInventoryPage => _state.Inventory.Count / ShopScreen.ItemRows +
                                    _state.Inventory.Count % ShopScreen.ItemRows;
 
-    public IEnumerable<Item> CurrentPageInventoryItems => _state.Inventory
+    public IEnumerable<EquipItem> CurrentPageInventoryItems => _state.Inventory
         .Skip(0)
         .Take(ShopScreen.ItemRows);
 
@@ -36,11 +37,10 @@ public class ShopViewModel
     public bool IsInInventoryWindow => _state.CurY > 0 && CurX >= _shopTabLength;
 
     public string? Message = null;
-
+    
     public ShopViewModel()
     {
-        _repository = Repository.GetInstance();
-
+        
         _state = new(
             SellingItems: Game.Items.ToList(),
             Inventory: _repository.Character.Inventory,
@@ -112,8 +112,8 @@ public class ShopViewModel
 }
 
 public record ShopState(
-    List<Item> SellingItems,
-    List<Item> Inventory,
+    List<EquipItem> SellingItems,
+    List<EquipItem> Inventory,
     int CurX,
     int CurY,
     int CurrentShopTab,

@@ -2,39 +2,39 @@ namespace ZzabDenRing.Model;
 
 public class Equipment
 {
-    private Dictionary<EquipmentSlot, Item> _equipped = new();
-    public IReadOnlyDictionary<EquipmentSlot, Item> Equiped => _equipped;
+    private Dictionary<EquipmentSlot, EquipItem> _equipped = new();
+    public IReadOnlyDictionary<EquipmentSlot, EquipItem> Equiped => _equipped;
 
     public Equipment()
     {
         var slots = Enum.GetValues<EquipmentSlot>();
         foreach (var slot in slots)
         {
-            _equipped[slot] = Item.Empty;
+            _equipped[slot] = EquipItem.Empty;
         }
     }
 
-    public Item Equip(EquipmentSlot slot, Item item)
+    public EquipItem Equip(EquipmentSlot slot, EquipItem equipItem)
     {
-        var unEquipped = Item.Empty;
+        var unEquipped = EquipItem.Empty;
         if (!_equipped[slot].IsEmptyItem())
         {
             unEquipped = UnEquip(slot);
-            Equip(slot, item);
+            Equip(slot, equipItem);
         }
         else
         {
-            _equipped[slot] = item;
+            _equipped[slot] = equipItem;
         }
 
         return unEquipped;
     }
 
-    public Item UnEquip(EquipmentSlot slot)
+    public EquipItem UnEquip(EquipmentSlot slot)
     {
         _equipped.TryGetValue(slot, out var item);
-        _equipped[slot] = Item.Empty;
-        return item ?? Item.Empty;
+        _equipped[slot] = EquipItem.Empty;
+        return item ?? EquipItem.Empty;
     }
 
     public int AddedAtk()

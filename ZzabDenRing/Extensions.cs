@@ -46,7 +46,7 @@ public static class Extensions
         };
     }
 
-    public static bool IsEmptyItem(this Item i) => string.IsNullOrEmpty(i.Name);
+    public static bool IsEmptyItem(this EquipItem i) => string.IsNullOrEmpty(i.Name);
 
     public static ItemType ToItemType(this EquipmentSlot slot) => slot switch
     {
@@ -76,7 +76,7 @@ public static class Extensions
         _ => throw new ArgumentOutOfRangeException(nameof(t), t, null)
     };
 
-    public static void DrawBorder(this BaseScreen s,int left, int top, int width, int height)
+    public static void DrawBorder(this BaseScreen s, int left, int top, int width, int height)
     {
         Console.SetCursorPosition(left, top);
         for (var i = 0; i < height; i++)
@@ -93,7 +93,8 @@ public static class Extensions
                     {
                         Console.Write("-");
                     }
-                }else if (j == 0 || j == width - 1)
+                }
+                else if (j == 0 || j == width - 1)
                 {
                     Console.Write("|");
                 }
@@ -101,11 +102,22 @@ public static class Extensions
                 {
                     Console.Write(" ");
                 }
-                
             }
 
             Console.WriteLine();
             Console.SetCursorPosition(left, Console.CursorTop);
         }
+    }
+
+    public static ConsoleColor Color(this ItemGrade g)
+    {
+        return g switch
+        {
+            ItemGrade.Normal => ConsoleColor.White,
+            ItemGrade.Rare => ConsoleColor.Blue,
+            ItemGrade.Epic => ConsoleColor.Magenta,
+            ItemGrade.Legendary => ConsoleColor.Yellow,
+            _ => Console.ForegroundColor
+        };
     }
 }
