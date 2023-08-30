@@ -34,6 +34,29 @@ public class HomeViewModel
             yield return homeState with { CurrentHomeString = Constants.HomeAsciiArt[..i] };
         }
     }
+
+    public void OnCommand(Command command)
+    {
+        switch (command)
+        {
+            case Command.MoveRight:
+                if (_homeState.CurX < HomeScreen.CharacterSlots - 1)
+                {
+                    _homeState = _homeState with { CurX = _homeState.CurX + 1 };
+                }
+                break;
+            case Command.MoveLeft:
+                if (_homeState.CurX > 0)
+                {
+                    _homeState = _homeState with { CurX = _homeState.CurX - 1 };
+                }
+
+                break;
+            case Command.Interaction:
+                //todo 캐릭터 생성 or 캐릭터 선택하도록 메모리 변경 
+                break;
+        }
+    }
 }
 
 public record HomeSplashState(

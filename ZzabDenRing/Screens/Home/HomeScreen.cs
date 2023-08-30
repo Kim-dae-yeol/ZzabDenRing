@@ -13,7 +13,7 @@ public class HomeScreen : BaseScreen
 
     private const int CharacterSlotWidth = 30 + 2;
     private const int CharacterSlotHeight = 10 + 2;
-    private const int CharacterSlots = 3;
+    public const int CharacterSlots = 3;
     private const int ButtonHeight = 3;
     private const int ButtonWidth = 16;
 
@@ -26,6 +26,10 @@ public class HomeScreen : BaseScreen
         _popBackStack = popBackStack;
         Height = 30;
         ClearScreenWhenRedraw = false;
+        CommandsWidth = 36;
+        CommandsHeight = 3 + 2;
+        CommandLeft = Left + Width / 2 - CommandsWidth / 2;
+        CommandTop = Height - CommandsHeight - 5;
     }
 
     private bool IsSplashStarted
@@ -101,6 +105,7 @@ public class HomeScreen : BaseScreen
     {
         ClearScreenWhenRedraw = true;
         IsSplashFinished = true;
+        ShownCommands = true;
         Thread.Sleep(50);
     }
 
@@ -108,34 +113,52 @@ public class HomeScreen : BaseScreen
     {
         SetCursorPositionToCommands();
         var key = ReadKey();
-        if (key.Key == ConsoleKey.D1)
-        {
-            _navToMain();
-        }
-        else if (key.Key == ConsoleKey.D2)
-        {
-            _popBackStack();
-        }
+
 
         var command = key.Key switch
         {
             ConsoleKey.Enter => Command.Interaction,
-            ConsoleKey.D1 => Command.Exit,
-            ConsoleKey.D2 => Command.Exit,
+            ConsoleKey.X => Command.Exit,
+            ConsoleKey.LeftArrow => Command.MoveLeft,
+            ConsoleKey.RightArrow => Command.MoveRight,
             _ => Command.Nothing
         };
 
-        if (command == Command.Interaction)
+
+        if (IsSplashFinished)
         {
-            IsSplashFinished = true;
+            // todo 현재 선택한 캐릭터로 진행함... navToMain에 인수 추가
+            _vm.OnCommand(command);
+            switch (command)
+            {
+                case Command.Exit:
+                    _popBackStack();
+                    break;
+                case Command.Interaction:
+                    _navToMain();
+                    break;
+            }
+        }
+        else
+        {
             SplashFinish();
+            return true;
         }
 
-        return !IsSplashFinished || command != Command.Exit;
+
+        return !IsSplashFinished || (command != Command.Exit && command != Command.Interaction);
     }
 
     protected override void DrawCommands()
     {
+        SetCursorPosition(CommandLeft, CommandTop + 1);
+        var lines = new string[] { "시작하기 [ Enter ]", "삭제하기 [ D ]", "종료하기 [ X ]" };
+        foreach (var line in lines)
+        {
+            var centerAligned = CommandLeft + CommandsWidth / 2 - line.LengthToDisplay() / 2;
+            SetCursorPosition(centerAligned, CursorTop);
+            WriteLine(line);
+        }
     }
 
     private void DrawCharacters()
@@ -288,8 +311,6 @@ public class HomeScreen : BaseScreen
     private void DrawSelectButton(int left, int top, bool isExists)
     {
         BackgroundColor = ConsoleColor.Magenta;
-
-
         SetCursorPosition(left: left, top: top);
 
         for (var i = 0; i < ButtonHeight; i++)
@@ -299,6 +320,7 @@ public class HomeScreen : BaseScreen
             {
                 Write(" ");
             }
+
             WriteLine();
         }
 
