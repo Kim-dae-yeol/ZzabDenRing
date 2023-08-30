@@ -9,13 +9,13 @@ public class Game
     // todo database or file system
     private ScreenDisplay _display = new();
 
-    
+
     public void Start()
     {
         _display.Display();
     }
-    
-    
+
+
     public static Item[] Items =
     {
         new Item("롱소드", "긴 검이다.", 0, ItemType.Weapon, 20, 0, 0, 0, 1500),
@@ -54,5 +54,47 @@ public class Game
     };
 
     public static Equipment Equipment = new Equipment(
+    );
+
+    public static Character C1 = new Character(
+        "Character1",
+        "전사",
+        200,
+        200,
+        30,
+        2,
+        10,
+        2_500,
+        10,
+        Items.ToList(),
+        Equipment
+    );
+    
+    public static Character C2 = new Character(
+        "C2",
+        "마법사",
+        200,
+        200,
+        30,
+        2,
+        10,
+        2_500,
+        10,
+        Items.ToList(),
+        Equipment
+    );
+    
+    public static Character C3 = new Character(
+        "C3",
+        "궁수",
+        200,
+        200,
+        30,
+        2,
+        10,
+        2_500,
+        10,
+        Items.ToList(),
+        Equipment
     );
 }
