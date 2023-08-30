@@ -10,6 +10,7 @@ public class HomeScreen : BaseScreen
 
     private bool _isSplashStarted;
     private bool _isSplashFinished;
+    private bool _isClearSplash;
 
     private const int CharacterSlotWidth = 30 + 2;
     private const int CharacterSlotHeight = 10 + 2;
@@ -73,6 +74,7 @@ public class HomeScreen : BaseScreen
         if (IsSplashFinished)
         {
             DrawCharacters();
+            _isClearSplash = true;
             return;
         }
 
@@ -125,9 +127,8 @@ public class HomeScreen : BaseScreen
         };
 
 
-        if (IsSplashFinished)
+        if (IsSplashFinished && _isClearSplash)
         {
-            // todo 현재 선택한 캐릭터로 진행함... navToMain에 인수 추가
             _vm.OnCommand(command);
             switch (command)
             {
