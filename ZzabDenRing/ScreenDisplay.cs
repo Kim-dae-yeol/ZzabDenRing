@@ -86,5 +86,8 @@ public enum Command
     MoveLeft,
     Interaction,
     Nothing,
+    Skill,
+    Attack,
+    Run,
     Wrong
 }

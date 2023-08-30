@@ -11,30 +11,72 @@ namespace ZzabDenRing.Screens.Dungeon
 {
     public class DungeonBattleScreen : BaseScreen
     {
+        private List<Monster> _monsters;
+
+        // 임의의 캐릭터 설정
+        public Character _character;
+
+        private enum BattlePhase
+        {
+            StartPhase,
+            CharacterPhase,
+            CharacterSkillPhase,
+            MonsterPhase
+        }
+
+        private BattlePhase _currentPhase = BattlePhase.StartPhase;
+
         protected override void DrawContent()
         {
-            DungeonBattleScreenShow();
+            switch (_currentPhase)
+            {
+                case BattlePhase.StartPhase:
+                    DungeonBattleScreenShow();
+                    break;
+                case BattlePhase.CharacterPhase:
+                    BattleCharacterPhase1();
+                    break;
+                case BattlePhase.CharacterSkillPhase:
+                    BattleCharacterPhase2();
+                    break;
+                case BattlePhase.MonsterPhase:
+                    for (var i = 0; i < _monsters.Count; i++)
+                    {
+                        BattleMonsterPhase(i);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         protected override bool ManageInput()
         {
             var key = ReadKey();
+            switch (_currentPhase)
+            {
+                case BattlePhase.StartPhase:
+                    
+                    break;
+                case BattlePhase.CharacterPhase:
+                    break;
+                case BattlePhase.CharacterSkillPhase:
+                    break;
+                case BattlePhase.MonsterPhase:
+                    break;
+            }
+
             var command = key.Key switch
             {
-                ConsoleKey.D1 => Command.Nothing,
-                ConsoleKey.D2 => Command.Nothing,
-                ConsoleKey.D3 => Command.Nothing,
+                ConsoleKey.D1 => Command.Attack,
+                ConsoleKey.D2 => Command.Skill,
+                ConsoleKey.D3 => Command.Run,
                 _ => Command.Nothing
             };
-            return command != Command.Exit;
+
+            return _currentPhase == BattlePhase.StartPhase && command == Command.Run;
         }
-
-        private List<Monster> _monsters;
-
-        // 임의의 캐릭터 설정
-        public Character _character;
-        int damage = 0;
-
 
         public DungeonBattleScreen(List<Monster> monsters)
         {
@@ -57,6 +99,7 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 WriteLine($"Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].Hp}");
             }
+
             WriteLine();
 
             // 캐릭터 정보 가져와야됨
@@ -98,7 +141,8 @@ namespace ZzabDenRing.Screens.Dungeon
             WriteLine();
 
             WriteLine($"{_character.Name} 의 공격!");
-            WriteLine($"Lv.(monster[고른번호 - 1].Level) (monster[고른번호 - 1].Name) 을(를) 맞췄습니다. [데미지 : [{hpBeforeBattle} - (monster[고른번호 - 1].Hp]]");
+            WriteLine(
+                $"Lv.(monster[고른번호 - 1].Level) (monster[고른번호 - 1].Name) 을(를) 맞췄습니다. [데미지 : [{hpBeforeBattle} - (monster[고른번호 - 1].Hp]]");
             WriteLine();
 
             WriteLine($"Lv.(monster[고른번호 - 1].Level) (monster[고른번호 - 1].Name)");
@@ -112,13 +156,15 @@ namespace ZzabDenRing.Screens.Dungeon
         }
 
         // hp가 0 초과인 몬스터들의 수만큼 밤복
-        private void BattleMonsterPhase(int a) {
+        private void BattleMonsterPhase(int index)
+        {
             WriteLine("Battle!!");
             WriteLine();
-            //몬스터 지정필요
-            int hpBeforeBattle = MonsterAttack(a);
 
-            WriteLine($"{_monsters[a - 1].Name} 의 공격!");
+            //몬스터 지정필요
+            int hpBeforeBattle = MonsterAttack(index);
+
+            WriteLine($"{_monsters[index - 1].Name} 의 공격!");
             WriteLine($"Lv.{_character.Level} {_character.Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle} - (character.Hp)]");
             WriteLine();
 
@@ -140,6 +186,7 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 attack = (int)(attack + 1.6);
             }
+
             // 입력받았던 번호를 가져와서 출력
             int hpBeforeBattle = _monsters[a - 1].Hp;
             if (attack - _monsters[a - 1].Def > 0)
@@ -150,6 +197,7 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 _monsters[a - 1].Hp -= 1;
             }
+
             // 계산전 체력을 리턴
             return hpBeforeBattle;
         }
@@ -163,13 +211,13 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 _character.Hp -= attack - _character.Def;
             }
-            else 
-            { 
+            else
+            {
                 _character.Hp -= 1;
             }
+
             // 계산전 체력을 리턴
             return hpBeforeBattle;
         }
-
     }
 }
