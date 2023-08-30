@@ -28,7 +28,7 @@ namespace ZzabDenRing.Screens.Dungeon
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Battle! - Result");
+            Console.WriteLine("\r\n  ____        _   _   _      _            _____                 _ _   \r\n |  _ \\      | | | | | |    | |          |  __ \\               | | |  \r\n | |_) | __ _| |_| |_| | ___| |  ______  | |__) |___  ___ _   _| | |_ \r\n |  _ < / _` | __| __| |/ _ \\ | |______| |  _  // _ \\/ __| | | | | __|\r\n | |_) | (_| | |_| |_| |  __/_|          | | \\ \\  __/\\__ \\ |_| | | |_ \r\n |____/ \\__,_|\\__|\\__|_|\\___(_)          |_|  \\_\\___||___/\\__,_|_|\\__|\r\n                                                                      \r\n                                                                      \r\n");
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
