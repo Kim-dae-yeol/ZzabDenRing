@@ -1,3 +1,4 @@
+using ZzabDenRing.Model;
 using ZzabDenRing.Screens;
 using ZzabDenRing.Screens.Dungeon;
 using ZzabDenRing.Screens.Equipment;
