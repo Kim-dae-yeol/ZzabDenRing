@@ -51,7 +51,7 @@ public class EquipmentScreen : BaseScreen
                 col: col,
                 isCursorHover: isHover,
                 slot: slot,
-                item: item,
+                equipItem: item,
                 isSelected: isSelected);
         }
     }
@@ -60,7 +60,7 @@ public class EquipmentScreen : BaseScreen
         int row,
         int col,
         EquipmentSlot slot,
-        Item item,
+        EquipItem equipItem,
         bool isCursorHover = false,
         bool isSelected = false
     )
@@ -109,7 +109,7 @@ public class EquipmentScreen : BaseScreen
         ResetColor();
         SetCursorPosition(left + 1, top + 1); //테두리 안쪽으로 커서 이동
 
-        if (item.IsEmptyItem())
+        if (equipItem.IsEmptyItem())
         {
             var text = $"•{slot.String()}";
             //center aligned
@@ -121,13 +121,13 @@ public class EquipmentScreen : BaseScreen
         }
         else
         {
-            var emoji = item.Type.ToEmoji();
-            var name = $"{emoji}{item.Name}";
+            var emoji = equipItem.Type.ToEmoji();
+            var name = $"{emoji}{equipItem.Name}";
             // var grade = $"•{}";
-            var atk = $"•Atk : {item.Atk}";
-            var def = $"•Def : {item.Def}";
-            var cri = $"•Cri : {item.Critical}";
-            var hp = $"•H p : {item.Hp}";
+            var atk = $"•Atk : {equipItem.Atk}";
+            var def = $"•Def : {equipItem.Def}";
+            var cri = $"•Cri : {equipItem.Critical}";
+            var hp = $"•H p : {equipItem.Hp}";
 
             var texts = new string[] { name, atk, def, cri, hp };
             var itemCursorLeft = CursorLeft;
@@ -142,7 +142,7 @@ public class EquipmentScreen : BaseScreen
         }
     }
 
-    private void DrawInventorySlots(IEnumerable<Item> items)
+    private void DrawInventorySlots(IEnumerable<EquipItem> items)
     {
         var left = EquipmentWidth + 1;
         var top = ContentTop;
@@ -187,7 +187,7 @@ public class EquipmentScreen : BaseScreen
         }
     }
 
-    private void DrawInventoryItem(Item item, int left, int top, bool isCursorOn, bool canEquip = true)
+    private void DrawInventoryItem(EquipItem equipItem, int left, int top, bool isCursorOn, bool canEquip = true)
     {
         SetCursorPosition(left + 1, top);
         if (isCursorOn)
@@ -207,11 +207,11 @@ public class EquipmentScreen : BaseScreen
             ForegroundColor = InvalidColor;
         }
 
-        var blankForName = item.Name.LengthToDisplay();
-        var nameBuilder = new StringBuilder(item.Name);
-        if (item.Enhancement > 0)
+        var blankForName = equipItem.Name.LengthToDisplay();
+        var nameBuilder = new StringBuilder(equipItem.Name);
+        if (equipItem.Enhancement > 0)
         {
-            nameBuilder.Insert(0, $" [ + {item.Enhancement} ]");
+            nameBuilder.Insert(0, $" [ + {equipItem.Enhancement} ]");
         }
 
         for (var i = 0; i < 10 - blankForName; i++)
@@ -219,7 +219,7 @@ public class EquipmentScreen : BaseScreen
             nameBuilder.Append(' ');
         }
 
-        var typeString = item.Type.String();
+        var typeString = equipItem.Type.String();
         var typeBuilder = new StringBuilder(typeString);
         var blankForType = typeString.LengthToDisplay();
 

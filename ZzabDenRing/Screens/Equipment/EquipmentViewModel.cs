@@ -47,7 +47,7 @@ public class EquipmentViewModel
         ? _state.CurInventoryIdx + 1 - _maxVisibleInventorySlots
         : 0;
 
-    public IEnumerable<Item> VisibleItems => _state.Character.Inventory
+    public IEnumerable<EquipItem> VisibleItems => _state.Character.Inventory
         .Skip(SkipCount)
         .Take(_maxVisibleInventorySlots);
 
@@ -323,16 +323,16 @@ public class EquipmentViewModel
         };
     }
 
-    public Item GetEquippedItem(EquipmentSlot slot)
+    public EquipItem GetEquippedItem(EquipmentSlot slot)
     {
         var equip = _state.Character.Equipment;
         return equip.Equiped[slot];
     }
 
-    private void EquipItem(EquipmentSlot slot, Item item)
+    private void EquipItem(EquipmentSlot slot, EquipItem equipItem)
     {
         _state.Character.Inventory.RemoveAt(_state.CurInventoryIdx);
-        var unEquipped = _state.Character.Equipment.Equip(slot: slot, item: item);
+        var unEquipped = _state.Character.Equipment.Equip(slot: slot, equipItem: equipItem);
         if (!unEquipped.IsEmptyItem())
         {
             _state.Character.Inventory.Add(unEquipped);

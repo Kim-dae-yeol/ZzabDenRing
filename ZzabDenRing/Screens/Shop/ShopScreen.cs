@@ -163,7 +163,7 @@ public class ShopScreen : BaseScreen
         DrawItems(left + 1, CursorTop, _vm.CurrentPageInventoryItems, false);
     }
 
-    private void DrawItems(int left, int top, IEnumerable<Item> items, bool isShopItem)
+    private void DrawItems(int left, int top, IEnumerable<EquipItem> items, bool isShopItem)
     {
         foreach (var pair in items.Select((value, i) => new { i, value }))
         {

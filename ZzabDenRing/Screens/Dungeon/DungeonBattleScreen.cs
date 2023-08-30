@@ -57,7 +57,6 @@ namespace ZzabDenRing.Screens.Dungeon
             switch (_currentPhase)
             {
                 case BattlePhase.StartPhase:
-                    
                     break;
                 case BattlePhase.CharacterPhase:
                     break;

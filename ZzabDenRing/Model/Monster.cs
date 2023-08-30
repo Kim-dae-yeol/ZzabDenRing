@@ -9,9 +9,9 @@ public class Monster
     public int Atk;
     public int Def;
     public int RewardGold;
-    public Item? RewardItem = null;
+    public EquipItem? RewardItem = null;
 
-    public Monster(int rewardGold, int def, int atk, int hp, int maxHp, int level, string name, Item? rewardItem = null)
+    public Monster(int rewardGold, int def, int atk, int hp, int maxHp, int level, string name, EquipItem? rewardItem = null)
     {
         RewardItem = rewardItem;
         RewardGold = rewardGold;

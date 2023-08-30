@@ -22,7 +22,7 @@ namespace ZzabDenRing.Screens.Dungeon
         {
             _navToMain = navToMain;
             _navToDungeonEntrance = navToDungeonEntrance;
-            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<Item>(),
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<EquipItem>(),
                 new Model.Equipment());
             reward = new Reward(1500, Game.Items.Take(3).ToArray());
         }
@@ -57,6 +57,7 @@ namespace ZzabDenRing.Screens.Dungeon
                     Write(item.Name + ", ");
                 }
             }
+
             WriteLine();
             Console.WriteLine($"획득 골드 : {reward.Gold} G");
             Console.WriteLine();

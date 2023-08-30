@@ -16,7 +16,7 @@ namespace ZzabDenRing.Screens.Status
         public StatusScreen(Action navToMain)
         {           
             _navToMain = navToMain;
-            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<Item>(),
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<EquipItem>(),
                 new Model.Equipment());
         }
         public Character player;
