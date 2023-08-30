@@ -10,17 +10,16 @@ using  ZzabDenRing.Model;
 namespace ZzabDenRing.Screens.Status
 {
     internal class StatusScreen : BaseScreen
-    {
-        private Stack<ScreenType> _backStack = new(10);
-        internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
+    {        
+        private Action _navToMain;
 
-        public Character player;
-
-        internal StatusScreen()
-        {
-            player = new Character("이름", "직업", 100, 100, 10, 01, 5, 1500, 15, new List<Item>(),
+        public StatusScreen(Action navToMain)
+        {           
+            _navToMain = navToMain;
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<Item>(),
                 new Model.Equipment());
         }
+        public Character player;
 
         protected override void DrawContent()
         {
@@ -59,43 +58,15 @@ namespace ZzabDenRing.Screens.Status
             var key = ReadKey();
             var command = key.Key switch
             {
-                ConsoleKey.UpArrow => Command.MoveTop,
-                ConsoleKey.RightArrow => Command.MoveRight,
-                ConsoleKey.DownArrow => Command.MoveBottom,
-                ConsoleKey.LeftArrow => Command.MoveLeft,
-                ConsoleKey.Enter => Command.Interaction,
-                ConsoleKey.X => Command.Exit,
-                _ => Command.Nothing
+                _ => Command.Exit
             };
-            //int selectedAction = CheckValidInput(0, 0);
-
-            //switch (selectedAction)
-            //{
-            //    case 0:
-            //        _backStack.Push(ScreenType.Main); // 상태보기 화면으로 이동
-            //        break;
-
-            //}
-
-            return true;
-        }
-
-        static int CheckValidInput(int min, int max) //입력된 숫자가 valid한지를 체크
-        {
-            while (true)
+            switch (key.Key)
             {
-                string input = Console.ReadLine();
-
-                bool parseSuccess = int.TryParse(input, out var ret);
-                if (parseSuccess)
-                {
-                    if (ret >= min && ret <= max)
-                        return ret;
-                }
-
-
-                Console.WriteLine("잘못된 입력입니다.");
+                case ConsoleKey.D0:
+                    _navToMain();
+                    break;
             }
+            return false;
         }
     }
 }
