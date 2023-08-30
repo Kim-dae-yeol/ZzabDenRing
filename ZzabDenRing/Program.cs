@@ -1,6 +1,7 @@
 // See https://aka.ms/new-console-template for more information
 
 using ZzabDenRing;
+using ZzabDenRing.Screens.Dungeon;
 using ZzabDenRing.Screens.Equipment;
 using ZzabDenRing.Screens.Status;
 
