@@ -45,6 +45,8 @@ public abstract class BaseScreen : IScreen
             if (ShownCommands)
             {
                 DrawCommandsWindow();
+                SetCursorPositionToCommands();
+                SetCursorPosition(CursorLeft + 1, CursorTop + 1);
                 DrawCommands();
             }
 
