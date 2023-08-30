@@ -7,7 +7,7 @@ public class Repository
     private readonly IDataSource _source;
     private static Repository? _instance;
     public Character[] Characters { get; private set; }
-    private int _selectedIndex = -1;
+    private int _selectedIndex = 0;
     public Character Character => Characters[_selectedIndex];
 
     public static Repository GetInstance()
