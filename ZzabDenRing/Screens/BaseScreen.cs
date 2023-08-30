@@ -12,6 +12,7 @@ public abstract class BaseScreen : IScreen
     public int Left = 0;
     public int Top = 0;
     public int CommandsHeight = 3;
+    public int CommandsWidth;
     public int CommandLeft;
     public int CommandTop;
 
@@ -21,8 +22,9 @@ public abstract class BaseScreen : IScreen
 
     protected List<IView> Views = new();
 
-    public BaseScreen()
+    protected BaseScreen()
     {
+        CommandsWidth = Width;
         CommandLeft = Left + 1;
         CommandTop = Top + Height + 1;
     }
@@ -79,16 +81,16 @@ public abstract class BaseScreen : IScreen
 
     private void DrawCommandsWindow()
     {
-        SetCursorPosition(Left, Height);
+        SetCursorPosition(CommandLeft, CommandTop);
         for (int i = 0; i < CommandsHeight; i++)
         {
-            for (int j = 0; j < Width; j++)
+            for (int j = 0; j < CommandsWidth; j++)
             {
                 if (i == 0 || i == CommandsHeight - 1)
                 {
                     Write("-");
                 }
-                else if (j == 0 || j == Width - 1)
+                else if (j == 0 || j == CommandsWidth - 1)
                 {
                     Write("|");
                 }
@@ -99,7 +101,7 @@ public abstract class BaseScreen : IScreen
             }
 
             WriteLine();
-            SetCursorPosition(Left, CursorTop);
+            SetCursorPosition(CommandLeft, CursorTop);
         }
     }
 
