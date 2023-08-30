@@ -39,5 +39,7 @@ public enum ItemType
     Pants,
     Ring,
     Boots,
+    Material,
+    Consumable,
     Nothing
 }
