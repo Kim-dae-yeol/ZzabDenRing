@@ -12,8 +12,8 @@ public abstract class BaseScreen : IScreen
     public int Left = 0;
     public int Top = 0;
     public int CommandsHeight = 3;
-    public int CommandLeft => Left + 1;
-    public int CommandTop => Top + Height + 1;
+    public int CommandLeft;
+    public int CommandTop;
 
 
     protected int ContentLeft => Left + 1;
@@ -21,6 +21,11 @@ public abstract class BaseScreen : IScreen
 
     protected List<IView> Views = new();
 
+    public BaseScreen()
+    {
+        CommandLeft = Left + 1;
+        CommandTop = Top + Height + 1;
+    }
 
     public void DrawScreen()
     {
@@ -30,16 +35,17 @@ public abstract class BaseScreen : IScreen
             {
                 Clear();
             }
-            
+
             DrawWindow();
             SetCursorPosition(ContentLeft, ContentTop);
             DrawContent();
-            
+
             if (ShownCommands)
             {
                 DrawCommandsWindow();
                 DrawCommands();
             }
+
             Views.ForEach(v => { v.Draw(); });
             SetCursorPositionToCommands();
         } while (ManageInput());
