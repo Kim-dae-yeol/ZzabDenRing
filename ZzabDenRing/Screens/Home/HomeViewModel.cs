@@ -1,3 +1,5 @@
+using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Home;
@@ -6,14 +8,15 @@ public class HomeViewModel
 {
     public IAsyncEnumerable<HomeSplashState> AnimationState { get; private set; }
     private HomeState _homeState;
+    private Repository _repo;
     public HomeState HomeState => _homeState;
 
 
     public HomeViewModel()
     {
+        _repo = Container.GetRepository();
         // todo get characters from repo
-        var characters = new List<Character>();
-        characters.AddRange(new[] { Game.C1, Game.C2, Game.C3 });
+        var characters = _repo.Characters;
         AnimationState = GetHomeState();
         _homeState = new HomeState(0, characters);
     }
@@ -44,6 +47,7 @@ public class HomeViewModel
                 {
                     _homeState = _homeState with { CurX = _homeState.CurX + 1 };
                 }
+
                 break;
             case Command.MoveLeft:
                 if (_homeState.CurX > 0)
