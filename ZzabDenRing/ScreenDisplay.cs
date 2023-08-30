@@ -36,7 +36,7 @@ public class ScreenDisplay
                 navToEquipment: () => { _backStack.Push(ScreenType.Equipment); }
             ),
             ScreenType.Shop => throw new NotImplementedException(),
-            ScreenType.Status => new StatusScreen(),
+            ScreenType.Status => new StatusScreen(navToMain: () => { }),
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
             ),
