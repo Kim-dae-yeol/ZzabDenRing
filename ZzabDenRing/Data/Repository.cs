@@ -6,7 +6,7 @@ public class Repository
 {
     private readonly IDataSource _source;
     private static Repository? _instance;
-    public Character[] Characters { get; private set; }
+    public Character?[] Characters { get; private set; }
     private int _selectedIndex = 0;
     public Character? Character => Characters.ElementAtOrDefault(_selectedIndex);
 
@@ -40,5 +40,11 @@ public class Repository
     public void SaveData()
     {
         _currentTask = _source.SaveData(Characters);
+    }
+
+    public async Task CreateCharacter(Character c)
+    {
+        Characters[_selectedIndex] = c;
+        await _source.SaveData(Characters);
     }
 }

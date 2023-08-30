@@ -71,22 +71,22 @@ public class LocalDataSource : IDataSource
         return characters;
     }
 
-    public async Task SaveData(Character[] characters)
+    public async Task SaveData(Character?[] characters)
     {
         var inventoryForEquip = characters
-            .Select(it => it.Inventory
+            .Select(it => it?.Inventory
                 .OfType<EquipItem>()
                 .ToArray()
             ).ToList();
 
         var inventoryForUse = characters
-            .Select(it => it.Inventory
+            .Select(it => it?.Inventory
                 .OfType<UseItem>()
                 .ToArray())
             .ToList();
 
         var inventoryForMaterial = characters
-            .Select(it => it.Inventory
+            .Select(it => it?.Inventory
                 .OfType<MaterialItem>()
                 .ToArray())
             .ToList();
