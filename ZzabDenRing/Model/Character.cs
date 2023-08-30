@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ZzabDenRing.Model;
 
 public class Character
@@ -6,19 +8,44 @@ public class Character
      *이름, 직업, 능력치, 레벨, 방어력, 체력, 공격력, 골드, 스킬(여유가 되면 ?), 인벤토리, 장비
      *
      */
-    public string Name;
+    [JsonInclude] public string Name;
 
-    public string Job;
-    public int MaxHp;
-    public int Hp;
-    public int Atk;
-    public int Level;
-    public int Def;
-    public int Gold;
-    public int Critical;
+    [JsonInclude] public string Job;
+    [JsonInclude] public int MaxHp;
+    [JsonInclude] public int Hp;
+    [JsonInclude] public int Atk;
+    [JsonInclude] public int Level;
+    [JsonInclude] public int Def;
+    [JsonInclude] public int Gold;
+    [JsonInclude] public int Critical;
 
     public List<IItem> Inventory;
-    public Equipment Equipment;
+    [JsonInclude] public Equipment Equipment;
+
+    [JsonConstructor]
+    public Character(string name,
+        string job,
+        int maxHp,
+        int hp,
+        int atk,
+        int level,
+        int def,
+        int gold,
+        int critical,
+        Equipment equipment)
+    {
+        Name = name;
+        Job = job;
+        MaxHp = maxHp;
+        Hp = hp;
+        Atk = atk;
+        Level = level;
+        Def = def;
+        Gold = gold;
+        Critical = critical;
+        Equipment = equipment;
+        Inventory = new List<IItem>();
+    }
 
     public Character(string name,
         string job,

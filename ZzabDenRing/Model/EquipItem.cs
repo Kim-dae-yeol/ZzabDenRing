@@ -1,40 +1,48 @@
+using System.Text.Json.Serialization;
+
 namespace ZzabDenRing.Model;
+
 
 public class EquipItem : IItem
 {
-    private string _name;
-    private string _desc;
-    private int _price;
-    private ItemGrade _grade;
-
+    [JsonInclude]
     public int Enhancement;
-    private ItemType _type;
+    [JsonInclude]
     public int Atk;
+    [JsonInclude]
     public int Def;
+    [JsonInclude]
     public int Critical;
+    [JsonInclude]
     public int Hp;
 
     public EquipItem(string name, string desc, int enhancement, ItemType type, int atk, int def, int critical, int hp,
         int price, ItemGrade grade = ItemGrade.Normal)
     {
-        _name = name;
-        _desc = desc;
+        Name = name;
+        Desc = desc;
         Enhancement = enhancement;
-        _type = type;
+        Type = type;
         Atk = atk;
         Def = def;
         Critical = critical;
         Hp = hp;
-        _price = price;
-        _grade = grade;
+        Price = price;
+        Grade = grade;
     }
 
     public static EquipItem Empty = new("", "", 0, ItemType.Nothing, 0, 0, 0, 0, 0);
-    public string Name => _name;
-    public string Desc => _desc;
-    public int Price => _price;
-    public ItemType Type => _type;
-    public ItemGrade Grade => _grade;
+
+    [JsonInclude]
+    public string Name { get; }
+    [JsonInclude]
+    public string Desc { get; }
+    [JsonInclude]
+    public int Price { get; }
+    [JsonInclude]
+    public ItemType Type { get; }
+    [JsonInclude]
+    public ItemGrade Grade { get; }
 }
 
 public enum ItemType

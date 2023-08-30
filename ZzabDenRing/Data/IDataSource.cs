@@ -4,7 +4,7 @@ namespace ZzabDenRing.Data;
 
 public interface IDataSource
 {
-    public Character[] GetCharacters();
+    public Task<Character[]> GetCharacters();
 
-    public void SaveData(Character[] characters);
+    public Task SaveData(Character[] characters);
 }

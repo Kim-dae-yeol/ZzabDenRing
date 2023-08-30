@@ -18,13 +18,15 @@ public class HomeScreen : BaseScreen
     private const int ButtonHeight = 3;
     private const int ButtonWidth = 16;
 
-    private Action _navToMain;
-    private Action _popBackStack;
+    private readonly Action _navToMain;
+    private readonly Action _popBackStack;
+    private Action _navToCreateCharacter;
 
-    public HomeScreen(Action navToMain, Action popBackStack)
+    public HomeScreen(Action navToMain, Action popBackStack, Action navToCreateCharacter)
     {
         _navToMain = navToMain;
         _popBackStack = popBackStack;
+        _navToCreateCharacter = navToCreateCharacter;
         Height = 30;
         ClearScreenWhenRedraw = false;
         CommandsWidth = 36;
@@ -73,7 +75,14 @@ public class HomeScreen : BaseScreen
     {
         if (IsSplashFinished)
         {
-            DrawCharacters();
+            if (_vm.HomeState.CreateCharacter)
+            {
+            }
+            else
+            {
+                DrawCharacters();
+            }
+
             _isClearSplash = true;
             return;
         }
@@ -136,7 +145,14 @@ public class HomeScreen : BaseScreen
                     _popBackStack();
                     break;
                 case Command.Interaction:
-                    _navToMain();
+                    if (_vm.HomeState.CreateCharacter)
+                    {
+                    }
+                    else
+                    {
+                        _navToMain();
+                    }
+
                     break;
             }
         }
@@ -299,13 +315,13 @@ public class HomeScreen : BaseScreen
                         break;
                 }
             }
+        }
 
-            if (isCursorOn)
-            {
-                var buttonLeft = startLeft + CharacterSlotWidth / 2 - ButtonWidth / 2;
-                var buttonTop = startTop + CharacterSlotHeight - 2 - ButtonHeight;
-                DrawSelectButton(buttonLeft, buttonTop, c != null);
-            }
+        if (isCursorOn)
+        {
+            var buttonLeft = startLeft + CharacterSlotWidth / 2 - ButtonWidth / 2;
+            var buttonTop = startTop + CharacterSlotHeight - 2 - ButtonHeight;
+            DrawSelectButton(buttonLeft, buttonTop, c != null);
         }
     }
 

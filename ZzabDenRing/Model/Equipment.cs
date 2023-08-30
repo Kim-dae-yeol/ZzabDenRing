@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace ZzabDenRing.Model;
 
 public class Equipment
 {
-    private Dictionary<EquipmentSlot, EquipItem> _equipped = new();
+    [JsonInclude] public Dictionary<EquipmentSlot, EquipItem> _equipped = new();
     public IReadOnlyDictionary<EquipmentSlot, EquipItem> Equiped => _equipped;
 
     public Equipment()
