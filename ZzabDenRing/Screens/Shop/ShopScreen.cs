@@ -133,7 +133,7 @@ public class ShopScreen : BaseScreen
         {
             Write($"{_vm.CurrentShopIdx + 1}/{_vm.TotalShopItems}");
             SetCursorPosition(left, top + TabHeight + 1);
-            var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows : 0;
+            var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows + 1 : 0;
             var visibleItems = _vm.ShopItems
                 .Skip(skip)
                 .Take(ItemRows);
@@ -363,7 +363,7 @@ public class ShopScreen : BaseScreen
     {
         await foreach (var k in EmitEnhance())
         {
-            SetCursorPosition(EnhancementSlotLeft 
+            SetCursorPosition(EnhancementSlotLeft
                               + k, EnhancementSlotTop + 3);
 
             ForegroundColor = ConsoleColor.Green;

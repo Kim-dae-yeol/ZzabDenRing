@@ -35,7 +35,7 @@ public class ShopViewModel
     public int CurrentShopTab => _state.CurrentShopTab;
 
     private int SkipInventory =>
-        CurrentInventoryIdx >= ShopScreen.ItemRows ? CurrentInventoryIdx - ShopScreen.ItemRows : 0;
+        CurrentInventoryIdx >= ShopScreen.ItemRows ? CurrentInventoryIdx - ShopScreen.ItemRows + 1 : 0;
 
     public IEnumerable<IItem> CurrentPageInventoryItems => _state.Inventory
         .Skip(SkipInventory)
