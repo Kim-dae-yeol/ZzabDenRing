@@ -206,7 +206,8 @@ public class EquipmentScreen : BaseScreen
         {
             ForegroundColor = InvalidColor;
         }
-
+        
+        //todo 이부분 정렬 수정 
         var blankForName = equipItem.Name.LengthToDisplay();
         var nameBuilder = new StringBuilder(equipItem.Name);
         if (equipItem.Enhancement > 0)

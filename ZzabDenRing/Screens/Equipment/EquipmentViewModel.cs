@@ -86,8 +86,8 @@ public class EquipmentViewModel
         {
             if (IsCursorInInventorySlot)
             {
-                var item = _state.Character.Inventory[_state.CurInventoryIdx];
-                if (item.IsEmptyItem()) return;
+                var item = _state.Character.Inventory.ElementAtOrDefault(_state.CurInventoryIdx);
+                if (item == null || item.IsEmptyItem()) return;
                 if (SelectedSlot != null && SelectedSlot?.ToItemType() != item.Type) return;
 
                 var equipItem = item as EquipItem;
@@ -122,13 +122,14 @@ public class EquipmentViewModel
                                 EquipItem(EquipmentSlot.Ring2, equipItem);
                             }
 
-
                             break;
                         case ItemType.Boots:
                             EquipItem(EquipmentSlot.Boots, equipItem);
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        case ItemType.Helm:
+                            EquipItem(EquipmentSlot.Helm
+                                , equipItem);
+                            break;
                     }
                 }
             }

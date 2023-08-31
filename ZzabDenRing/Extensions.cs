@@ -50,7 +50,7 @@ public static class Extensions
 
     public static ItemType ToItemType(this EquipmentSlot slot) => slot switch
     {
-        EquipmentSlot.Helm => ItemType.Armor,
+        EquipmentSlot.Helm => ItemType.Helm,
         EquipmentSlot.Necklace => ItemType.Necklace,
         EquipmentSlot.Weapon => ItemType.Weapon,
         EquipmentSlot.Armor => ItemType.Armor,
