@@ -11,6 +11,7 @@ public class HomeViewModel
     private Repository _repo;
     public HomeState HomeState => _homeState;
     public Task? Loading;
+
     public HomeViewModel()
     {
         _repo = Container.GetRepository();
@@ -66,6 +67,24 @@ public class HomeViewModel
 
                 break;
         }
+    }
+
+    public void CreateCharacter()
+    {
+        //todo : delete create screen 만들고 나서
+        var character = new Character(
+            "용사",
+            "전사",
+            200,
+            200,
+            10,
+            1,
+            10,
+            20_000,
+            10,
+            new List<IItem>(),
+            new());
+        _repo.CreateCharacter(character);
     }
 }
 

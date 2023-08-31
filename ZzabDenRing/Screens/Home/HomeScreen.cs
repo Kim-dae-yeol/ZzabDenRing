@@ -74,7 +74,7 @@ public class HomeScreen : BaseScreen
     protected override async void DrawContent()
     {
         if (_vm.Loading != null) await _vm.Loading;
-        
+
         if (IsSplashFinished)
         {
             if (_vm.HomeState.CreateCharacter)
@@ -149,6 +149,9 @@ public class HomeScreen : BaseScreen
                 case Command.Interaction:
                     if (_vm.HomeState.CreateCharacter)
                     {
+                        //todo nav to createCharacter
+                        _vm.CreateCharacter();
+                        _navToMain();
                     }
                     else
                     {
