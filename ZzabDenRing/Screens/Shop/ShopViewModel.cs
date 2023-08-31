@@ -66,17 +66,17 @@ public class ShopViewModel
     public ShopViewModel()
     {
         _repository = Container.GetRepository();
-        LoadDataAsync();
+        LoadData();
     }
 
-    private void LoadDataAsync()
+    private void LoadData()
     {
         var character = _repository.Character;
         var inventory = _repository.Character.Inventory.ToList();
         var gold = character.Gold;
 
         _state = new(
-            SellingItems: Game.Items.Select(it => it).ToList(),
+            SellingItems: _repository.Shopper.SellingItems.Select(item => item as IItem).ToList(),
             Inventory: inventory,
             CurX: 0,
             CurY: 0,
@@ -266,7 +266,7 @@ public class ShopViewModel
                 }).ToList(),
 
             //todo selling Items 로 변경 
-            SellingItems = Game.Items
+            SellingItems = _repository.Shopper.SellingItems
                 .Select(it =>
                 {
                     IItem item = it;
