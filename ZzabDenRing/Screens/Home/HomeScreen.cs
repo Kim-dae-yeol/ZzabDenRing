@@ -149,9 +149,7 @@ public class HomeScreen : BaseScreen
                 case Command.Interaction:
                     if (_vm.HomeState.CreateCharacter)
                     {
-                        //todo nav to createCharacter
-                        _vm.CreateCharacter();
-                        _navToMain();
+                        _navToCreateCharacter();
                     }
                     else
                     {
