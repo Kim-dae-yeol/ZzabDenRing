@@ -43,7 +43,7 @@ public class ScreenDisplay
                 navToInventory: () => { _backStack.Push(ScreenType.Inventory); }
             ),
             ScreenType.Shop => new ShopScreen(popBackStack: () => { _backStack.Pop(); }),
-            ScreenType.Status => new StatusScreen(navToMain: () => { }),
+            ScreenType.Status => new StatusScreen(navToMain: () => { _backStack.Push(ScreenType.Main); }),
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
             ),
