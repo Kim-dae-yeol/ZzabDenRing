@@ -9,7 +9,7 @@ public class LocalDataSource : IDataSource
 
     public Character[] GetCharacters()
     {
-        Character[] characters;
+        Character?[] characters;
         var parent = Environment.CurrentDirectory;
         var filePath = Path.Combine(parent, FileName);
 
@@ -18,27 +18,36 @@ public class LocalDataSource : IDataSource
             using var file = File.OpenRead(filePath);
             var appData = JsonSerializer.Deserialize<AppData>(file);
             characters = appData.Characters;
-            foreach (var pair in characters.Select((c, i) => new {i,c }))
+            foreach (var pair in characters.Select((c, i) => new { i, c }))
             {
-                {
-                    var character = pair.c;
-                    IItem[] useItems = appData.InventoryForUse[pair.i];
-                    IItem[] equipItems = appData.InventoryForEquip[pair.i];
-                    IItem[] materialItems = appData.InventoryForMaterial[pair.i];
-                    character.Inventory =equipItems.ToList();
-                    character.Inventory.AddRange(useItems);
-                    character.Inventory.AddRange(materialItems);
-                }
+                var character = pair.c;
+                if (character == null) continue;
+                IItem[] useItems = appData.InventoryForUse[pair.i];
+                IItem[] equipItems = appData.InventoryForEquip[pair.i];
+                IItem[] materialItems = appData.InventoryForMaterial[pair.i];
+                var list = new List<IItem>();
+                if (useItems != null)
+                    list.AddRange(useItems);
+                if (equipItems != null)
+                    list.AddRange(equipItems);
+                if (materialItems != null)
+                    list.AddRange(materialItems);
+                character.Inventory = list;
+                list.AddRange(useItems);
+                list.AddRange(equipItems);
+                list.AddRange(materialItems);
+                character.Inventory = list;
             }
         }
         else
         {
             characters = new Character[3];
         }
+
         return characters;
     }
 
-    public async void SaveData(Character?[] characters)
+    public void SaveData(Character?[] characters)
     {
         var inventoryForEquip = characters
             .Select(it => it?.Inventory
@@ -66,10 +75,10 @@ public class LocalDataSource : IDataSource
 
         var parent = Environment.CurrentDirectory;
         var filePath = Path.Combine(parent, FileName);
-        await using FileStream file = File.Exists(filePath)
+        using FileStream file = File.Exists(filePath)
             ? File.Open(filePath, FileMode.Truncate)
             : File.Open(filePath, FileMode.Create);
-        
-        await JsonSerializer.SerializeAsync(file, saveData);
+
+        JsonSerializer.SerializeAsync(file, saveData);
     }
 }
