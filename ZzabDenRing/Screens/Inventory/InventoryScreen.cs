@@ -163,7 +163,15 @@ namespace ZzabDenRing.Screens.Inventory
         public void Render()
         {
             Console.WriteLine();
-            Console.WriteLine(" ★ 인벤토리 ★");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" ★ ");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("인벤토리");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" ★ ");
+            Console.ResetColor();
             Console.WriteLine();
 
             for (int i = 0; i < arrItem.Length; i++)
@@ -175,7 +183,9 @@ namespace ZzabDenRing.Screens.Inventory
 
                 if (SelectIndex == i)
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write(" ★");
+                    Console.ResetColor();
                 }
                 else if (null == arrItem[i])
                 {
@@ -194,13 +204,36 @@ namespace ZzabDenRing.Screens.Inventory
                 Console.WriteLine($"{arrItem[SelectIndex].Name} + ({arrItem[SelectIndex].Type})");
                 Console.WriteLine();
 
-                Console.WriteLine(" 가격   : " + arrItem[SelectIndex].Price);
+                if (arrItem[SelectIndex].Grade == ItemGrade.Legendary)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(" 등급 : " + arrItem[SelectIndex].Grade);
+                    Console.ResetColor();
+                }
+                else if (arrItem[SelectIndex].Grade == ItemGrade.Epic)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine(" 등급 : " + arrItem[SelectIndex].Grade);
+                    Console.ResetColor();
+                }
+                else if (arrItem[SelectIndex].Grade == ItemGrade.Rare)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(" 등급 : " + arrItem[SelectIndex].Grade);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine(" 등급 : " + arrItem[SelectIndex].Grade);
+                }
+                Console.WriteLine();
+                Console.WriteLine(" 가격 : " + arrItem[SelectIndex].Price);
                 Console.WriteLine();
                 Console.WriteLine($"☆{arrItem[SelectIndex].Desc}☆");
             }
             else
             {
-                Console.WriteLine("현재 선택한 아이템");
+                Console.Write("현재 선택한 아이템: ");
                 Console.WriteLine("아이템이 비어 있습니다!");
             }
         }
