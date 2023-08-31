@@ -7,12 +7,17 @@ public class ShopScreen : BaseScreen
 {
     private Action _popBackStack;
     private ShopViewModel _vm;
-    private const int ShopWidth = 60;
+    private const int ShopWidth = 70;
     private const int ShopHeight = 19; // 16rows + 3 [tab]
-    private const int InventoryWidth = 60;
+    private const int InventoryWidth = 70;
     private const int InventoryHeight = 19; // 16rows + 3 [tab]
     private const int TabWidth = 12;
     private const int TabHeight = 3;
+    private int ShopLeft => Width / 2 - _totalWidth / 2 + 2; // window border : 2
+    private int EnhancementSlotWidth => 20;
+    private int EnhancementSlotHeight => 5;
+    private int EnhancementSlotTop => Top + ShopHeight / 3;
+    private int EnhancementSlotLeft => ShopLeft + ShopWidth / 2 - EnhancementSlotWidth / 2;
     private int _totalWidth = ShopWidth + InventoryWidth + 4;
 
     public const int ItemRows = 13;
@@ -35,10 +40,9 @@ public class ShopScreen : BaseScreen
 
     protected override void DrawContent()
     {
-        var shopLeft = Width / 2 - _totalWidth / 2 + 2; // window border : 2 
         var top = Top + 1;
-        DrawShop(shopLeft, top);
-        DrawInventory(shopLeft + ShopWidth, top);
+        DrawShop(ShopLeft, top);
+        DrawInventory(ShopLeft + ShopWidth, top);
     }
 
     protected override bool ManageInput()
@@ -96,15 +100,22 @@ public class ShopScreen : BaseScreen
             left: left + tabs.Length * TabWidth + 2,
             top: top + TabHeight / 2 + TabHeight % 2
         );
-        Write($"{_vm.CurrentShopIdx + 1}/{_vm.TotalShopItems}");
 
-        SetCursorPosition(left, top + TabHeight + 1);
-        WriteLine("|      이름     |     부위    |    등급    |   가격  ");
-        var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows : 0;
-        var visibleItems = _vm.ShopItems
-            .Skip(skip)
-            .Take(ItemRows);
-        DrawItems(left + 1, CursorTop, items: visibleItems, true);
+
+        if (_vm.CurrentShopTab != (int)ShopTabs.Enhancement)
+        {
+            Write($"{_vm.CurrentShopIdx + 1}/{_vm.TotalShopItems}");
+            SetCursorPosition(left, top + TabHeight + 1);
+            var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows : 0;
+            var visibleItems = _vm.ShopItems
+                .Skip(skip)
+                .Take(ItemRows);
+            DrawItems(left + 1, CursorTop, items: visibleItems, true);
+        }
+        else
+        {
+            DrawEnhancement();
+        }
     }
 
     private void DrawTabs(int left, int top, string[] texts, bool isShopTabs)
@@ -164,13 +175,31 @@ public class ShopScreen : BaseScreen
         Write($"{_vm.CurrentInventoryIdx + 1}/{_vm.TotalInventoryItems}");
         SetCursorPosition(left, top + TabHeight + 1);
 
-        WriteLine("|      이름     |     부위    |    등급    |   가격  ");
         DrawItems(left + 1, CursorTop, _vm.CurrentPageInventoryItems, false);
-        DrawGold(left + InventoryWidth - 20, top  + InventoryHeight, _vm.Gold);
+        DrawGold(left + InventoryWidth - 20, top + InventoryHeight, _vm.Gold);
     }
 
     private void DrawItems(int left, int top, IEnumerable<IItem> items, bool isShopItem)
     {
+        var headers = new[] { "이름", "설명", "등급", "가격" };
+
+        for (var k = 0; k < headers.Length; k++)
+        {
+            if (k == 1)
+            {
+                SetCursorPosition(left + 3 + 15 * k, CursorTop);
+            }
+            else
+            {
+                SetCursorPosition(left + 3 + 17 * k, CursorTop);
+            }
+
+            var header = headers[k];
+            Write(header);
+        }
+
+        WriteLine();
+
         foreach (var pair in items.Select((value, i) => new { i, value }))
         {
             var item = pair.value;
@@ -193,8 +222,7 @@ public class ShopScreen : BaseScreen
             }
 
 
-            SetCursorPosition(left, top + pair.i);
-            //todo align ~~~ 
+            SetCursorPosition(left, top + pair.i + 1);
             if (isCursorOn)
             {
                 ForegroundColor = ConsoleColor.Cyan;
@@ -206,9 +234,31 @@ public class ShopScreen : BaseScreen
                 Write("   ");
             }
 
-            WriteLine($"{item.Name}" +
-                      $"     {item.Desc}    |" +
-                      $"    등급    |   {item.Price:N0}  ");
+            ForegroundColor = item.Grade.Color();
+            var name = item.Name;
+            var desc = item.Desc.Length > 10 ? item.Desc.Substring(0, 8) + "..." : item.Desc;
+            var grade = item.Grade.String();
+            var price = item.Price.ToString("N0");
+
+            var itemInfos = new[] { name, desc, grade, price };
+            var itemInfoCursorLeft = CursorLeft;
+
+            for (var k = 0; k < itemInfos.Length; k++)
+            {
+                if (k == 1)
+                {
+                    SetCursorPosition(itemInfoCursorLeft + 15 * k, CursorTop);
+                }
+                else
+                {
+                    SetCursorPosition(itemInfoCursorLeft + 17 * k, CursorTop);
+                }
+
+                var itemInfo = itemInfos[k];
+                Write(itemInfo);
+            }
+
+            ResetColor();
         }
     }
 
@@ -219,6 +269,15 @@ public class ShopScreen : BaseScreen
         Write($"Gold : ");
         Write($"{gold,13:N0}");
         ResetColor();
+    }
+
+    private void DrawEnhancement()
+    {
+        this.DrawBorder(EnhancementSlotLeft, EnhancementSlotTop, EnhancementSlotWidth, EnhancementSlotHeight);
+        SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
+        // todo 강화의 돌 갯수 
+        // todo 선택한 장비 아이템 출력 
+        
     }
 
     internal enum ShopTabs
