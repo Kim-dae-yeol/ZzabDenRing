@@ -6,6 +6,7 @@ public class Repository
 {
     private readonly IDataSource _source;
     private static Repository? _instance;
+    private long _time;
     public Character[] Characters { get; private set; }
     private int _selectedIndex = 0;
     public Character? Character => Characters.ElementAtOrDefault(_selectedIndex);
@@ -24,8 +25,9 @@ public class Repository
         LoadCharacters();
         Shopper = _source.GetSellingItems();
         Shopper.SellingItems = Shopper.SellingItems.OrderBy(it => it.Grade).ToList();
+        _time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
-    
+
     public void LoadCharacters()
     {
         Characters = _source.GetCharacters();
@@ -35,7 +37,7 @@ public class Repository
     public void SelectCharacter(int index)
     {
         // todo : 예외 확인 후(존재 하지 않는 idx의 경우에 캐릭터를 새로 생성하도록 처리 )후 선택
-        
+
         _selectedIndex = index;
     }
 
@@ -54,7 +56,6 @@ public class Repository
     {
         Character.Inventory.Add(item);
         Character.Gold -= item.Price;
-        SaveData();
     }
 
     public void SellItem(IItem sellItem)
@@ -62,12 +63,22 @@ public class Repository
         var delete = Character.Inventory.Find(item => item.Name == sellItem.Name);
         Character.Inventory.Remove(delete);
         Character.Gold += sellItem.Price / 10 * 3;
-        SaveData();
     }
 
     public void DeleteCharacter(int idx)
     {
         Characters[idx] = null;
-        SaveData();
+    }
+
+    public void Enhance(int stone)
+    {
+        for (var i = 0; i < stone; i++)
+        {
+            var idx = Character.Inventory.FindIndex(item => item is MaterialItem);
+            if (idx != -1)
+            {
+                Character.Inventory.RemoveAt(idx);
+            }
+        }
     }
 }

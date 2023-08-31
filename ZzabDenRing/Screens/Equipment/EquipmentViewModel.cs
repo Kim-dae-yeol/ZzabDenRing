@@ -1,23 +1,17 @@
+using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Equipment;
 
 public class EquipmentViewModel
 {
+    private Repository _repository;
+
     public EquipmentViewModel(int inventorySlots = 19)
     {
-        Character c = new Character("Kim",
-            "전사",
-            200,
-            200,
-            10,
-            1,
-            20,
-            2500,
-            0,
-            Game.Items.ToList(),
-            Game.Equipment
-        );
+        _repository = Container.GetRepository();
+        Character c = _repository.Character;
         // todo character from repo
         _state = new EquipmentState(
             Character: c,
@@ -37,8 +31,6 @@ public class EquipmentViewModel
         new[] { false, true, false, true },
         new[] { true, true, true, true }
     };
-
-    // todo 여기서 사용 못하도록 수정 
 
 
     private EquipmentState _state;
@@ -77,8 +69,8 @@ public class EquipmentViewModel
         ? _maxVisibleInventorySlots - 1
         : _state.CurInventoryIdx;
 
-    public int TotalItemCount => _state.Character.Inventory.Count;
-    public int CurrentItemIdx => _state.CurInventoryIdx;
+    public int TotalItemCount => _state.Character.Inventory.Count(item => item is EquipItem);
+    public int CurrentItemIdx => TotalItemCount == 0 ? -1 : _state.CurInventoryIdx;
 
     public EquipmentSlot? SelectedSlot => _state.SelectedSlot;
 
@@ -94,8 +86,8 @@ public class EquipmentViewModel
         {
             if (IsCursorInInventorySlot)
             {
-                var item = _state.Character.Inventory[_state.CurInventoryIdx];
-                if (item.IsEmptyItem()) return;
+                var item = _state.Character.Inventory.ElementAtOrDefault(_state.CurInventoryIdx);
+                if (item == null || item.IsEmptyItem()) return;
                 if (SelectedSlot != null && SelectedSlot?.ToItemType() != item.Type) return;
 
                 var equipItem = item as EquipItem;
@@ -130,13 +122,13 @@ public class EquipmentViewModel
                                 EquipItem(EquipmentSlot.Ring2, equipItem);
                             }
 
-
                             break;
                         case ItemType.Boots:
                             EquipItem(EquipmentSlot.Boots, equipItem);
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        case ItemType.Helm:
+                            EquipItem(EquipmentSlot.Helm, equipItem);
+                            break;
                     }
                 }
             }

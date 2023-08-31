@@ -15,12 +15,13 @@ namespace ZzabDenRing;
 
 public class ScreenDisplay
 {
-    
     public Dictionary<string, object> NavArgs = new(10);
     private Stack<ScreenType> _backStack = new(10);
     internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
 
     private DungeonEntranceScreen? _dungeonEntranceScreen = null;
+    private long _playTime = 0;
+    private long _startTime = DateTimeOffset.UtcNow.Millisecond;
 
     public ScreenDisplay()
     {
@@ -33,7 +34,11 @@ public class ScreenDisplay
         {
             ScreenType.Home => new HomeScreen(
                 navToMain: () => { _backStack.Push(ScreenType.Main); },
-                popBackStack: () => { _backStack.Pop(); },
+                exitGame: () =>
+                {
+                    Environment.Exit(0
+                    );
+                },
                 navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
             ScreenType.Main => new MainScreen(
@@ -54,18 +59,27 @@ public class ScreenDisplay
             ),
 
             ScreenType.Inventory => new InventoryScreen(() => { _backStack.Pop(); }),
-            ScreenType.DungeonEntrance => _dungeonEntranceScreen ??= new DungeonEntranceScreen(
-                navToBattle: () => { _backStack.Push(ScreenType.DungeonBattle); },
+            ScreenType.DungeonEntrance => new DungeonEntranceScreen(
+                navToBattle: (monsters) =>
+                {
+                    NavArgs[DungeonBattleScreen.ArgMonster] = monsters;
+                    _backStack.Push(ScreenType.DungeonBattle);
+                },
                 popBackStack: () => { _backStack.Pop(); }
             ),
             ScreenType.DungeonBattle => new DungeonBattleScreen(
-                monsters: _dungeonEntranceScreen?.monsters ?? new(),
+                monsters: NavArgs[DungeonBattleScreen.ArgMonster] as List<Monster>,
                 navToMain: () =>
                 {
                     do
                     {
                         _backStack.Pop();
                     } while (_backStack.Peek() != ScreenType.Main);
+                },
+                navToReward: (reward) =>
+                {
+                    NavArgs[DungeonRewardScreen.ArgReward] = reward;
+                    _backStack.Push(ScreenType.DungeonReward);
                 }
             ),
             ScreenType.CrateCharacter => new CreateCharacterScreen(
@@ -76,8 +90,27 @@ public class ScreenDisplay
                 },
                 popBackStack: () => { _backStack.Pop(); }
             ),
+            ScreenType.DungeonReward => new DungeonRewardScreen(
+                navToMain: () =>
+                {
+                    {
+                        do
+                        {
+                            _backStack.Pop();
+                        } while (_backStack.Peek() != ScreenType.Main);
+                    }
+                },
+                navToDungeonEntrance: () =>
+                {
+                    do
+                    {
+                        _backStack.Pop();
+                    } while (_backStack.Peek() != ScreenType.DungeonEntrance);
+                },
+                reward: NavArgs[DungeonRewardScreen.ArgReward] as Reward
+            ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
-        } ;
+        };
 
         screen.DrawScreen();
     }
@@ -102,6 +135,7 @@ public enum ScreenType
     Inventory,
     DungeonEntrance,
     DungeonBattle,
+    DungeonReward,
     CrateCharacter,
 }
 
@@ -124,5 +158,6 @@ public enum Command
     AttackMonster3,
     AttackCharacter,
     BattleStart,
-    Delete
+    Delete,
+    Enhance
 }

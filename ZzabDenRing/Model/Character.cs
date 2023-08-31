@@ -18,6 +18,9 @@ public class Character
     [JsonInclude] public int Def;
     [JsonInclude] public int Gold;
     [JsonInclude] public int Critical;
+    [JsonInclude] public int Experience;
+    [JsonInclude] public int MaxExperience;
+    
 
     public List<IItem> Inventory;
     [JsonInclude] public Equipment Equipment;
@@ -79,4 +82,25 @@ public class Character
     }
 
     // todo skill 추가
+    
+    public void UseItem(UseItem item)
+    {
+        switch (item.Grade)
+        {
+            case ItemGrade.Normal:
+                Hp = MaxHp;
+                break;
+            case ItemGrade.Rare:
+                Atk += Random.Shared.Next(1, 6);
+                break;
+            case ItemGrade.Epic:
+                Def += Random.Shared.Next(1, 6);
+                break;
+            case ItemGrade.Legendary:
+                Gold += Random.Shared.Next(-100_000, 200_000);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
 }

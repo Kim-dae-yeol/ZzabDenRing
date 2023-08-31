@@ -4,7 +4,8 @@ public static class Constants
 {
     // todo add all constants used in project.
 
-    public const string HomeAsciiArt = @" ███████████                      █████     ██████████                       ███████████    ███                     
+    public const string HomeAsciiArt =
+        @" ███████████                      █████     ██████████                       ███████████    ███                     
 ░█░░░░░░███                      ░░███     ░░███░░░░███                     ░░███░░░░░███  ░░░                      
 ░     ███░    █████████  ██████   ░███████  ░███   ░░███  ██████  ████████   ░███    ░███  ████  ████████    ███████
      ███     ░█░░░░███  ░░░░░███  ░███░░███ ░███    ░███ ███░░███░░███░░███  ░██████████  ░░███ ░░███░░███  ███░░███
@@ -23,10 +24,13 @@ public static class Constants
  ░███  ░     ░███     ░███ ░███ ░███ ░███ ░███     ░███    ░███ ░███ ███    ░███░███ ░███  ░███       ░███ ███      
  █████       █████    ░░██████  █████░███ █████    █████   ░░██████ ░░█████████ ░░██████   █████      ░░█████       
 ░░░░░       ░░░░░      ░░░░░░  ░░░░░ ░░░ ░░░░░    ░░░░░     ░░░░░░   ░░░░░░░░░   ░░░░░░   ░░░░░        ░░░░░    ";
-    
+
     public const int CharacterSlot = 3;
 
-    public static string[] Jobs = { "전사", "궁수","마법사" };
-    public static int StartingGold = 10000;
+    public const string MainAsciiArt =
+        "\r\n  __  __       _       \r\n |  \\/  |     (_)      \r\n | \\  / | __ _ _ _ __  \r\n | |\\/| |/ _` | | '_ \\ \r\n | |  | | (_| | | | | |\r\n |_|  |_|\\__,_|_|_| |_|\r\n                       \r\n                       \r\n";
+
+    public static string[] Jobs = { "전사", "궁수", "마법사" };
+    public static int StartingGold = 200_000;
     public static string StoneOfEnhance = "강화의 돌";
 }

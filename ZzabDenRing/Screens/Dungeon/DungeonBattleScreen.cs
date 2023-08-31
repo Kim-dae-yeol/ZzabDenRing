@@ -12,6 +12,7 @@ namespace ZzabDenRing.Screens.Dungeon
 {
     public class DungeonBattleScreen : BaseScreen
     {
+        public const string ArgMonster = "arg_monster";
         private List<Monster> _monsters;
 
         // 임의의 캐릭터 설정
@@ -27,7 +28,7 @@ namespace ZzabDenRing.Screens.Dungeon
             15,
             new());
 
-        private Action _navToReward;
+        private Action<Reward> _navToReward;
         private Action _navToMain;
 
         private bool _continueOnThisScreen = true;
@@ -166,10 +167,11 @@ namespace ZzabDenRing.Screens.Dungeon
             return command != Command.Run;
         }
 
-        public DungeonBattleScreen(List<Monster> monsters, Action navToMain)
+        public DungeonBattleScreen(List<Monster> monsters, Action navToMain, Action<Reward> navToReward)
         {
             _monsters = monsters;
             _navToMain = navToMain;
+            _navToReward = navToReward;
         }
 
         private void DungeonBattleScreenShow()
@@ -272,7 +274,14 @@ namespace ZzabDenRing.Screens.Dungeon
             WriteLine();
 
             WriteLine("Enter. 다음");
-            _continueOnThisScreen = _monsters.Count(monster => monster.Hp <= 0) <= 0;
+            _continueOnThisScreen = _monsters.Any(monster => monster.Hp > 0);
+
+            //todo 보상 item 추가
+            if (!_continueOnThisScreen)
+            {
+                var gold = _monsters.Sum(it => it.RewardGold);
+                _navToReward(new Reward(gold, Array.Empty<IItem>()));
+            }
         }
 
         // hp가 0 초과인 몬스터들의 수만큼 밤복

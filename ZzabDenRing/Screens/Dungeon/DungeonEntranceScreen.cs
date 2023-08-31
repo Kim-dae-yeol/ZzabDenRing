@@ -12,7 +12,7 @@ namespace ZzabDenRing.Screens.Dungeon
 {
     public class DungeonEntranceScreen : BaseScreen
     {
-        private Action _navToBattle;
+        private Action<List<Monster>> _navToBattle;
         private Action _popBackStack;
 
         protected override void DrawContent()
@@ -34,7 +34,7 @@ namespace ZzabDenRing.Screens.Dungeon
             switch (command)
             {
                 case Command.Interaction:
-                    _navToBattle();
+                    _navToBattle(monsters);
                     break;
                 case Command.Exit:
                     _popBackStack();
@@ -49,7 +49,7 @@ namespace ZzabDenRing.Screens.Dungeon
 
         public List<Monster> monsters = new List<Monster>();
 
-        public DungeonEntranceScreen(Action navToBattle, Action popBackStack)
+        public DungeonEntranceScreen(Action<List<Monster>> navToBattle, Action popBackStack)
         {
             _navToBattle = navToBattle;
             _popBackStack = popBackStack;

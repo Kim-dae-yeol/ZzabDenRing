@@ -1,4 +1,43 @@
 {
+  "SellingUse": [
+    {
+      "Name": "회복 물약",
+      "Desc": "회복 물약이다. 체력이 모두 회복된다.",
+      "Price": 1500,
+      "Type": 4,
+      "Grade": 0
+    },
+    {
+      "Name": "힘의 물약",
+      "Desc": "공격력이 1~5 만큼 증가한다.",
+      "Price": 2000,
+      "Type": 4,
+      "Grade": 1
+    },
+    {
+      "Name": "방어의 물약",
+      "Desc": "방어력이 1~5 만큼 증가한다.",
+      "Price": 2000,
+      "Type": 4,
+      "Grade": 2
+    },
+    {
+      "Name": "코인 투자",
+      "Desc": "???",
+      "Price": 15000,
+      "Type": 4,
+      "Grade": 3
+    }
+  ],
+  "SellingMaterial": [
+    {
+      "Name": "강화의 돌",
+      "Desc": "강화에 쓰이는 돌이다.",
+      "Price": 500,
+      "Type": 4,
+      "Grade": 0
+    }
+  ],
   "SellingItems": [
     {
       "Name": "녹슨 반지",

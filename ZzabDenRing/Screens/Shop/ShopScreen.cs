@@ -19,6 +19,26 @@ public class ShopScreen : BaseScreen
     private int EnhancementSlotTop => Top + ShopHeight / 3;
     private int EnhancementSlotLeft => ShopLeft + ShopWidth / 2 - EnhancementSlotWidth / 2;
     private int _totalWidth = ShopWidth + InventoryWidth + 4;
+    private object _lock = new();
+    private bool _isAniamated;
+
+    private bool IsAnimated
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _isAniamated;
+            }
+        }
+        set
+        {
+            lock (_lock)
+            {
+                _isAniamated = value;
+            }
+        }
+    }
 
     public const int ItemRows = 13;
 
@@ -43,14 +63,20 @@ public class ShopScreen : BaseScreen
         var top = Top + 1;
         DrawShop(ShopLeft, top);
         DrawInventory(ShopLeft + ShopWidth, top);
+        if (IsAnimated)
+        {
+            AnimateEnhance();
+        }
     }
 
     protected override bool ManageInput()
     {
-        var key = ReadKey().Key;
+        var key = ReadKey(true).Key;
+        IsAnimated = false;
         var command = key switch
         {
             ConsoleKey.X => Command.Exit,
+            ConsoleKey.Y => Command.Enhance,
             ConsoleKey.UpArrow => Command.MoveTop,
             ConsoleKey.RightArrow => Command.MoveRight,
             ConsoleKey.DownArrow => Command.MoveBottom,
@@ -61,6 +87,11 @@ public class ShopScreen : BaseScreen
         if (command == Command.Exit)
         {
             _popBackStack();
+        }
+
+        if (command == Command.Enhance && _vm.CanEnhance)
+        {
+            IsAnimated = true;
         }
 
         _vm.OnCommand(cmd: command);
@@ -78,11 +109,7 @@ public class ShopScreen : BaseScreen
         }
         else
         {
-            Beep();
-            BackgroundColor = ConsoleColor.Red;
-            WriteLine(_vm.Message);
-            _vm.ConsumeMessage();
-            ResetColor();
+            HandleMessage(_vm.Message);
         }
     }
 
@@ -106,7 +133,7 @@ public class ShopScreen : BaseScreen
         {
             Write($"{_vm.CurrentShopIdx + 1}/{_vm.TotalShopItems}");
             SetCursorPosition(left, top + TabHeight + 1);
-            var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows : 0;
+            var skip = _vm.CurrentShopIdx >= ItemRows ? _vm.CurrentShopIdx - ItemRows + 1 : 0;
             var visibleItems = _vm.ShopItems
                 .Skip(skip)
                 .Take(ItemRows);
@@ -277,12 +304,13 @@ public class ShopScreen : BaseScreen
     {
         this.DrawBorder(EnhancementSlotLeft, EnhancementSlotTop, EnhancementSlotWidth, EnhancementSlotHeight);
         SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
-        // todo 강화의 돌 갯수 
-        // todo 선택한 장비 아이템 출력
+
         if (!_vm.EnhanceSlotItem.IsEmptyItem())
         {
             SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
+            ForegroundColor = _vm.EnhanceSlotItem.Grade.Color();
             WriteLine(_vm.EnhanceSlotItem.Name);
+            ResetColor();
             SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
             Write("강화확률 : ");
             var percent = _vm.EnhancePercent;
@@ -310,6 +338,14 @@ public class ShopScreen : BaseScreen
             }
 
             ResetColor();
+
+
+            SetCursorPosition(EnhancementSlotLeft + 1, CursorTop + 2);
+            WriteLine($"소유한 강화의 돌 : {_vm.StoneCount}");
+            SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
+            WriteLine($"필요한 강화의 돌 : {_vm.NeedStone}");
+            SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
+            WriteLine("강화하시려면 Y키를 누르세요.");
         }
         else
         {
@@ -320,6 +356,49 @@ public class ShopScreen : BaseScreen
                 , CursorTop);
             WriteLine(text);
             ResetColor();
+        }
+    }
+
+    private async void AnimateEnhance()
+    {
+        await foreach (var k in EmitEnhance())
+        {
+            SetCursorPosition(EnhancementSlotLeft
+                              + k, EnhancementSlotTop + 3);
+
+            ForegroundColor = ConsoleColor.Green;
+            BackgroundColor = ConsoleColor.Gray;
+
+            if (k * 100 / EnhancementSlotWidth <= _vm.EnhancePercent && _vm.Success)
+            {
+                Write('@');
+            }
+            else
+            {
+                Write(' ');
+            }
+        }
+    }
+
+    private void HandleMessage(string msg)
+    {
+        var messageLeft = 20;
+        var messageTop = Height - 10;
+        this.DrawBorder(messageLeft, messageTop, 40, 3);
+        SetCursorPosition(messageLeft + 1, messageTop + 1);
+        Beep();
+        BackgroundColor = ConsoleColor.Red;
+        Write(msg);
+        _vm.ConsumeMessage();
+        ResetColor();
+    }
+
+    private async IAsyncEnumerable<int> EmitEnhance()
+    {
+        for (var i = 0; i < EnhancementSlotWidth - 2 && IsAnimated; i++)
+        {
+            await Task.Delay(20);
+            yield return i;
         }
     }
 

@@ -153,7 +153,11 @@ public class CreateCharViewModel
                     break;
                 }
 
-                CurrentState = CurrentState with { MaxHp = CurrentState.MaxHp - 50 };
+                CurrentState = CurrentState with
+                {
+                    Stats = CurrentState.Stats + 1,
+                    MaxHp = CurrentState.MaxHp - 50
+                };
                 break;
             case 1:
                 if (CurrentState.Atk == MinAtk)
@@ -162,7 +166,11 @@ public class CreateCharViewModel
                     break;
                 }
 
-                CurrentState = CurrentState with { Atk = CurrentState.Atk - 10 };
+                CurrentState = CurrentState with
+                {
+                    Stats = CurrentState.Stats + 1,
+                    Atk = CurrentState.Atk - 10
+                };
                 break;
             case 2:
                 if (CurrentState.Def == MinDef)
@@ -171,7 +179,11 @@ public class CreateCharViewModel
                     break;
                 }
 
-                CurrentState = CurrentState with { Def = CurrentState.Def - 10 };
+                CurrentState = CurrentState with
+                {
+                    Stats = CurrentState.Stats + 1,
+                    Def = CurrentState.Def - 10
+                };
                 break;
             case 3:
                 if (CurrentState.Cri == MinCri)
@@ -180,7 +192,11 @@ public class CreateCharViewModel
                     break;
                 }
 
-                CurrentState = CurrentState with { Cri = CurrentState.Cri - 1 };
+                CurrentState = CurrentState with
+                {
+                    Stats = CurrentState.Stats + 1,
+                    Cri = CurrentState.Cri - 1
+                };
                 break;
         }
     }

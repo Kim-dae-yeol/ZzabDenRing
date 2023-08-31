@@ -1,15 +1,21 @@
+using System.Text.Json.Serialization;
+
 namespace ZzabDenRing.Model;
 
 public class MaterialItem : IItem
 {
-    public string Name { get; }
-    public string Desc { get; }
-    public int Price { get; }
-    public ItemType Type { get; }
+    public MaterialItem(string name, string desc, int price, ItemType type, ItemGrade grade)
+    {
+        Name = name;
+        Desc = desc;
+        Price = price;
+        Type = type;
+        Grade = grade;
+    }
 
-    public ItemGrade Grade { get; }
-    //빛바랜 돌 
-    //다듬은 돌
-    //빛나는 돌
-    //찬란한 돌 
+    [JsonInclude] public string Name { get; }
+    [JsonInclude] public string Desc { get; }
+    [JsonInclude] public int Price { get; }
+    [JsonInclude] public ItemType Type { get; }
+    [JsonInclude] public ItemGrade Grade { get; }
 }

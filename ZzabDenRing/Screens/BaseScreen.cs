@@ -1,3 +1,5 @@
+using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.View;
 using static System.Console;
 
@@ -24,6 +26,7 @@ public abstract class BaseScreen : IScreen
 
     protected BaseScreen()
     {
+        
         CommandsWidth = Width;
         CommandLeft = Left + 1;
         CommandTop = Top + Height + 1;
@@ -57,6 +60,7 @@ public abstract class BaseScreen : IScreen
 
     private void DrawWindow()
     {
+        BackgroundColor = ConsoleColor.Black;
         SetCursorPosition(Left, Top);
         for (var i = 0; i < Height; i++)
         {
@@ -79,6 +83,8 @@ public abstract class BaseScreen : IScreen
             WriteLine();
             SetCursorPosition(Left, CursorTop);
         }
+
+        ResetColor();
     }
 
     private void DrawCommandsWindow()
