@@ -22,12 +22,18 @@ public class LocalDataSource : IDataSource
             {
                 {
                     var character = pair.c;
+                    if (character == null) continue;
                     IItem[] useItems = appData.InventoryForUse[pair.i];
                     IItem[] equipItems = appData.InventoryForEquip[pair.i];
                     IItem[] materialItems = appData.InventoryForMaterial[pair.i];
-                    character.Inventory =equipItems.ToList();
-                    character.Inventory.AddRange(useItems);
-                    character.Inventory.AddRange(materialItems);
+                    var list = new List<IItem>();
+                    if (useItems != null)
+                        list.AddRange(useItems);
+                    if (equipItems != null)
+                        list.AddRange(equipItems);
+                    if (materialItems != null)
+                        list.AddRange(materialItems);
+                    character.Inventory = list;
                 }
             }
         }
