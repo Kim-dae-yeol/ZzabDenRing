@@ -132,6 +132,7 @@ public class HomeScreen : BaseScreen
         {
             ConsoleKey.Enter => Command.Interaction,
             ConsoleKey.X => Command.Exit,
+            ConsoleKey.D => Command.Delete,
             ConsoleKey.LeftArrow => Command.MoveLeft,
             ConsoleKey.RightArrow => Command.MoveRight,
             _ => Command.Nothing

@@ -43,6 +43,9 @@ public class HomeViewModel
     {
         switch (command)
         {
+            case Command.Delete:
+                _repo.DeleteCharacter(_homeState.CurX);
+                break;
             case Command.MoveRight:
                 if (_homeState.CurX < HomeScreen.CharacterSlots - 1)
                 {
@@ -67,6 +70,11 @@ public class HomeViewModel
 
                 break;
         }
+    }
+
+    private void DeleteCharacter()
+    {
+        _repo.DeleteCharacter(_homeState.CurX);
     }
 }
 
