@@ -43,6 +43,9 @@ public class HomeViewModel
     {
         switch (command)
         {
+            case Command.Delete:
+                _repo.DeleteCharacter(_homeState.CurX);
+                break;
             case Command.MoveRight:
                 if (_homeState.CurX < HomeScreen.CharacterSlots - 1)
                 {
@@ -69,22 +72,9 @@ public class HomeViewModel
         }
     }
 
-    public void CreateCharacter()
+    private void DeleteCharacter()
     {
-        //todo : delete create screen 만들고 나서
-        var character = new Character(
-            "용사",
-            "전사",
-            200,
-            200,
-            10,
-            1,
-            10,
-            20_000,
-            10,
-            new List<IItem>(),
-            new());
-        _repo.CreateCharacter(character);
+        _repo.DeleteCharacter(_homeState.CurX);
     }
 }
 

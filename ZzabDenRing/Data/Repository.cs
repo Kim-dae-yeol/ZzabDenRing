@@ -60,4 +60,10 @@ public class Repository
         Character.Gold += sellItem.Price / 10 * 3;
         SaveData();
     }
+
+    public void DeleteCharacter(int idx)
+    {
+        Characters[idx] = null;
+        SaveData();
+    }
 }
