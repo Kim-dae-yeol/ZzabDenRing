@@ -15,7 +15,6 @@ namespace ZzabDenRing;
 
 public class ScreenDisplay
 {
-    
     public Dictionary<string, object> NavArgs = new(10);
     private Stack<ScreenType> _backStack = new(10);
     internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
@@ -54,18 +53,27 @@ public class ScreenDisplay
             ),
 
             ScreenType.Inventory => new InventoryScreen(() => { _backStack.Pop(); }),
-            ScreenType.DungeonEntrance => _dungeonEntranceScreen ??= new DungeonEntranceScreen(
-                navToBattle: () => { _backStack.Push(ScreenType.DungeonBattle); },
+            ScreenType.DungeonEntrance => new DungeonEntranceScreen(
+                navToBattle: (monsters) =>
+                {
+                    NavArgs[DungeonBattleScreen.ArgMonster] = monsters;
+                    _backStack.Push(ScreenType.DungeonBattle);
+                },
                 popBackStack: () => { _backStack.Pop(); }
             ),
             ScreenType.DungeonBattle => new DungeonBattleScreen(
-                monsters: _dungeonEntranceScreen?.monsters ?? new(),
+                monsters: NavArgs[DungeonBattleScreen.ArgMonster] as List<Monster>,
                 navToMain: () =>
                 {
                     do
                     {
                         _backStack.Pop();
                     } while (_backStack.Peek() != ScreenType.Main);
+                },
+                navToReward: (reward) =>
+                {
+                    NavArgs[DungeonRewardScreen.ArgReward] = reward;
+                    _backStack.Push(ScreenType.DungeonReward);
                 }
             ),
             ScreenType.CrateCharacter => new CreateCharacterScreen(
@@ -76,8 +84,27 @@ public class ScreenDisplay
                 },
                 popBackStack: () => { _backStack.Pop(); }
             ),
+            ScreenType.DungeonReward => new DungeonRewardScreen(
+                navToMain: () =>
+                {
+                    {
+                        do
+                        {
+                            _backStack.Pop();
+                        } while (_backStack.Peek() != ScreenType.Main);
+                    }
+                },
+                navToDungeonEntrance: () =>
+                {
+                    do
+                    {
+                        _backStack.Pop();
+                    } while (_backStack.Peek() != ScreenType.DungeonEntrance);
+                },
+                reward: NavArgs[DungeonRewardScreen.ArgReward] as Reward
+            ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
-        } ;
+        };
 
         screen.DrawScreen();
     }
@@ -102,6 +129,7 @@ public enum ScreenType
     Inventory,
     DungeonEntrance,
     DungeonBattle,
+    DungeonReward,
     CrateCharacter,
 }
 

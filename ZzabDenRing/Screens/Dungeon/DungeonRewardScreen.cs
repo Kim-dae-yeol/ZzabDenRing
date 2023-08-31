@@ -11,20 +11,25 @@ namespace ZzabDenRing.Screens.Dungeon
 {
     public class DungeonRewardScreen : BaseScreen
     {
+        public const string ArgReward = "arg_reward";
         public Character player;
-        public Reward reward;
+        public Reward _reward;
 
         private Action _navToDungeonEntrance;
         private Action _navToMain;
 
         public DungeonRewardScreen(Action navToDungeonEntrance,
-            Action navToMain)
+            Action navToMain,
+            Reward reward
+        )
         {
             _navToMain = navToMain;
             _navToDungeonEntrance = navToDungeonEntrance;
             player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<IItem>(),
                 new Model.Equipment());
-            reward = new Reward(1500, Game.Items.Take(3).ToArray());
+            _reward = reward;
+            
+            
         }
 
         protected override void DrawContent()
@@ -44,11 +49,11 @@ namespace ZzabDenRing.Screens.Dungeon
             Console.WriteLine($"남은 체력 : {player.Hp}");
             Console.Write($"획득 아이템 : ");
 
-            foreach (var pair in reward.Items.Select((item, i) => new { item, i }))
+            foreach (var pair in _reward.Items.Select((item, i) => new { item, i }))
             {
                 var item = pair.item;
                 var i = pair.i;
-                if (i == reward.Items.Length - 1)
+                if (i == _reward.Items.Length - 1)
                 {
                     Write(item.Name);
                 }
@@ -59,7 +64,7 @@ namespace ZzabDenRing.Screens.Dungeon
             }
 
             WriteLine();
-            Console.WriteLine($"획득 골드 : {reward.Gold} G");
+            Console.WriteLine($"획득 골드 : {_reward.Gold} G");
             Console.WriteLine();
 
             Console.WriteLine("1. 계속 전투");
