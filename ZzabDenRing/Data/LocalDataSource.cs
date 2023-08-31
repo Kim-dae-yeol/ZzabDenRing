@@ -9,7 +9,7 @@ public class LocalDataSource : IDataSource
 
     public Character[] GetCharacters()
     {
-        Character[] characters;
+        Character?[] characters;
         var parent = Environment.CurrentDirectory;
         var filePath = Path.Combine(parent, FileName);
 
@@ -18,8 +18,9 @@ public class LocalDataSource : IDataSource
             using var file = File.OpenRead(filePath);
             var appData = JsonSerializer.Deserialize<AppData>(file);
             characters = appData.Characters;
-            foreach (var pair in characters.Select((c, i) => new {i,c }))
+            foreach (var pair in characters.Select((c, i) => new { i, c }))
             {
+<<<<<<< Updated upstream
                 {
                     var character = pair.c;
                     if (character == null) continue;
@@ -35,16 +36,30 @@ public class LocalDataSource : IDataSource
                         list.AddRange(materialItems);
                     character.Inventory = list;
                 }
+=======
+                var character = pair.c;
+                if(character == null) continue;
+                IItem[] useItems = appData.InventoryForUse[pair.i];
+                IItem[] equipItems = appData.InventoryForEquip[pair.i];
+                IItem[] materialItems = appData.InventoryForMaterial[pair.i];
+
+                var list = new List<IItem>();
+                list.AddRange(useItems);
+                list.AddRange(equipItems);
+                list.AddRange(materialItems);
+                character.Inventory = list;
+>>>>>>> Stashed changes
             }
         }
         else
         {
             characters = new Character[3];
         }
+
         return characters;
     }
 
-    public async void SaveData(Character?[] characters)
+    public void SaveData(Character?[] characters)
     {
         var inventoryForEquip = characters
             .Select(it => it?.Inventory
@@ -72,10 +87,10 @@ public class LocalDataSource : IDataSource
 
         var parent = Environment.CurrentDirectory;
         var filePath = Path.Combine(parent, FileName);
-        await using FileStream file = File.Exists(filePath)
+        using FileStream file = File.Exists(filePath)
             ? File.Open(filePath, FileMode.Truncate)
             : File.Open(filePath, FileMode.Create);
-        
-        await JsonSerializer.SerializeAsync(file, saveData);
+
+        JsonSerializer.SerializeAsync(file, saveData);
     }
 }

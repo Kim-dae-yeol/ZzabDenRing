@@ -47,7 +47,8 @@ public class ScreenDisplay
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
             ),
-            ScreenType.Inventory => new InventoryScreen(10,10),
+
+            ScreenType.Inventory => new InventoryScreen(() => { }),
             ScreenType.DungeonEntrance => _dungeonEntranceScreen ??= new DungeonEntranceScreen(
                 navToBattle: () => { _backStack.Push(ScreenType.DungeonBattle); },
                 popBackStack: () => { _backStack.Pop(); }
