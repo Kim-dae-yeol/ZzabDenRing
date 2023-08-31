@@ -9,25 +9,28 @@ namespace ZzabDenRing.Screens.Main;
 
 public class MainScreen : BaseScreen
 {
-    private Action _popBackStack;
+    
     private Action _navToShop;
     private Action _navToDungeonEntrance;
     private Action _navToStatus;
     private Action _navToEquipment;
     private Action _navToInventory;
+    private Action _navToHome;
 
-    public MainScreen(Action popBackStack,
+    public MainScreen(
         Action navToShop,
         Action navToDungeonEntrance,
         Action navToStatus,
+        Action navToHome,
         Action navToEquipment, Action navToInventory)
     {
-        _popBackStack = popBackStack;
+        
         _navToShop = navToShop;
         _navToDungeonEntrance = navToDungeonEntrance;
         _navToStatus = navToStatus;
         _navToEquipment = navToEquipment;
         _navToInventory = navToInventory;
+        _navToHome = navToHome;
     }
 
     protected override void DrawContent()
@@ -45,7 +48,7 @@ public class MainScreen : BaseScreen
         Console.WriteLine("4. 상점");
         Console.WriteLine("5. 장비창");
         Console.WriteLine();
-        Console.WriteLine("6. 시작화면");
+        Console.WriteLine("X. 시작화면");
         Console.WriteLine();
 
         Console.WriteLine("원하는 행동을 입력해주세요.");
@@ -76,28 +79,13 @@ public class MainScreen : BaseScreen
             case ConsoleKey.D5:
                 _navToEquipment();
                 break;
-            case ConsoleKey.D6:
-                _popBackStack();
+            case ConsoleKey.X:
+                _navToHome();
                 break;
         }
 
         return false;
     }
 
-    private int CheckValidInput(int min, int max) //�Էµ� ���ڰ� valid������ üũ
-    {
-        while (true)
-        {
-            string input = Console.ReadLine();
-
-            bool parseSuccess = int.TryParse(input, out var ret);
-            if (parseSuccess)
-            {
-                if (ret >= min && ret <= max)
-                    return ret;
-            }
-
-            Console.WriteLine("failed");
-        }
-    }
+    
 }

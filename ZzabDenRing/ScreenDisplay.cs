@@ -34,13 +34,13 @@ public class ScreenDisplay
                 popBackStack: () => { _backStack.Pop(); },
                 navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
-            ScreenType.Main => new MainScreen(
-                popBackStack: () => { _backStack.Pop(); },
+            ScreenType.Main => new MainScreen(               
                 navToShop: () => { _backStack.Push(ScreenType.Shop); },
                 navToDungeonEntrance: () => { _backStack.Push(ScreenType.DungeonEntrance); },
                 navToStatus: () => { _backStack.Push(ScreenType.Status); },
                 navToEquipment: () => { _backStack.Push(ScreenType.Equipment); },
-                navToInventory: () => { _backStack.Push(ScreenType.Inventory); }
+                navToInventory: () => { _backStack.Push(ScreenType.Inventory); },
+                navToHome: () => { _backStack.Push(ScreenType.Home); }
             ),
             ScreenType.Shop => new ShopScreen(popBackStack: () => { _backStack.Pop(); }),
             ScreenType.Status => new StatusScreen(navToMain: () => { _backStack.Push(ScreenType.Main); }),
