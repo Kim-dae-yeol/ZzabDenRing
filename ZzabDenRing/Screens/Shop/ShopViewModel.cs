@@ -54,6 +54,27 @@ public class ShopViewModel
 
     public EquipItem EnhanceSlotItem => _state.EnhanceItem;
 
+    private int _enhancePercent => 150 - EnhanceSlotItem.Enhancement * ((int)EnhanceSlotItem.Grade * 7);
+
+    public int EnhancePercent
+    {
+        get
+        {
+            if (_enhancePercent > 100)
+            {
+                return 100;
+            }
+            else if (_enhancePercent <= 5)
+            {
+                return 5;
+            }
+            else
+            {
+                return _enhancePercent;
+            }
+        }
+    }
+
     // todo 1. 강화 탭인 경우 강화 할 아이템이 선택됐는지 ?
     // todo 1. 탭 마다 필터링 적용 하기
     // todo 강화창으로 옮긴 경우 아이템 넘기기 
@@ -122,7 +143,18 @@ public class ShopViewModel
             case Command.MoveBottom:
                 if (_state.CurY == 0)
                 {
-                    _state = _state with { CurY = _state.CurY + 1 };
+                    if (CurrentShopTab == (int)ShopScreen.ShopTabs.Enhancement)
+                    {
+                        _state = _state with
+                        {
+                            CurY = _state.CurY + 1,
+                            CurX = 4
+                        };
+                    }
+                    else
+                    {
+                        _state = _state with { CurY = _state.CurY + 1 };
+                    }
                 }
                 else if (IsInInventoryWindow && _state.CurInventoryItemIdx < _state.Inventory.Count - 1)
                 {
@@ -164,7 +196,11 @@ public class ShopViewModel
                 }
                 else
                 {
-                    if (IsInInventoryWindow)
+                    if (CurrentShopTab == (int)ShopScreen.ShopTabs.Enhancement)
+                    {
+                        AddItemToEnhanceSlot();
+                    }
+                    else if (IsInInventoryWindow)
                     {
                         SellItem();
                     }
@@ -224,8 +260,18 @@ public class ShopViewModel
         };
     }
 
-    private void EnhanceItem()
+    private void AddItemToEnhanceSlot()
     {
+        var selected = _state.Inventory[_state.CurInventoryItemIdx] as EquipItem;
+        if (_state.EnhanceItem == selected)
+        {
+            _state = _state with { EnhanceItem = EquipItem.Empty };
+        }
+        else
+        {
+            _state = _state with { EnhanceItem = selected ?? EquipItem.Empty };
+        }
+
         Message = "아직 구현중이에영";
     }
 
@@ -238,7 +284,9 @@ public class ShopViewModel
                 CurrentInventoryTab = (int)ShopScreen.InventoryTabs.Equip,
                 Inventory = _repository.Character.Inventory
                     .Where(it => it is EquipItem)
-                    .ToList()
+                    .ToList(),
+                CurX = 4,
+                CurY = 1
             };
             return;
         }

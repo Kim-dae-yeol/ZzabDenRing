@@ -23,8 +23,9 @@ public class Repository
         _source = source;
         LoadCharacters();
         Shopper = _source.GetSellingItems();
+        Shopper.SellingItems = Shopper.SellingItems.OrderBy(it => it.Grade).ToList();
     }
-
+    
     public void LoadCharacters()
     {
         Characters = _source.GetCharacters();
@@ -34,6 +35,7 @@ public class Repository
     public void SelectCharacter(int index)
     {
         // todo : 예외 확인 후(존재 하지 않는 idx의 경우에 캐릭터를 새로 생성하도록 처리 )후 선택
+        
         _selectedIndex = index;
     }
 
