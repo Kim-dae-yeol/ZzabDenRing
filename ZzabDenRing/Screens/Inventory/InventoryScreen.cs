@@ -11,8 +11,7 @@ namespace ZzabDenRing.Screens.Inventory
 {
     internal class InventoryScreen : BaseScreen
     {
-    
-        
+       
         int SelectIndex = 0;
         Item[] arrItem;
         int itemX;
@@ -45,7 +44,10 @@ namespace ZzabDenRing.Screens.Inventory
         
         public InventoryScreen(int x, int y)
         {
+            Console.Clear();
+
             if (1 > x) // 인벤토리 크기가 0보다 작으면 안 되니까
+
             {
                 x = 1;
             }
@@ -154,6 +156,8 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 if (i != 0 && i % itemX == 0)
                 {
+
+
                     Console.WriteLine(" ");
                 }
                 if (SelectIndex == i)
@@ -167,6 +171,7 @@ namespace ZzabDenRing.Screens.Inventory
                 else
                 {
                     Console.Write(" ■");
+
                 }
             }
 
