@@ -9,13 +9,20 @@ namespace ZzabDenRing.Screens.Main;
 
 public class MainScreen : BaseScreen
 {
-    
     private Action _navToShop;
     private Action _navToDungeonEntrance;
     private Action _navToStatus;
     private Action _navToEquipment;
     private Action _navToInventory;
     private Action _navToHome;
+
+    private int _contentWidth = 80;
+    private int _contentHeight = 24;
+    private int ContentPadding => 16
+    ;
+    
+    private int ContentLeft => Left + Width / 2 - _contentWidth / 2;
+    private int ContentTop => Height / 2 - _contentHeight / 2 + Top;
 
     public MainScreen(
         Action navToShop,
@@ -24,7 +31,6 @@ public class MainScreen : BaseScreen
         Action navToHome,
         Action navToEquipment, Action navToInventory)
     {
-        
         _navToShop = navToShop;
         _navToDungeonEntrance = navToDungeonEntrance;
         _navToStatus = navToStatus;
@@ -35,23 +41,38 @@ public class MainScreen : BaseScreen
 
     protected override void DrawContent()
     {
-        Console.Clear();
+        this.DrawBorder(ContentLeft, ContentTop, _contentWidth, _contentHeight);
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("\r\n  __  __       _       \r\n |  \\/  |     (_)      \r\n | \\  / | __ _ _ _ __  \r\n | |\\/| |/ _` | | '_ \\ \r\n | |  | | (_| | | | | |\r\n |_|  |_|\\__,_|_|_| |_|\r\n                       \r\n                       \r\n");
-        Console.ResetColor();
-        Console.WriteLine();
+        ForegroundColor = ConsoleColor.Yellow;
+        SetCursorPosition(ContentLeft + ContentPadding, ContentTop + 1);
+        var lines = Constants.MainAsciiArt.Split('\n');
+        foreach (var line in lines)
+        {
+            SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+            WriteLine(line);
+        }
 
-        Console.WriteLine("1. 상태 보기");
-        Console.WriteLine("2. 던전입장");
-        Console.WriteLine("3. 인벤토리");
-        Console.WriteLine("4. 상점");
-        Console.WriteLine("5. 장비창");
-        Console.WriteLine();
-        Console.WriteLine("X. 시작화면");
-        Console.WriteLine();
+        ResetColor();
 
-        Console.WriteLine("원하는 행동을 입력해주세요.");
+        WriteLine();
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+
+        WriteLine("1. 상태 보기");
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+        WriteLine("2. 던전입장");
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+        WriteLine("3. 인벤토리");
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+        WriteLine("4. 상점");
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+        WriteLine("5. 장비창");
+        WriteLine();
+        SetCursorPosition(ContentLeft+ ContentPadding, CursorTop);
+        WriteLine("X. 시작화면");
+
+        WriteLine();
+        SetCursorPosition(ContentLeft + ContentPadding, CursorTop);
+        WriteLine("원하는 행동을 입력해주세요.");
     }
 
     protected override bool ManageInput()
@@ -86,6 +107,4 @@ public class MainScreen : BaseScreen
 
         return false;
     }
-
-    
 }
