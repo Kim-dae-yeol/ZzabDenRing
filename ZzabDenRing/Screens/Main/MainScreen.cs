@@ -38,7 +38,7 @@ public class MainScreen : BaseScreen
         Console.Clear();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("메인 화면");
+        Console.WriteLine("\r\n  __  __       _       \r\n |  \\/  |     (_)      \r\n | \\  / | __ _ _ _ __  \r\n | |\\/| |/ _` | | '_ \\ \r\n | |  | | (_| | | | | |\r\n |_|  |_|\\__,_|_|_| |_|\r\n                       \r\n                       \r\n");
         Console.ResetColor();
         Console.WriteLine();
 
