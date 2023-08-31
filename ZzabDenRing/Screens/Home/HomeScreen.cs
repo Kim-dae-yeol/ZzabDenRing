@@ -132,6 +132,7 @@ public class HomeScreen : BaseScreen
         {
             ConsoleKey.Enter => Command.Interaction,
             ConsoleKey.X => Command.Exit,
+            ConsoleKey.D => Command.Delete,
             ConsoleKey.LeftArrow => Command.MoveLeft,
             ConsoleKey.RightArrow => Command.MoveRight,
             _ => Command.Nothing
@@ -278,11 +279,11 @@ public class HomeScreen : BaseScreen
             var cri = c.Critical;
             var lines = new[]
             {
-                level.ToString("D"),
+                level.ToString("N0"),
                 name,
                 job,
-                hp.ToString("D"), atk.ToString("D"),
-                def.ToString("D"), cri.ToString("D")
+                hp.ToString("N0"), atk.ToString("N0"),
+                def.ToString("N0"), cri.ToString("N0")
             };
 
             for (var i = 0; i < lines.Length; i++)
@@ -296,6 +297,7 @@ public class HomeScreen : BaseScreen
                         SetCursorPosition(
                             left: startLeft + CharacterSlotWidth / 2 - levelText.Length / 2,
                             top: CursorTop);
+                        
                         WriteLine(levelText);
                         ResetColor();
                         break;
@@ -309,12 +311,12 @@ public class HomeScreen : BaseScreen
                         break;
                     case 3:
                         Write($"[{$" Hp  {lines[i]}",-(CharacterSlotWidth - 6) / 2}]");
-                        Write($"[{$" Atk  {lines[i]}",-(CharacterSlotWidth - 6) / 2}]");
+                        Write($"[{$" Atk  {lines[i+1]}",-(CharacterSlotWidth - 6) / 2}]");
                         break;
                     case 5:
                         SetCursorPosition(CursorLeft, CursorTop - 1);
                         Write($"[{$" Def  {lines[i]}",-(CharacterSlotWidth - 6) / 2}]");
-                        Write($"[{$" Cri  {lines[i]}",-(CharacterSlotWidth - 6) / 2}]");
+                        Write($"[{$" Cri  {lines[i+1]}",-(CharacterSlotWidth - 6) / 2}]");
                         break;
                 }
             }
