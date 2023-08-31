@@ -5,6 +5,7 @@ using ZzabDenRing.Screens.CreateCharacter;
 using ZzabDenRing.Screens.Dungeon;
 using ZzabDenRing.Screens.Equipment;
 using ZzabDenRing.Screens.Home;
+using ZzabDenRing.Screens.Inventory;
 using ZzabDenRing.Screens.Main;
 using ZzabDenRing.Screens.Shop;
 using ZzabDenRing.Screens.Status;
@@ -35,17 +36,18 @@ public class ScreenDisplay
             ),
             ScreenType.Main => new MainScreen(
                 popBackStack: () => { _backStack.Pop(); },
-                navToShop: () => { },
+                navToShop: () => { _backStack.Push(ScreenType.Shop); },
                 navToDungeonEntrance: () => { _backStack.Push(ScreenType.DungeonEntrance); },
                 navToStatus: () => { _backStack.Push(ScreenType.Status); },
-                navToEquipment: () => { _backStack.Push(ScreenType.Equipment); }
+                navToEquipment: () => { _backStack.Push(ScreenType.Equipment); },
+                navToInventory: () => { _backStack.Push(ScreenType.Inventory); }
             ),
             ScreenType.Shop => new ShopScreen(popBackStack: () => { _backStack.Pop(); }),
             ScreenType.Status => new StatusScreen(navToMain: () => { }),
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
             ),
-            ScreenType.Inventory => throw new NotImplementedException(),
+            ScreenType.Inventory => new InventoryScreen(10,10),
             ScreenType.DungeonEntrance => _dungeonEntranceScreen ??= new DungeonEntranceScreen(
                 navToBattle: () => { _backStack.Push(ScreenType.DungeonBattle); },
                 popBackStack: () => { _backStack.Pop(); }
@@ -98,5 +100,9 @@ public enum Command
     Skill,
     Attack,
     Run,
-    Wrong
+    Wrong,
+    SelectMonster,
+    AttackMonster,
+    AttackCharacter,
+    BallteStart,
 }

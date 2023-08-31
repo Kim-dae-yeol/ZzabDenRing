@@ -14,18 +14,20 @@ public class MainScreen : BaseScreen
     private Action _navToDungeonEntrance;
     private Action _navToStatus;
     private Action _navToEquipment;
+    private Action _navToInventory;
 
     public MainScreen(Action popBackStack,
         Action navToShop,
         Action navToDungeonEntrance,
         Action navToStatus,
-        Action navToEquipment)
+        Action navToEquipment, Action navToInventory)
     {
         _popBackStack = popBackStack;
         _navToShop = navToShop;
         _navToDungeonEntrance = navToDungeonEntrance;
         _navToStatus = navToStatus;
         _navToEquipment = navToEquipment;
+        _navToInventory = navToInventory;
     }
 
     protected override void DrawContent()
@@ -66,10 +68,10 @@ public class MainScreen : BaseScreen
                 _navToDungeonEntrance();
                 break;
             case ConsoleKey.D3:
-                //navTo();
+                _navToInventory();
                 break;
             case ConsoleKey.D4:
-                //();
+                _navToShop();
                 break;
             case ConsoleKey.D5:
                 _navToEquipment();

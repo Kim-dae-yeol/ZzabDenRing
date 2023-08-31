@@ -1,3 +1,4 @@
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 
 namespace ZzabDenRing;
@@ -10,9 +11,10 @@ public class Game
     private ScreenDisplay _display = new();
 
 
-    public void Start()
+    public async void Start()
     {
         _display.Display();
+        Container.GetRepository().SaveData();
     }
 
 

@@ -6,7 +6,7 @@ public class AppData
 {
     [JsonInclude] // include this field
     public Character[] Characters;
-
+    
     [JsonInclude]
     public List<EquipItem[]> InventoryForEquip;
     [JsonInclude]

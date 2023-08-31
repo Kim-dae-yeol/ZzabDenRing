@@ -6,12 +6,11 @@ public class Repository
 {
     private readonly IDataSource _source;
     private static Repository? _instance;
-    public Character?[] Characters { get; private set; }
+    public Character[] Characters { get; private set; }
     private int _selectedIndex = 0;
     public Character? Character => Characters.ElementAtOrDefault(_selectedIndex);
 
-    private Task? _currentTask = null;
-    public bool IsTaskComplete => _currentTask?.IsCompleted ?? true;
+    public Task? CurrentTask;
 
     public static Repository GetInstance()
     {
@@ -24,11 +23,10 @@ public class Repository
         LoadCharacters();
     }
 
-    public async void LoadCharacters()
+    public void LoadCharacters()
     {
-        var task = _source.GetCharacters();
-        _currentTask = task;
-        Characters = await task;
+        Characters = _source.GetCharacters();
+        CurrentTask = null;
     }
 
     public void SelectCharacter(int index)
@@ -39,12 +37,27 @@ public class Repository
 
     public void SaveData()
     {
-        _currentTask = _source.SaveData(Characters);
+        _source.SaveData(Characters);
     }
 
-    public async Task CreateCharacter(Character c)
+    public void CreateCharacter(Character c)
     {
         Characters[_selectedIndex] = c;
-        await _source.SaveData(Characters);
+        _source.SaveData(Characters);
+    }
+
+    public void BuyItem(IItem item)
+    {
+        Character.Inventory.Add(item);
+        Character.Gold -= item.Price;
+        SaveData();
+    }
+
+    public void SellItem(IItem sellItem)
+    {
+        var delete = Character.Inventory.Find(item => item.Name == sellItem.Name);
+        Character.Inventory.Remove(delete);
+        Character.Gold += sellItem.Price / 10 * 3;
+        SaveData();
     }
 }

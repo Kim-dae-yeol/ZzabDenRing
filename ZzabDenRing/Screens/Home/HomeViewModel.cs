@@ -10,12 +10,12 @@ public class HomeViewModel
     private HomeState _homeState;
     private Repository _repo;
     public HomeState HomeState => _homeState;
-    public bool IsLoading => !_repo.IsTaskComplete;
-
+    public Task? Loading;
     public HomeViewModel()
     {
         _repo = Container.GetRepository();
         // todo get characters from repo
+        Loading = _repo.CurrentTask;
         var characters = _repo.Characters;
         AnimationState = GetHomeState();
         _homeState = new HomeState(0, characters);
@@ -77,5 +77,5 @@ public record HomeSplashState(
 
 public record HomeState(
     int CurX,
-    IReadOnlyCollection<Character> Characters,
+    IReadOnlyCollection<Character?> Characters,
     bool CreateCharacter = false);

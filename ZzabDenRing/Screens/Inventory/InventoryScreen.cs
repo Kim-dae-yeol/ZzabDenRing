@@ -11,7 +11,7 @@ namespace ZzabDenRing.Screens.Inventory
 {
     internal class InventoryScreen : BaseScreen
     {
-       
+
         int SelectIndex = 0;
         IItem[] arrItem;
         int itemX;
@@ -31,8 +31,8 @@ namespace ZzabDenRing.Screens.Inventory
         protected override bool ManageInput()
         {
             return false;
-        }    
-        
+        }
+
         public InventoryScreen(Action popBackStack) // 생성자
         {
             Console.Clear();
@@ -57,7 +57,7 @@ namespace ZzabDenRing.Screens.Inventory
         {
             int index = 0;
 
-            for (int i=0; i<arrItem.Length; i++)
+            for (int i = 0; i < arrItem.Length; i++)
             {
                 if (arrItem[i] == null)
                 {
@@ -143,7 +143,7 @@ namespace ZzabDenRing.Screens.Inventory
             Console.WriteLine(" ★ 인벤토리 ★");
             Console.WriteLine();
 
-            for (int i=0; i<arrItem.Length; i++)
+            for (int i = 0; i < arrItem.Length; i++)
             {
                 if (i != 0 && i % itemX == 0)
                 {
@@ -167,12 +167,12 @@ namespace ZzabDenRing.Screens.Inventory
             }
 
             Console.WriteLine("\n");
-            if (arrItem[SelectIndex]  != null)
+            if (arrItem[SelectIndex] != null)
             {
                 Console.Write(" 현재 선택한 아이템: ");
                 Console.WriteLine($"{arrItem[SelectIndex].Name} + ({arrItem[SelectIndex].Type})");
                 Console.WriteLine();
-                
+
                 Console.WriteLine(" 가격   : " + arrItem[SelectIndex].Price);
                 Console.WriteLine();
                 Console.WriteLine($"☆{arrItem[SelectIndex].Desc}☆");
@@ -186,9 +186,9 @@ namespace ZzabDenRing.Screens.Inventory
 
         public void DataSetting()
         {
-            
+
             bool flag = true;
-            
+
 
             while (flag)
             {
