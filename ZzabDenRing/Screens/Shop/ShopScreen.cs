@@ -14,7 +14,7 @@ public class ShopScreen : BaseScreen
     private const int TabWidth = 12;
     private const int TabHeight = 3;
     private int ShopLeft => Width / 2 - _totalWidth / 2 + 2; // window border : 2
-    private int EnhancementSlotWidth => 20;
+    private int EnhancementSlotWidth => 22;
     private int EnhancementSlotHeight => 5;
     private int EnhancementSlotTop => Top + ShopHeight / 3;
     private int EnhancementSlotLeft => ShopLeft + ShopWidth / 2 - EnhancementSlotWidth / 2;
@@ -165,6 +165,8 @@ public class ShopScreen : BaseScreen
             .GetValues<InventoryTabs>()
             .Select(it => _tabStrings[(int)it])
             .ToArray();
+
+        //todo 강화 중인 경우 장비탭만 출력하도록!
         DrawTabs(left, top + 1, tabs, isShopTabs: false);
         SetCursorPosition(left, top + TabHeight + 1);
 
@@ -276,8 +278,49 @@ public class ShopScreen : BaseScreen
         this.DrawBorder(EnhancementSlotLeft, EnhancementSlotTop, EnhancementSlotWidth, EnhancementSlotHeight);
         SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
         // todo 강화의 돌 갯수 
-        // todo 선택한 장비 아이템 출력 
-        
+        // todo 선택한 장비 아이템 출력
+        if (!_vm.EnhanceSlotItem.IsEmptyItem())
+        {
+            SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
+            WriteLine(_vm.EnhanceSlotItem.Name);
+            SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
+            Write("강화확률 : ");
+            var percent = _vm.EnhancePercent;
+            if (percent < 50)
+            {
+                ForegroundColor = ConsoleColor.Red;
+            }
+
+            WriteLine($"{percent}%");
+            ResetColor();
+            SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
+
+            ForegroundColor = ConsoleColor.Magenta;
+            BackgroundColor = ConsoleColor.Gray;
+            for (var i = 0; i < EnhancementSlotWidth - 2; i++)
+            {
+                if (i * 100 / EnhancementSlotWidth <= percent)
+                {
+                    Write('@');
+                }
+                else
+                {
+                    Write(' ');
+                }
+            }
+
+            ResetColor();
+        }
+        else
+        {
+            ForegroundColor = ConsoleColor.Cyan;
+            var text = "강화";
+            SetCursorPosition(
+                CursorLeft + EnhancementSlotWidth / 2 - text.LengthToDisplay() / 2 - 1
+                , CursorTop);
+            WriteLine(text);
+            ResetColor();
+        }
     }
 
     internal enum ShopTabs
