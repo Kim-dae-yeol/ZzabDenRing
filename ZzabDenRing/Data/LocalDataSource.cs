@@ -6,6 +6,7 @@ namespace ZzabDenRing.Data;
 public class LocalDataSource : IDataSource
 {
     private const string FileName = "ZzabDenRing.json";
+    private const string ShopperFileName = "items.json";
 
     public Character[] GetCharacters()
     {
@@ -41,7 +42,7 @@ public class LocalDataSource : IDataSource
                     character.Inventory = list;
                 }
             }
-            catch (JsonException  e)
+            catch (JsonException e)
             {
                 Console.WriteLine("파일이 손상되었습니다.");
                 Thread.Sleep(500);
@@ -89,5 +90,12 @@ public class LocalDataSource : IDataSource
             : File.Open(filePath, FileMode.Create);
 
         JsonSerializer.SerializeAsync(file, saveData);
+    }
+
+    public Shopper GetSellingItems()
+    {
+        var filePath = Path.Combine(Environment.CurrentDirectory, ShopperFileName);
+        using var file = File.OpenRead(filePath);
+        return JsonSerializer.Deserialize<Shopper>(file);
     }
 }

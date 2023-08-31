@@ -11,6 +11,7 @@ public class Repository
     public Character? Character => Characters.ElementAtOrDefault(_selectedIndex);
 
     public Task? CurrentTask;
+    public Shopper Shopper;
 
     public static Repository GetInstance()
     {
@@ -21,6 +22,7 @@ public class Repository
     {
         _source = source;
         LoadCharacters();
+        Shopper = _source.GetSellingItems();
     }
 
     public void LoadCharacters()
