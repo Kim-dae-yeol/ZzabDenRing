@@ -34,7 +34,7 @@ public class ScreenDisplay
                 popBackStack: () => { _backStack.Pop(); },
                 navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
-            ScreenType.Main => new MainScreen(               
+            ScreenType.Main => new MainScreen(
                 navToShop: () => { _backStack.Push(ScreenType.Shop); },
                 navToDungeonEntrance: () => { _backStack.Push(ScreenType.DungeonEntrance); },
                 navToStatus: () => { _backStack.Push(ScreenType.Status); },
@@ -54,7 +54,14 @@ public class ScreenDisplay
                 popBackStack: () => { _backStack.Pop(); }
             ),
             ScreenType.DungeonBattle => new DungeonBattleScreen(
-                monsters: _dungeonEntranceScreen?.monsters ?? new()
+                monsters: _dungeonEntranceScreen?.monsters ?? new(),
+                navToMain: () =>
+                {
+                    do
+                    {
+                        _backStack.Pop();
+                    } while (_backStack.Peek() != ScreenType.Main);
+                }
             ),
             ScreenType.CrateCharacter => new CreateCharacterScreen(
                 navToMain: () =>
@@ -107,8 +114,10 @@ public enum Command
     Run,
     Wrong,
     SelectMonster,
-    AttackMonster,
+    AttackMonster1,
+    AttackMonster2,
+    AttackMonster3,
     AttackCharacter,
-    BallteStart,
+    BattleStart,
     Delete
 }

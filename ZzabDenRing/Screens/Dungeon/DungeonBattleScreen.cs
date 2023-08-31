@@ -15,18 +15,31 @@ namespace ZzabDenRing.Screens.Dungeon
         private List<Monster> _monsters;
 
         // 임의의 캐릭터 설정
-        public Character _character;
+        public Character _character = new Character(
+            "테스트",
+            "테스트 직업",
+            300,
+            1000,
+            20000,
+            10,
+            3,
+            150,
+            15,
+            new());
 
         private Action _navToReward;
         private Action _navToMain;
 
+        private bool _continueOnThisScreen = true;
 
         private enum BattlePhase
         {
             StartPhase,
             CharacterSelectPhase,
-            CharacterAttackPhase,
-            MonsterAttackPhase
+            CharacterAttackPhase1,
+            CharacterAttackPhase2,
+            CharacterAttackPhase3,
+            MonsterAttackPhase,
         }
 
         private BattlePhase _currentPhase = BattlePhase.StartPhase;
@@ -41,18 +54,17 @@ namespace ZzabDenRing.Screens.Dungeon
                 case BattlePhase.CharacterSelectPhase:
                     BattleCharacterPhase1();
                     break;
-                case BattlePhase.CharacterAttackPhase:
-                    BattleCharacterPhase2();
+                case BattlePhase.CharacterAttackPhase1:
+                    BattleCharacterPhase2(0);
+                    break;
+                case BattlePhase.CharacterAttackPhase2:
+                    BattleCharacterPhase2(1);
+                    break;
+                case BattlePhase.CharacterAttackPhase3:
+                    BattleCharacterPhase2(2);
                     break;
                 case BattlePhase.MonsterAttackPhase:
-                    for (var i = 0; i < _monsters.Count; i++)
-                    {
-                        if (_monsters[i].Hp > 0)
-                        {
-                            BattleMonsterPhase(i);
-                            continue;
-                        }
-                    }
+                    BattleMonsterPhase();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -70,32 +82,49 @@ namespace ZzabDenRing.Screens.Dungeon
                     {
                         ConsoleKey.D1 => Command.Attack,
                         // 구현 못함
-                        ConsoleKey.D2 => Command.Nothing,
-                        ConsoleKey.D3 => Command.Run,
+                        // ConsoleKey.D2 => Command.Nothing,
+                        ConsoleKey.D2 => Command.Run,
                         _ => Command.Nothing
                     };
                     break;
                 case BattlePhase.CharacterSelectPhase:
                     command = key.Key switch
                     {
-                        ConsoleKey.D1 => Command.AttackMonster,
-                        ConsoleKey.D2 => Command.AttackMonster,
-                        ConsoleKey.D3 => Command.AttackMonster,
-                        ConsoleKey.X => Command.SelectMonster,
+                        ConsoleKey.D1 => Command.AttackMonster1,
+                        ConsoleKey.D2 => Command.AttackMonster2,
+                        ConsoleKey.D3 => Command.AttackMonster3,
+                        ConsoleKey.X => Command.BattleStart,
                         _ => Command.Nothing
                     };
                     break;
-                case BattlePhase.CharacterAttackPhase:
+                case BattlePhase.CharacterAttackPhase1:
                     command = key.Key switch
                     {
                         ConsoleKey.Enter => Command.AttackCharacter,
+                        ConsoleKey.X => Command.Attack,
+                        _ => Command.Nothing
+                    };
+                    break;
+                case BattlePhase.CharacterAttackPhase2:
+                    command = key.Key switch
+                    {
+                        ConsoleKey.Enter => Command.AttackCharacter,
+                        ConsoleKey.X => Command.Attack,
+                        _ => Command.Nothing
+                    };
+                    break;
+                case BattlePhase.CharacterAttackPhase3:
+                    command = key.Key switch
+                    {
+                        ConsoleKey.Enter => Command.AttackCharacter,
+                        ConsoleKey.X => Command.Attack,
                         _ => Command.Nothing
                     };
                     break;
                 case BattlePhase.MonsterAttackPhase:
                     command = key.Key switch
                     {
-                        ConsoleKey.Enter => Command.BallteStart,
+                        ConsoleKey.Enter => Command.BattleStart,
                         _ => Command.Nothing
                     };
                     break;
@@ -109,8 +138,14 @@ namespace ZzabDenRing.Screens.Dungeon
                 case Command.Run:
                     _navToMain();
                     break;
-                case Command.AttackMonster:
-                    _currentPhase = BattlePhase.CharacterAttackPhase;
+                case Command.AttackMonster1:
+                    _currentPhase = BattlePhase.CharacterAttackPhase1;
+                    break;
+                case Command.AttackMonster2:
+                    _currentPhase = BattlePhase.CharacterAttackPhase2;
+                    break;
+                case Command.AttackMonster3:
+                    _currentPhase = BattlePhase.CharacterAttackPhase3;
                     break;
                 case Command.SelectMonster:
                     _currentPhase = BattlePhase.CharacterSelectPhase;
@@ -118,19 +153,23 @@ namespace ZzabDenRing.Screens.Dungeon
                 case Command.AttackCharacter:
                     _currentPhase = BattlePhase.MonsterAttackPhase;
                     break;
-                case Command.BallteStart:
+                case Command.BattleStart:
                     _currentPhase = BattlePhase.StartPhase;
                     break;
             }
 
-            return _currentPhase == BattlePhase.StartPhase && command == Command.Run;
+            if (!_continueOnThisScreen)
+            {
+                return false;
+            }
+
+            return command != Command.Run;
         }
 
-        public DungeonBattleScreen(List<Monster> monsters)
+        public DungeonBattleScreen(List<Monster> monsters, Action navToMain)
         {
             _monsters = monsters;
-            // 이때 캐릭터 정보도 같이 가져오면 좋겠습니다.
-            // _character = character;
+            _navToMain = navToMain;
         }
 
         private void DungeonBattleScreenShow()
@@ -145,88 +184,137 @@ namespace ZzabDenRing.Screens.Dungeon
 
             for (int i = 0; i < _monsters.Count; i++)
             {
-                WriteLine($"Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].Hp}");
+                if (_monsters[i].Hp > 0)
+                {
+                    WriteLine(
+                        $"Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
+                }
+                else
+                {
+                    WriteLine($"Lv. {_monsters[i].Level} {_monsters[i].Name}  Dead");
+                }
             }
 
             WriteLine();
 
             // 캐릭터 정보 가져와야됨
             WriteLine("[내정보]");
-            WriteLine($"Lv.(character.Lv) (character.Name) ((character.Job))");
-            WriteLine($"HP (character.MaxHp)/(character.Hp)");
+            WriteLine($"Lv.{_character.Level} {_character.Name} ({_character.Job})");
+            WriteLine($"HP {_character.MaxHp}/{_character.Hp}");
             WriteLine();
 
             WriteLine("1. 공격");
-            WriteLine("2. 스킬");
-            WriteLine("3. 도주");
+            // 미구현
+            // WriteLine("2. 스킬");
+            WriteLine("2. 도주");
         }
 
         private void BattleCharacterPhase1()
         {
+            WriteLine("Battle!!");
+            WriteLine();
+
             for (int i = 0; i < _monsters.Count; i++)
             {
                 if (_monsters[i].Hp > 0)
                 {
-                    WriteLine($"{i} Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].Hp}");
+                    WriteLine(
+                        $"{i + 1} Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
                 }
                 else
                 {
-                    WriteLine($"{i} Lv. {_monsters[i].Level} {_monsters[i].Name}  Dead");
+                    WriteLine($"{i + 1} Lv. {_monsters[i].Level} {_monsters[i].Name}  Dead");
                 }
             }
 
-            // 캐릭터 정보 가져와야됨
-            WriteLine("[내정보]");
-            WriteLine($"Lv.(character.Lv) (character.Name) ((character.Job))");
-            WriteLine($"HP (character.MaxHp)/(character.Hp)");
             WriteLine();
 
-            WriteLine("X. 다시 고르기");
+            WriteLine("[내정보]");
+            WriteLine($"Lv.{_character.Level} {_character.Name} ({_character.Job})");
+            WriteLine($"HP {_character.MaxHp}/{_character.Hp}");
+            WriteLine();
+
+            WriteLine("X. 행동 다시 고르기");
         }
 
-        private void BattleCharacterPhase2()
+        private void BattleCharacterPhase2(int index)
         {
-            // 캐릭터페이즈2에서 고른 번호-1를 가져옴
-            int hpBeforeBattle = CharacterAttack(0);
             WriteLine("Battle!!");
             WriteLine();
+
+            if (index >= _monsters.Count || _monsters[index].Hp < 1)
+            {
+                WriteLine("지정할 수 없는 대상입니다. 돌아가십시오.");
+                WriteLine();
+
+                WriteLine("X. 대상 다시 고르기");
+
+                return;
+            }
+
+            int hpBeforeBattle = CharacterAttack(index);
 
             WriteLine($"{_character.Name} 의 공격!");
             WriteLine(
-                $"Lv.(monster[고른번호 - 1].Level) (monster[고른번호 - 1].Name) 을(를) 맞췄습니다. [데미지 : [{hpBeforeBattle} - (monster[고른번호 - 1].Hp]]");
+                $"Lv.{_monsters[index].Level} {_monsters[index].Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle - _monsters[index].Hp}]");
             WriteLine();
 
-            WriteLine($"Lv.(monster[고른번호 - 1].Level) (monster[고른번호 - 1].Name)");
-            //if (_monsters[i].Hp > 0)
-            WriteLine($"HP {hpBeforeBattle} -> (monster[고른번호 - 1].Hp");
-            //else
-            WriteLine($"HP {hpBeforeBattle} -> Dead");
+            WriteLine($"Lv.{_monsters[index].Level} {_monsters[index].Name}");
+            if (_monsters[index].Hp > 0)
+            {
+                WriteLine($"HP {hpBeforeBattle} -> {_monsters[index].Hp}");
+            }
+            else
+            {
+                WriteLine($"HP {hpBeforeBattle} -> Dead");
+            }
+
             WriteLine();
 
-            WriteLine("다음");
+            WriteLine("Enter. 다음");
+            _continueOnThisScreen = _monsters.Count(monster => monster.Hp <= 0) <= 0;
         }
 
         // hp가 0 초과인 몬스터들의 수만큼 밤복
-        private void BattleMonsterPhase(int index)
+        private void BattleMonsterPhase()
         {
             WriteLine("Battle!!");
             WriteLine();
 
-            //몬스터 지정필요
-            int hpBeforeBattle = MonsterAttack(index);
+            for (int i = 0; i < _monsters.Count; i++)
+            {
+                if (_monsters[i].Hp < 1)
+                {
+                    continue;
+                }
 
-            WriteLine($"{_monsters[index - 1].Name} 의 공격!");
-            WriteLine($"Lv.{_character.Level} {_character.Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle} - (character.Hp)]");
+                int hpBeforeBattle = MonsterAttack(i);
+
+                WriteLine($"{_monsters[i].Name} 의 공격!");
+                WriteLine(
+                    $"Lv.{_character.Level} {_character.Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle - _character.Hp}]");
+                WriteLine();
+
+                WriteLine($"Lv.{_character.Level} {_character.Name}");
+                if (_character.Hp > 0)
+                {
+                    WriteLine($"HP {hpBeforeBattle} -> {_character.Hp}");
+                    WriteLine();
+                }
+                else
+                {
+                    WriteLine($"HP {hpBeforeBattle} -> Dead");
+                    WriteLine();
+
+                    WriteLine("Enter. 다음");
+                    _continueOnThisScreen = false;
+                    _navToMain();
+                    return;
+                }
+            }
+
             WriteLine();
-
-            WriteLine($"Lv.{_character.Level} {_character.Name}");
-            //if (_character.Hp > 0)
-            WriteLine($"HP {hpBeforeBattle} -> (character.Hp_");
-            //else
-            WriteLine($"HP {hpBeforeBattle} -> Dead");
-            WriteLine();
-
-            WriteLine("다음");
+            WriteLine("Enter. 다음");
         }
 
         private int CharacterAttack(int index)
@@ -239,24 +327,24 @@ namespace ZzabDenRing.Screens.Dungeon
             }
 
             // 입력받았던 번호를 가져와서 출력
-            int hpBeforeBattle = _monsters[index - 1].Hp;
-            if (attack - _monsters[index - 1].Def > 0)
+            int hpBeforeBattle = _monsters[index].Hp;
+            if (attack - _monsters[index].Def > 0)
             {
-                _monsters[index - 1].Hp -= attack - _monsters[index - 1].Def;
+                _monsters[index].Hp -= attack - _monsters[index].Def;
             }
             else
             {
-                _monsters[index - 1].Hp -= 1;
+                _monsters[index].Hp -= 1;
             }
 
             // 계산전 체력을 리턴
             return hpBeforeBattle;
         }
 
-        // 현재체력이 hp > 0 이상인 몬스터만 실행(반복문)
+
         private int MonsterAttack(int index)
         {
-            int attack = Random.Shared.Next((int)(_monsters[index - 1].Atk * 0.9), (int)(_monsters[index - 1].Atk * 1.1)) + 1;
+            int attack = Random.Shared.Next((int)(_monsters[index].Atk * 0.9), (int)(_monsters[index].Atk * 1.1)) + 1;
             int hpBeforeBattle = _character.Hp;
             if (attack - _character.Def > 0)
             {
