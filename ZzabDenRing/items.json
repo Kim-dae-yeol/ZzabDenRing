@@ -24,7 +24,7 @@
     {
       "Name": "코인 투자",
       "Desc": "???",
-      "Price": 100,
+      "Price": 15000,
       "Type": 4,
       "Grade": 3
     }
@@ -32,7 +32,7 @@
   "SellingMaterial": [
     {
       "Name": "강화의 돌",
-      "Desc": "강화에 쓰이는 재료다.",
+      "Desc": "강화에 쓰이는 돌이다.",
       "Price": 500,
       "Type": 4,
       "Grade": 0

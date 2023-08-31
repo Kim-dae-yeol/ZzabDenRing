@@ -81,13 +81,13 @@ public class EquipItem : IItem
 public enum ItemType
 {
     Helm,
-    Weapon,
     Armor,
+    Weapon,
+    Boots,
+    Ring,
     Necklace,
     SubWeapon,
     Pants,
-    Ring,
-    Boots,
     Nothing
 }
 
