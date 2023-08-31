@@ -48,7 +48,7 @@ public class ScreenDisplay
                 popBackStack: () => { _backStack.Pop(); }
             ),
 
-            ScreenType.Inventory => new InventoryScreen(() => { }),
+            ScreenType.Inventory => new InventoryScreen(() => { _backStack.Pop(); }),
             ScreenType.DungeonEntrance => _dungeonEntranceScreen ??= new DungeonEntranceScreen(
                 navToBattle: () => { _backStack.Push(ScreenType.DungeonBattle); },
                 popBackStack: () => { _backStack.Pop(); }

@@ -241,8 +241,6 @@ namespace ZzabDenRing.Screens.Inventory
         public void DataSetting()
         {
             bool flag = true;
-
-
             while (flag)
             {
                 Console.Clear();
