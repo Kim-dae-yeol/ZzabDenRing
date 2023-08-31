@@ -20,6 +20,8 @@ public class ScreenDisplay
     internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
 
     private DungeonEntranceScreen? _dungeonEntranceScreen = null;
+    private long _playTime = 0;
+    private long _startTime = DateTimeOffset.UtcNow.Millisecond;
 
     public ScreenDisplay()
     {
@@ -32,8 +34,11 @@ public class ScreenDisplay
         {
             ScreenType.Home => new HomeScreen(
                 navToMain: () => { _backStack.Push(ScreenType.Main); },
-                exitGame: () => { Environment.Exit(0
-                    ); },
+                exitGame: () =>
+                {
+                    Environment.Exit(0
+                    );
+                },
                 navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
             ScreenType.Main => new MainScreen(

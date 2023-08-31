@@ -377,8 +377,6 @@ public class ShopViewModel
         {
             Message = "실패했습니다...ㅠㅠ";
         }
-
-        _repository.SaveData();
     }
 }
 

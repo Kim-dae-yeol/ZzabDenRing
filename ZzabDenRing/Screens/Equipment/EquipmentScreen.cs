@@ -9,7 +9,9 @@ public class EquipmentScreen : BaseScreen
     private EquipmentViewModel _vm;
     private Action _popBackStack;
 
-    private const int WidthPerSlot = 20 + 2; // 2 is border
+    private const int WidthPerSlot = 30
+                                     + 2; // 2 is border
+
     private const int HeightPerSlot = 5 + 2; // 2 is border
     private const int InventoryWidth = 50;
     private int InventoryHeight => Height - 2;
@@ -24,7 +26,7 @@ public class EquipmentScreen : BaseScreen
     {
         _popBackStack = popBackStack;
         Height = HeightPerSlot * EquipmentViewModel.SlotRows + 2;
-        Width = WidthPerSlot * EquipmentViewModel.SlotCols + 2 + InventoryWidth + 40;
+        Width = WidthPerSlot * EquipmentViewModel.SlotCols + 2 + InventoryWidth + 2;
         // border of window AND EquipmentBorder AND ItemCount
         _vm = new(inventorySlots: Height - 2 - 2 - 1);
     }
@@ -121,9 +123,12 @@ public class EquipmentScreen : BaseScreen
         }
         else
         {
+            ForegroundColor = equipItem.Grade.Color();
+
             var emoji = equipItem.Type.ToEmoji();
-            var name = $"{emoji}{equipItem.Name}";
-            // var grade = $"•{}";
+            var enhancement = equipItem.Enhancement > 0 ? $"+{equipItem.Enhancement}" : "";
+            
+            var name = $"{emoji}{enhancement}{equipItem.Name}";
             var atk = $"•Atk : {equipItem.Atk}";
             var def = $"•Def : {equipItem.Def}";
             var cri = $"•Cri : {equipItem.Critical}";
@@ -139,6 +144,8 @@ public class EquipmentScreen : BaseScreen
                 );
                 WriteLine(line);
             }
+
+            ResetColor();
         }
     }
 
@@ -206,7 +213,11 @@ public class EquipmentScreen : BaseScreen
         {
             ForegroundColor = InvalidColor;
         }
-        
+        else
+        {
+            ForegroundColor = equipItem.Grade.Color();
+        }
+
         //todo 이부분 정렬 수정 
         var blankForName = equipItem.Name.LengthToDisplay();
         var nameBuilder = new StringBuilder(equipItem.Name);
@@ -229,7 +240,7 @@ public class EquipmentScreen : BaseScreen
             typeBuilder.Append(' ');
         }
 
-        var grade = "등급";
+        var grade = equipItem.Grade.String();
         var gradeBuilder = new StringBuilder(grade);
         var blankForGrade = grade.LengthToDisplay();
         for (var i = 0; i < 10 - blankForGrade; i++)

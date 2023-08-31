@@ -127,8 +127,7 @@ public class EquipmentViewModel
                             EquipItem(EquipmentSlot.Boots, equipItem);
                             break;
                         case ItemType.Helm:
-                            EquipItem(EquipmentSlot.Helm
-                                , equipItem);
+                            EquipItem(EquipmentSlot.Helm, equipItem);
                             break;
                     }
                 }

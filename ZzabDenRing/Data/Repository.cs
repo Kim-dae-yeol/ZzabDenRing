@@ -43,12 +43,7 @@ public class Repository
 
     public void SaveData()
     {
-        if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _time > 5000)
-        {
-            _time = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-            _source.SaveData(Characters);
-        }
+        _source.SaveData(Characters);
     }
 
     public void CreateCharacter(Character c)
