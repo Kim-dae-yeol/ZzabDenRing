@@ -13,8 +13,11 @@ namespace ZzabDenRing.Screens.Inventory
     {
        
         int SelectIndex = 0;
-        Item[] arrItem;
+        IItem[] arrItem;
         int itemX;
+        int x = 10;
+        int y = 10;
+        Action _popBackStack;
 
         protected override void DrawContent()
         {
@@ -27,25 +30,13 @@ namespace ZzabDenRing.Screens.Inventory
 
         protected override bool ManageInput()
         {
-            var key = Console.ReadKey();
-            var command = key.Key switch
-            {
-                ConsoleKey.UpArrow => Command.MoveTop,
-                ConsoleKey.RightArrow => Command.MoveRight,
-                ConsoleKey.DownArrow => Command.MoveBottom,
-                ConsoleKey.LeftArrow => Command.MoveLeft,
-                ConsoleKey.Enter => Command.Interaction,
-                ConsoleKey.X => Command.Exit,
-                _ => Command.Nothing
-            };
-
-            return command != Command.Exit;
+            return false;
         }    
         
-        public InventoryScreen(int x, int y)
+        public InventoryScreen(Action popBackStack) // 생성자
         {
             Console.Clear();
-
+            _popBackStack = popBackStack;
             if (1 > x) // 인벤토리 크기가 0보다 작으면 안 되니까
 
             {
@@ -59,10 +50,10 @@ namespace ZzabDenRing.Screens.Inventory
 
             itemX = x;
 
-            arrItem = new Item[(x * y)];
+            arrItem = new IItem[(x * y)];
         }
 
-        public void ItemIn(Item item)
+        public void ItemIn(IItem item)
         {
             int index = 0;
 
@@ -76,7 +67,7 @@ namespace ZzabDenRing.Screens.Inventory
             }
             arrItem[index] = item;
         }
-        public void ItemIn(Item item, int order)
+        public void ItemIn(IItem item, int order)
         {
             if (null != arrItem[order])
             {
@@ -179,12 +170,9 @@ namespace ZzabDenRing.Screens.Inventory
             if (arrItem[SelectIndex]  != null)
             {
                 Console.Write(" 현재 선택한 아이템: ");
-                Console.WriteLine($"{arrItem[SelectIndex].Name} +{arrItem[SelectIndex].Enhancement} ({arrItem[SelectIndex].Type})");
+                Console.WriteLine($"{arrItem[SelectIndex].Name} + ({arrItem[SelectIndex].Type})");
                 Console.WriteLine();
-                Console.WriteLine(" 공격력 : " + arrItem[SelectIndex].Atk);
-                Console.WriteLine(" 방어력 : " + arrItem[SelectIndex].Def);
-                Console.WriteLine(" 치명타 : " + arrItem[SelectIndex].Critical);
-                Console.WriteLine(" 체력   : " + arrItem[SelectIndex].Hp);
+                
                 Console.WriteLine(" 가격   : " + arrItem[SelectIndex].Price);
                 Console.WriteLine();
                 Console.WriteLine($"☆{arrItem[SelectIndex].Desc}☆");
@@ -198,37 +186,37 @@ namespace ZzabDenRing.Screens.Inventory
 
         public void DataSetting()
         {
-            InventoryScreen NewInven = new InventoryScreen(10, 10);
+            
+            bool flag = true;
+            
 
-            NewInven.ItemIn(new Item(name: "군주 직검", desc: "군주가 사용하던 직검이다.", enhancement: 1, ItemType.Weapon, atk: 5, def: 0, critical: 1, hp: 0, price: 30));
-
-            while (true)
+            while (flag)
             {
                 Console.Clear();
-                NewInven.Render();
+                Render();
                 ConsoleKeyInfo checkKey = Console.ReadKey();
 
                 switch (checkKey.Key)
                 {
                     case ConsoleKey.LeftArrow:
-                        NewInven.SelectMoveLeft();
+                        SelectMoveLeft();
                         break;
                     case ConsoleKey.RightArrow:
-                        NewInven.SelectMoveRight();
+                        SelectMoveRight();
                         break;
                     case ConsoleKey.UpArrow:
-                        NewInven.SelectMoveUp();
+                        SelectMoveUp();
                         break;
                     case ConsoleKey.DownArrow:
-                        NewInven.SelectMoveDown();
+                        SelectMoveDown();
                         break;
-                    //case ConsoleKey.D0:
-                    //    MainScreen();
                     default:
+                        flag = false;
                         break;
 
                 }
             }
+            _popBackStack();
         }
     }
 }
