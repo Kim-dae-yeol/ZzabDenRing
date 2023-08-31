@@ -15,12 +15,7 @@ namespace ZzabDenRing.Screens.Status
         private Action _navToMain;
         public Character player;
 
-        //public StatusScreen(Action navToMain)
-        //{
-        //    _navToMain = navToMain;
-        //    player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<IItem>(),
-        //        new Model.Equipment());
-        //}
+        
         public StatusScreen(Action navToMain, Repository repository)
         {
             _navToMain = navToMain;
@@ -35,7 +30,7 @@ namespace ZzabDenRing.Screens.Status
             Console.WriteLine(
                 "\r\n _______ __          __               \r\n|     __|  |_.---.-.|  |_.--.--.-----.\r\n|__     |   _|  _  ||   _|  |  |__ --|\r\n|_______|____|___._||____|_____|_____|\r\n  \r\n");
 
-            Console.ResetColor(); //컬러 리셋
+            Console.ResetColor(); 
 
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
             Console.WriteLine();
