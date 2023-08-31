@@ -27,7 +27,8 @@ public class CreateCharViewModel
         }
     }
 
-    public async void CreateCharacter()
+    public
+        void CreateCharacter()
     {
         Validation();
         Character c = new Character(
@@ -44,7 +45,7 @@ public class CreateCharViewModel
             new Model.Equipment()
         );
 
-        await _repository.CreateCharacter(c);
+        _repository.CreateCharacter(c);
     }
 }
 

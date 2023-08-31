@@ -161,11 +161,12 @@ public class ShopScreen : BaseScreen
             left: left + tabs.Length * TabWidth + 2,
             top: top + TabHeight / 2 + TabHeight % 2
         );
-        Write($"{_vm.CurrentInventoryIdx + 1}/{_vm.TotalShopItems}");
+        Write($"{_vm.CurrentInventoryIdx + 1}/{_vm.TotalInventoryItems}");
         SetCursorPosition(left, top + TabHeight + 1);
 
         WriteLine("|      이름     |     부위    |    등급    |   가격  ");
         DrawItems(left + 1, CursorTop, _vm.CurrentPageInventoryItems, false);
+        DrawGold(left + InventoryWidth - 20, top  + InventoryHeight, _vm.Gold);
     }
 
     private void DrawItems(int left, int top, IEnumerable<IItem> items, bool isShopItem)
@@ -209,6 +210,15 @@ public class ShopScreen : BaseScreen
                       $"     {item.Desc}    |" +
                       $"    등급    |   {item.Price:N0}  ");
         }
+    }
+
+    private void DrawGold(int left, int top, int gold)
+    {
+        SetCursorPosition(left, top);
+        ForegroundColor = ConsoleColor.DarkYellow;
+        Write($"Gold : ");
+        Write($"{gold,13:N0}");
+        ResetColor();
     }
 
     internal enum ShopTabs

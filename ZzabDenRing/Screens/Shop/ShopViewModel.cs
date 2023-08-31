@@ -55,6 +55,8 @@ public class ShopViewModel
 
     public bool IsEnhancementTab => _state.CurrentShopTab == (int)ShopScreen.ShopTabs.Enhancement;
 
+    public int Gold => _state.Gold;
+
     // todo 1. 강화 탭인 경우 강화 할 아이템이 선택됐는지 ?
     // todo 1. 탭 마다 필터링 적용 하기
     public string? Message;
@@ -62,17 +64,25 @@ public class ShopViewModel
     public ShopViewModel()
     {
         _repository = Container.GetRepository();
+        LoadDataAsync();
+    }
+
+    private void LoadDataAsync()
+    {
+        var character = _repository.Character;
+        var inventory = _repository.Character.Inventory.ToList();
+        var gold = character.Gold;
 
         _state = new(
-            SellingItems: Game.Items.Select(it => it as IItem).ToList(),
-            Inventory: _repository.Character.Inventory.Select(it => it as IItem).ToList(),
+            SellingItems: Game.Items.Select(it => it).ToList(),
+            Inventory: inventory,
             CurX: 0,
             CurY: 0,
             CurrentShopTab: 0,
             CurShopItemIdx: 0,
             CurInventoryItemIdx: 0,
             CurrentInventoryTab: 0,
-            Gold: _repository.Character.Gold
+            Gold: gold
         );
     }
 
@@ -173,12 +183,43 @@ public class ShopViewModel
 
     private void BuyItem()
     {
-        Message = "아직 구현중이에영";
+        var selectedItem = _state.SellingItems.ElementAtOrDefault(CurrentShopIdx);
+        if (selectedItem == null)
+        {
+            return;
+        }
+
+        if (selectedItem.Price > Gold)
+        {
+            Message = "골드가 부족합니다.";
+        }
+        else
+        {
+            Message = $"{selectedItem.Name}을(를) {selectedItem.Price}에 구매합니다.";
+            _repository.BuyItem(selectedItem);
+            _state = _state with
+            {
+                Inventory = _repository.Character?.Inventory,
+                Gold = _repository.Character.Gold
+            };
+        }
     }
 
     private void SellItem()
     {
-        Message = "아직 구현중이에영";
+        var selectedItem = _state.Inventory.ElementAtOrDefault(CurrentInventoryIdx);
+        if (selectedItem == null)
+        {
+            return;
+        }
+
+        Message = $"{selectedItem.Name}을(를) {selectedItem.Price * 3 / 10}에 판매합니다";
+        _repository.SellItem(selectedItem);
+        _state = _state with
+        {
+            Inventory = _repository.Character?.Inventory,
+            Gold = _repository.Character.Gold
+        };
     }
 
     private void EnhanceItem()
@@ -209,7 +250,8 @@ public class ShopViewModel
                             return false;
                     }
                 }).ToList(),
-            SellingItems = _repository.Character.Inventory
+
+            SellingItems = ShopItems
                 .Select(it =>
                 {
                     IItem item = it;
@@ -243,6 +285,4 @@ public record ShopState(
     int CurShopItemIdx,
     int CurInventoryItemIdx,
     int Gold
-)
-{
-}
+);

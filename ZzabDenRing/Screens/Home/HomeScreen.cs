@@ -71,8 +71,10 @@ public class HomeScreen : BaseScreen
         }
     }
 
-    protected override void DrawContent()
+    protected override async void DrawContent()
     {
+        if (_vm.Loading != null) await _vm.Loading;
+        
         if (IsSplashFinished)
         {
             if (_vm.HomeState.CreateCharacter)
@@ -217,7 +219,7 @@ public class HomeScreen : BaseScreen
 
         for (var i = 0; i < CharacterSlots; i++)
         {
-            Character? character = _vm.HomeState.Characters.ElementAtOrDefault(i);
+            var character = _vm.HomeState.Characters.ElementAtOrDefault(i);
             var slotLeft = startLeft + 2 + CharacterSlotWidth * i;
             var slotTop = startTop + 1;
             var isCursorOn = _vm.HomeState.CurX == i;
