@@ -32,7 +32,8 @@ public class ScreenDisplay
         {
             ScreenType.Home => new HomeScreen(
                 navToMain: () => { _backStack.Push(ScreenType.Main); },
-                popBackStack: () => { _backStack.Pop(); },
+                exitGame: () => { Environment.Exit(0
+                    ); },
                 navToCreateCharacter: () => { _backStack.Push(ScreenType.CrateCharacter); }
             ),
             ScreenType.Main => new MainScreen(
@@ -152,5 +153,6 @@ public enum Command
     AttackMonster3,
     AttackCharacter,
     BattleStart,
-    Delete
+    Delete,
+    Enhance
 }

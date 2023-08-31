@@ -54,7 +54,7 @@ public class ShopViewModel
 
     public EquipItem EnhanceSlotItem => _state.EnhanceItem;
 
-    private int _enhancePercent => 150 - EnhanceSlotItem.Enhancement * ((int)EnhanceSlotItem.Grade * 7);
+    private int _enhancePercent => 100 - (EnhanceSlotItem.Enhancement * (int)(EnhanceSlotItem.Grade + 1) * 4);
 
     public int EnhancePercent
     {
@@ -64,25 +64,25 @@ public class ShopViewModel
             {
                 return 100;
             }
-            else if (_enhancePercent <= 5)
+
+            return _enhancePercent switch
             {
-                return 5;
-            }
-            else
-            {
-                return _enhancePercent;
-            }
+                <= 5 => 5,
+                _ => _enhancePercent
+            };
         }
     }
 
-    // todo 1. 강화 탭인 경우 강화 할 아이템이 선택됐는지 ?
-    // todo 1. 탭 마다 필터링 적용 하기
-    // todo 강화창으로 옮긴 경우 아이템 넘기기 
+    public bool Success { get; private set; }
     public string? Message;
 
-    public int StoneCount => _state.Inventory
-        .OfType<MaterialItem>()
-        .Count(it => it.Name == Constants.StoneOfEnhance);
+    public int StoneCount => _repository.Character
+        .Inventory
+        .Count(it => it is MaterialItem);
+
+    public int NeedStone => (int)(EnhanceSlotItem.Grade + 1) * EnhanceSlotItem.Enhancement + 1;
+    public bool CanEnhance => StoneCount >= NeedStone;
+
 
     public ShopViewModel()
     {
@@ -93,7 +93,7 @@ public class ShopViewModel
     private void LoadData()
     {
         var character = _repository.Character;
-        var inventory = _repository.Character.Inventory.ToList();
+        var inventory = _repository.Character.Inventory.Where(it => it is EquipItem).ToList();
         var gold = character.Gold;
 
         _state = new(
@@ -211,6 +211,9 @@ public class ShopViewModel
                 }
 
                 break;
+            case Command.Enhance:
+                Enhance();
+                break;
         }
     }
 
@@ -235,9 +238,21 @@ public class ShopViewModel
         {
             Message = $"{selectedItem.Name}을(를) {selectedItem.Price}에 구매합니다.";
             _repository.BuyItem(selectedItem);
+
             _state = _state with
             {
-                Inventory = _repository.Character?.Inventory,
+                Inventory = _repository.Character.Inventory.Where(it =>
+                    {
+                        return CurrentInventoryTab switch
+
+                        {
+                            (int)ShopScreen.InventoryTabs.Equip => it is EquipItem,
+                            (int)ShopScreen.InventoryTabs.Material => it is MaterialItem,
+                            (int)ShopScreen.InventoryTabs.Use => it is UseItem,
+                            _ => false
+                        };
+                    }
+                ).ToList(),
                 Gold = _repository.Character.Gold
             };
         }
@@ -253,9 +268,21 @@ public class ShopViewModel
 
         Message = $"{selectedItem.Name}을(를) {selectedItem.Price * 3 / 10}에 판매합니다";
         _repository.SellItem(selectedItem);
+
         _state = _state with
         {
-            Inventory = _repository.Character?.Inventory,
+            Inventory = _repository.Character.Inventory.Where(it =>
+                {
+                    return CurrentInventoryTab switch
+
+                    {
+                        (int)ShopScreen.InventoryTabs.Equip => it is EquipItem,
+                        (int)ShopScreen.InventoryTabs.Material => it is MaterialItem,
+                        (int)ShopScreen.InventoryTabs.Use => it is UseItem,
+                        _ => false
+                    };
+                }
+            ).ToList(),
             Gold = _repository.Character.Gold
         };
     }
@@ -277,6 +304,10 @@ public class ShopViewModel
 
     private void OnTabChanged()
     {
+        _state = _state with
+        {
+            CurInventoryItemIdx = 0, CurShopItemIdx = 0
+        };
         if (CurrentShopTab == (int)ShopScreen.ShopTabs.Enhancement)
         {
             _state = _state with
@@ -303,7 +334,6 @@ public class ShopViewModel
 
         _state = _state with
         {
-
             SellingItems = shopperItems,
             Inventory = _repository.Character.Inventory
                 .Select(it =>
@@ -325,6 +355,30 @@ public class ShopViewModel
                     }
                 }).ToList(),
         };
+    }
+
+    private void Enhance()
+    {
+        if (StoneCount < NeedStone)
+        {
+            Message = "강화의 돌의 갯수가 부족합니다";
+            return;
+        }
+
+        var success = Random.Shared.Next(1, 101) <= EnhancePercent;
+        _repository.Enhance(NeedStone);
+        Success = success;
+        if (success)
+        {
+            EnhanceSlotItem.Enhance();
+            Message = "성공! 축하합니다!";
+        }
+        else
+        {
+            Message = "실패했습니다...ㅠㅠ";
+        }
+
+        _repository.SaveData();
     }
 }
 

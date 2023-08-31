@@ -1,3 +1,5 @@
+using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.View;
 using static System.Console;
 
@@ -22,15 +24,20 @@ public abstract class BaseScreen : IScreen
 
     protected List<IView> Views = new();
 
+    private static Repository _repository;
+
     protected BaseScreen()
     {
+        
         CommandsWidth = Width;
         CommandLeft = Left + 1;
         CommandTop = Top + Height + 1;
+        _repository = Container.GetRepository();
     }
 
     public void DrawScreen()
     {
+        _repository.SaveData();
         do
         {
             if (ClearScreenWhenRedraw)
@@ -80,6 +87,7 @@ public abstract class BaseScreen : IScreen
             WriteLine();
             SetCursorPosition(Left, CursorTop);
         }
+
         ResetColor();
     }
 

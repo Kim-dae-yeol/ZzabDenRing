@@ -14,7 +14,6 @@ public class Game
     public void Start()
     {
         _display.Display();
-        Container.GetRepository().SaveData();
     }
 
 

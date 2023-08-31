@@ -19,13 +19,13 @@ public class HomeScreen : BaseScreen
     private const int ButtonWidth = 16;
 
     private readonly Action _navToMain;
-    private readonly Action _popBackStack;
+    private readonly Action _exitGame;
     private Action _navToCreateCharacter;
 
-    public HomeScreen(Action navToMain, Action popBackStack, Action navToCreateCharacter)
+    public HomeScreen(Action navToMain, Action exitGame, Action navToCreateCharacter)
     {
         _navToMain = navToMain;
-        _popBackStack = popBackStack;
+        _exitGame = exitGame;
         _navToCreateCharacter = navToCreateCharacter;
         Height = 30;
         ClearScreenWhenRedraw = false;
@@ -145,7 +145,7 @@ public class HomeScreen : BaseScreen
             switch (command)
             {
                 case Command.Exit:
-                    _popBackStack();
+                    _exitGame();
                     break;
                 case Command.Interaction:
                     if (_vm.HomeState.CreateCharacter)
