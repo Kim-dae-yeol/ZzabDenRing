@@ -57,7 +57,11 @@ public class ScreenDisplay
                 monsters: _dungeonEntranceScreen?.monsters ?? new()
             ),
             ScreenType.CrateCharacter => new CreateCharacterScreen(
-                navToMain: () => { _backStack.Push(ScreenType.Main); },
+                navToMain: () =>
+                {
+                    while (_backStack.Pop() == ScreenType.Home) ;
+                    _backStack.Push(ScreenType.Main);
+                },
                 popBackStack: () => { _backStack.Pop(); }
             ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
@@ -106,4 +110,5 @@ public enum Command
     AttackMonster,
     AttackCharacter,
     BallteStart,
+    Delete
 }
