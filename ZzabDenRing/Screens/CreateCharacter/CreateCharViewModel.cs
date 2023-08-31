@@ -187,7 +187,7 @@ public class CreateCharViewModel
 
     private void NextStep()
     {
-        if (CurrentState.CreateStep < CreateStep.Stats)
+        if (CurrentState.CreateStep < CreateStep.Exit)
         {
             CurrentState = CurrentState with
             {

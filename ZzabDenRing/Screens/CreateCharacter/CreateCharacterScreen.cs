@@ -59,6 +59,8 @@ namespace ZzabDenRing.Screens.CreateCharacter
                     case CreateStep.Stats:
                         DrawStats();
                         break;
+                    case CreateStep.Exit:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -213,7 +215,13 @@ namespace ZzabDenRing.Screens.CreateCharacter
                     throw new ArgumentOutOfRangeException();
             }
 
-            return true;
+            var isExitScreen = _vm.CurrentState.CreateStep != CreateStep.Exit;
+            if (isExitScreen)
+            {
+                _navToMain();
+            }
+
+            return isExitScreen;
         }
     }
 
@@ -222,6 +230,7 @@ namespace ZzabDenRing.Screens.CreateCharacter
     {
         Name,
         Job,
-        Stats
+        Stats,
+        Exit
     }
 }
