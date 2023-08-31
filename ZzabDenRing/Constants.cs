@@ -27,4 +27,5 @@ public static class Constants
     public const int CharacterSlot = 3;
 
     public static string[] Jobs = { "전사", "궁수","마법사" };
+    public static int StartingGold = 10000;
 }

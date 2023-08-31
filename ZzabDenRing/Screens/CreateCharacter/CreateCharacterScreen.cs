@@ -10,7 +10,7 @@ namespace ZzabDenRing.Screens.CreateCharacter
         private Action _popBackStack;
 
         private const int ContentWidth = 60;
-        private const int ContentHeight = 15;
+        private const int ContentHeight = 20;
         private const int ContentPadding = 8;
 
         private CreateStep[] _steps = Enum.GetValues<CreateStep>();
@@ -46,6 +46,7 @@ namespace ZzabDenRing.Screens.CreateCharacter
             SetCursorPosition(left + ContentPadding, top + 1);
 
             foreach (var step in _steps)
+
             {
                 switch (step)
                 {
@@ -58,24 +59,39 @@ namespace ZzabDenRing.Screens.CreateCharacter
                     case CreateStep.Stats:
                         DrawStats();
                         break;
+                    case CreateStep.Exit:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                WriteLine();
+                for (var i = 0; i < 4; i++)
+                {
+                    WriteLine();
+                }
+
                 SetCursorPosition(left + ContentPadding, CursorTop);
             }
         }
 
-        private void HandleState(CreateState state)
+        private async void HandleState(CreateState state)
         {
+            await Task.Delay(20);
+            Beep();
+
             switch (state.CreateStep)
             {
                 case CreateStep.Name:
+                    BackgroundColor = ConsoleColor.Red;
+                    Write(state.ErrorMessage ?? "");
+                    ResetColor();
                     break;
                 case CreateStep.Job:
                     break;
                 case CreateStep.Stats:
+                    BackgroundColor = ConsoleColor.Red;
+                    Write(state.ErrorMessage ?? "");
+                    ResetColor();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -91,11 +107,54 @@ namespace ZzabDenRing.Screens.CreateCharacter
         private void DrawJob()
         {
             Write("직업 : ");
+            var startLeft = CursorLeft;
+            var startTop = CursorTop;
+
+            for (var i = 0; i < Constants.Jobs.Length; i++)
+            {
+                if (i == _vm.CurrentState.SelectedJobIdx && _vm.CurrentState.CreateStep == CreateStep.Job)
+                    ForegroundColor = ConsoleColor.Blue;
+                SetCursorPosition(startLeft + i * 15, startTop);
+                var job = Constants.Jobs[i];
+                this.DrawBorder(startLeft + i * 15, startTop, width: job.LengthToDisplay() + 4, height: 3);
+                SetCursorPosition(
+                    left: startLeft + i * 15 + (job.LengthToDisplay() + 4) / 2 - job.LengthToDisplay() / 2,
+                    top: startTop + 1);
+                Write(job);
+                ResetColor();
+            }
         }
 
         private void DrawStats()
         {
-            Write($"남은 스탯 : {_vm.CurrentState.Stats}");
+            var left = CursorLeft;
+            var statHeader = "남은 스탯 : ";
+            Write(statHeader);
+            WriteLine($"{_vm.CurrentState.Stats}");
+
+            var lines = new[]
+            {
+                $"Hp : {_vm.CurrentState.MaxHp}",
+                $"Atk : {_vm.CurrentState.Atk}",
+                $"Def : {_vm.CurrentState.Def}",
+                $"Cri : {_vm.CurrentState.Cri}"
+            };
+            for (int i = 0; i < lines.Length; i++)
+            {
+                SetCursorPosition(left, CursorTop);
+                if (i == _vm.CurrentState.CurStatIdx && _vm.CurrentState.CreateStep == CreateStep.Stats)
+                {
+                    ForegroundColor = ConsoleColor.Blue;
+                    Write("==> ");
+                }
+                else
+                {
+                    Write("    ");
+                }
+
+                WriteLine(lines[i]);
+                ResetColor();
+            }
         }
 
         private void ReadName()
@@ -103,6 +162,40 @@ namespace ZzabDenRing.Screens.CreateCharacter
             SetCursorPosition(NameInputLeft, NameInputTop);
             var name = ReadLine();
             _vm.OnNameChanged(name);
+        }
+
+        private void ReadJob()
+        {
+            SetCursorPosition(NameInputLeft - 10, NameInputTop + 2);
+            Write("<- Press Enter To Select ->");
+            var key = ReadKey();
+            var command = key.Key switch
+            {
+                ConsoleKey.LeftArrow => Command.MoveLeft,
+                ConsoleKey.RightArrow => Command.MoveRight,
+                ConsoleKey.Enter => Command.Interaction,
+                _ => Command.Nothing
+            };
+            _vm.OnJobChanged(command);
+        }
+
+        private void ReadStats()
+        {
+            SetCursorPosition(NameInputLeft - 10, NameInputTop + 7);
+            Write("<- Decrease / Increase ->");
+            var key = ReadKey();
+
+            var command = key.Key switch
+            {
+                ConsoleKey.LeftArrow => Command.MoveLeft,
+                ConsoleKey.RightArrow => Command.MoveRight,
+                ConsoleKey.DownArrow => Command.MoveBottom,
+                ConsoleKey.UpArrow => Command.MoveTop,
+                ConsoleKey.Enter => Command.Interaction,
+                _ => Command.Nothing
+            };
+
+            _vm.OnStatChanged(command);
         }
 
         protected override bool ManageInput()
@@ -113,14 +206,22 @@ namespace ZzabDenRing.Screens.CreateCharacter
                     ReadName();
                     break;
                 case CreateStep.Job:
+                    ReadJob();
                     break;
                 case CreateStep.Stats:
+                    ReadStats();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return true;
+            var isExitScreen = _vm.CurrentState.CreateStep != CreateStep.Exit;
+            if (isExitScreen)
+            {
+                _navToMain();
+            }
+
+            return isExitScreen;
         }
     }
 
@@ -129,6 +230,7 @@ namespace ZzabDenRing.Screens.CreateCharacter
     {
         Name,
         Job,
-        Stats
+        Stats,
+        Exit
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 using ZzabDenRing.Screens.Main;
 using static System.Console;
@@ -11,9 +13,9 @@ namespace ZzabDenRing.Screens.Inventory
 {
     internal class InventoryScreen : BaseScreen
     {
-
         int SelectIndex = 0;
         IItem[] arrItem;
+        private Repository _repository;
         int itemX;
         int x = 10;
         int y = 10;
@@ -24,8 +26,6 @@ namespace ZzabDenRing.Screens.Inventory
             Console.Clear();
             Render();
             DataSetting();
-
-
         }
 
         protected override bool ManageInput()
@@ -37,6 +37,8 @@ namespace ZzabDenRing.Screens.Inventory
         {
             Console.Clear();
             _popBackStack = popBackStack;
+            _repository = Container.GetRepository(); // 의존성 주입 흉내 -> 수동적 의존성 주입  
+
             if (1 > x) // 인벤토리 크기가 0보다 작으면 안 되니까
 
             {
@@ -50,7 +52,13 @@ namespace ZzabDenRing.Screens.Inventory
 
             itemX = x;
 
+
             arrItem = new IItem[(x * y)];
+            var character = _repository.Character ?? throw new NullReferenceException();
+            for (var i = 0; i < character.Inventory.Count && i < x * y; i++)
+            {
+                arrItem[i] = character.Inventory[i];
+            }
         }
 
         public void ItemIn(IItem item)
@@ -65,14 +73,17 @@ namespace ZzabDenRing.Screens.Inventory
                     break;
                 }
             }
+
             arrItem[index] = item;
         }
+
         public void ItemIn(IItem item, int order)
         {
             if (null != arrItem[order])
             {
                 return;
             }
+
             arrItem[order] = item;
         }
 
@@ -91,10 +102,11 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
+
             if (SelectIndex > 0)
             {
                 SelectIndex -= 1;
-            }           
+            }
         }
 
         public void SelectMoveRight()
@@ -107,6 +119,7 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
+
             if (SelectIndex < 99)
             {
                 SelectIndex += 1;
@@ -123,6 +136,7 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
+
             if (SelectIndex > 9)
             {
                 SelectIndex -= itemX;
@@ -156,10 +170,9 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 if (i != 0 && i % itemX == 0)
                 {
-
-
                     Console.WriteLine(" ");
                 }
+
                 if (SelectIndex == i)
                 {
                     Console.Write(" ★");
@@ -171,7 +184,6 @@ namespace ZzabDenRing.Screens.Inventory
                 else
                 {
                     Console.Write(" ■");
-
                 }
             }
 
@@ -195,7 +207,6 @@ namespace ZzabDenRing.Screens.Inventory
 
         public void DataSetting()
         {
-
             bool flag = true;
 
 
@@ -222,9 +233,9 @@ namespace ZzabDenRing.Screens.Inventory
                     default:
                         flag = false;
                         break;
-
                 }
             }
+
             _popBackStack();
         }
     }
