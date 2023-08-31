@@ -179,9 +179,8 @@ namespace ZzabDenRing.Screens.Inventory
                 Console.WriteLine(" 공격력 : " + arrItem[SelectIndex].Atk);
                 Console.WriteLine(" 방어력 : " + arrItem[SelectIndex].Def);
                 Console.WriteLine(" 치명타 : " + arrItem[SelectIndex].Critical);
-                Console.WriteLine(" 체력 : " + arrItem[SelectIndex].Hp);
-                Console.WriteLine(" 가격 : " + arrItem[SelectIndex].Price);
-                Console.WriteLine(" 종류 : " + arrItem[SelectIndex].Type);
+                Console.WriteLine(" 체력   : " + arrItem[SelectIndex].Hp);
+                Console.WriteLine(" 가격   : " + arrItem[SelectIndex].Price);
                 Console.WriteLine();
                 Console.WriteLine($"☆{arrItem[SelectIndex].Desc}☆");
             }
