@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +11,8 @@ namespace ZzabDenRing.Screens.Inventory
 {
     internal class InventoryScreen : BaseScreen
     {
-       
         int SelectIndex = 0;
-        Item[] arrItem;
+        IItem[] arrItem;
         int itemX;
 
         protected override void DrawContent()
@@ -21,8 +20,6 @@ namespace ZzabDenRing.Screens.Inventory
             Console.Clear();
             Render();
             DataSetting();
-
-
         }
 
         protected override bool ManageInput()
@@ -40,8 +37,8 @@ namespace ZzabDenRing.Screens.Inventory
             };
 
             return command != Command.Exit;
-        }    
-        
+        }
+
         public InventoryScreen(int x, int y)
         {
             Console.Clear();
@@ -59,14 +56,14 @@ namespace ZzabDenRing.Screens.Inventory
 
             itemX = x;
 
-            arrItem = new Item[(x * y)];
+            arrItem = new IItem[(x * y)];
         }
 
-        public void ItemIn(Item item)
+        public void ItemIn(IItem item)
         {
             int index = 0;
 
-            for (int i=0; i<arrItem.Length; i++)
+            for (int i = 0; i < arrItem.Length; i++)
             {
                 if (arrItem[i] == null)
                 {
@@ -74,14 +71,17 @@ namespace ZzabDenRing.Screens.Inventory
                     break;
                 }
             }
+
             arrItem[index] = item;
         }
-        public void ItemIn(Item item, int order)
+
+        public void ItemIn(IItem item, int order)
         {
             if (null != arrItem[order])
             {
                 return;
             }
+
             arrItem[order] = item;
         }
 
@@ -152,14 +152,13 @@ namespace ZzabDenRing.Screens.Inventory
             Console.WriteLine(" ★ 인벤토리 ★");
             Console.WriteLine();
 
-            for (int i=0; i<arrItem.Length; i++)
+            for (int i = 0; i < arrItem.Length; i++)
             {
                 if (i != 0 && i % itemX == 0)
                 {
-
-
                     Console.WriteLine(" ");
                 }
+
                 if (SelectIndex == i)
                 {
                     Console.Write(" ★");
@@ -171,20 +170,15 @@ namespace ZzabDenRing.Screens.Inventory
                 else
                 {
                     Console.Write(" ■");
-
                 }
             }
 
             Console.WriteLine("\n");
-            if (arrItem[SelectIndex]  != null)
+            if (arrItem[SelectIndex] != null)
             {
                 Console.Write(" 현재 선택한 아이템: ");
-                Console.WriteLine($"{arrItem[SelectIndex].Name} +{arrItem[SelectIndex].Enhancement} ({arrItem[SelectIndex].Type})");
+                Console.WriteLine($"{arrItem[SelectIndex].Name}  ({arrItem[SelectIndex].Type})");
                 Console.WriteLine();
-                Console.WriteLine(" 공격력 : " + arrItem[SelectIndex].Atk);
-                Console.WriteLine(" 방어력 : " + arrItem[SelectIndex].Def);
-                Console.WriteLine(" 치명타 : " + arrItem[SelectIndex].Critical);
-                Console.WriteLine(" 체력   : " + arrItem[SelectIndex].Hp);
                 Console.WriteLine(" 가격   : " + arrItem[SelectIndex].Price);
                 Console.WriteLine();
                 Console.WriteLine($"☆{arrItem[SelectIndex].Desc}☆");
@@ -200,7 +194,11 @@ namespace ZzabDenRing.Screens.Inventory
         {
             InventoryScreen NewInven = new InventoryScreen(10, 10);
 
-            NewInven.ItemIn(new Item(name: "군주 직검", desc: "군주가 사용하던 직검이다.", enhancement: 1, ItemType.Weapon, atk: 5, def: 0, critical: 1, hp: 0, price: 30));
+            NewInven.ItemIn(new EquipItem(name: "군주 직검",
+                desc: "군주가 사용하던 직검이다.",
+                enhancement: 1,
+                ItemType.Weapon,
+                atk: 5, def: 0, critical: 1, hp: 0, price: 30));
 
             while (true)
             {
@@ -226,7 +224,6 @@ namespace ZzabDenRing.Screens.Inventory
                     //    MainScreen();
                     default:
                         break;
-
                 }
             }
         }

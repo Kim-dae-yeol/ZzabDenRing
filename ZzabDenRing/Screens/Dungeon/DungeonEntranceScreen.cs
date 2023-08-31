@@ -36,11 +36,14 @@ namespace ZzabDenRing.Screens.Dungeon
                 case Command.Interaction:
                     _navToBattle();
                     break;
+                case Command.Exit:
+                    _popBackStack();
+                    break;
                 case Command.Nothing:
                     CreateMonsters();
                     break;
             }
-            
+
             return command != Command.Exit && command != Command.Interaction;
         }
 
@@ -55,7 +58,6 @@ namespace ZzabDenRing.Screens.Dungeon
 
         public DungeonEntranceScreen()
         {
-
         }
 
         private void CreateMonsters()
