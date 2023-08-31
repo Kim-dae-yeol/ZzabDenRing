@@ -15,11 +15,22 @@ namespace ZzabDenRing.Screens.Dungeon
         private List<Monster> _monsters;
 
         // 임의의 캐릭터 설정
-        public Character _character = new Character("테스트", "테스트 직업", 30, 30, 10, 10, 3, 150, 15, null);
+        public Character _character = new Character(
+            "테스트",
+            "테스트 직업",
+            300,
+            1000,
+            20000,
+            10,
+            3,
+            150,
+            15,
+            new());
 
         private Action _navToReward;
         private Action _navToMain;
 
+        private bool _continueOnThisScreen = true;
 
         private enum BattlePhase
         {
@@ -147,12 +158,18 @@ namespace ZzabDenRing.Screens.Dungeon
                     break;
             }
 
+            if (!_continueOnThisScreen)
+            {
+                return false;
+            }
+
             return command != Command.Run;
         }
 
-        public DungeonBattleScreen(List<Monster> monsters)
+        public DungeonBattleScreen(List<Monster> monsters, Action navToMain)
         {
             _monsters = monsters;
+            _navToMain = navToMain;
         }
 
         private void DungeonBattleScreenShow()
@@ -169,7 +186,8 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 if (_monsters[i].Hp > 0)
                 {
-                    WriteLine($"Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
+                    WriteLine(
+                        $"Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
                 }
                 else
                 {
@@ -200,13 +218,15 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 if (_monsters[i].Hp > 0)
                 {
-                    WriteLine($"{i + 1} Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
+                    WriteLine(
+                        $"{i + 1} Lv. {_monsters[i].Level} {_monsters[i].Name}  HP {_monsters[i].MaxHp}/{_monsters[i].Hp}");
                 }
                 else
                 {
                     WriteLine($"{i + 1} Lv. {_monsters[i].Level} {_monsters[i].Name}  Dead");
                 }
             }
+
             WriteLine();
 
             WriteLine("[내정보]");
@@ -248,9 +268,11 @@ namespace ZzabDenRing.Screens.Dungeon
             {
                 WriteLine($"HP {hpBeforeBattle} -> Dead");
             }
+
             WriteLine();
 
             WriteLine("Enter. 다음");
+            _continueOnThisScreen = _monsters.Count(monster => monster.Hp <= 0) <= 0;
         }
 
         // hp가 0 초과인 몬스터들의 수만큼 밤복
@@ -265,10 +287,12 @@ namespace ZzabDenRing.Screens.Dungeon
                 {
                     continue;
                 }
+
                 int hpBeforeBattle = MonsterAttack(i);
 
                 WriteLine($"{_monsters[i].Name} 의 공격!");
-                WriteLine($"Lv.{_character.Level} {_character.Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle - _character.Hp}]");
+                WriteLine(
+                    $"Lv.{_character.Level} {_character.Name} 을(를) 맞췄습니다. [데미지 : {hpBeforeBattle - _character.Hp}]");
                 WriteLine();
 
                 WriteLine($"Lv.{_character.Level} {_character.Name}");
@@ -283,11 +307,13 @@ namespace ZzabDenRing.Screens.Dungeon
                     WriteLine();
 
                     WriteLine("Enter. 다음");
+                    _continueOnThisScreen = false;
+                    _navToMain();
                     return;
                 }
             }
-            WriteLine();
 
+            WriteLine();
             WriteLine("Enter. 다음");
         }
 
