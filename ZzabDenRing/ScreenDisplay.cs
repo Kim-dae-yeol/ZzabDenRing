@@ -1,3 +1,4 @@
+using ZzabDenRing.Data;
 using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 using ZzabDenRing.Screens;
@@ -14,6 +15,7 @@ namespace ZzabDenRing;
 
 public class ScreenDisplay
 {
+    
     public Dictionary<string, object> NavArgs = new(10);
     private Stack<ScreenType> _backStack = new(10);
     internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
@@ -43,7 +45,10 @@ public class ScreenDisplay
                 navToHome: () => { _backStack.Push(ScreenType.Home); }
             ),
             ScreenType.Shop => new ShopScreen(popBackStack: () => { _backStack.Pop(); }),
-            ScreenType.Status => new StatusScreen(navToMain: () => { _backStack.Push(ScreenType.Main); }),
+            ScreenType.Status => new StatusScreen(
+                navToMain: () => { _backStack.Push(ScreenType.Main); },
+                repository: Repository.GetInstance()
+            ),
             ScreenType.Equipment => new EquipmentScreen(
                 popBackStack: () => { _backStack.Pop(); }
             ),
@@ -72,7 +77,7 @@ public class ScreenDisplay
                 popBackStack: () => { _backStack.Pop(); }
             ),
             _ => throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null)
-        };
+        } ;
 
         screen.DrawScreen();
     }
