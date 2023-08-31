@@ -107,8 +107,10 @@ public enum Command
     Run,
     Wrong,
     SelectMonster,
-    AttackMonster,
+    AttackMonster1,
+    AttackMonster2,
+    AttackMonster3,
     AttackCharacter,
-    BallteStart,
+    BattleStart,
     Delete
 }
