@@ -5,28 +5,30 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using  ZzabDenRing.Model;
+using ZzabDenRing.Model;
 
 namespace ZzabDenRing.Screens.Status
 {
     internal class StatusScreen : BaseScreen
     {
-        private Stack<ScreenType> _backStack = new(10);
-        internal IReadOnlyCollection<ScreenType> BackStack => _backStack;
+        private Action _navToMain;
 
-        public Character player;
-
-        internal StatusScreen()
+        public StatusScreen(Action navToMain)
         {
-            player = new Character("이름", "직업", 100, 100, 10, 01, 5, 1500, 15, new List<Item>(),
+            _navToMain = navToMain;
+            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<IItem>(),
                 new Model.Equipment());
         }
+
+        public Character player;
 
         protected override void DrawContent()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("상태 보기");
+            Console.WriteLine(
+                "\r\n _______ __          __               \r\n|     __|  |_.---.-.|  |_.--.--.-----.\r\n|__     |   _|  _  ||   _|  |  |__ --|\r\n|_______|____|___._||____|_____|_____|\r\n  \r\n");
+
             Console.ResetColor(); //컬러 리셋
 
             Console.WriteLine("캐릭터의 정보가 표시됩니다.");
@@ -59,43 +61,16 @@ namespace ZzabDenRing.Screens.Status
             var key = ReadKey();
             var command = key.Key switch
             {
-                ConsoleKey.UpArrow => Command.MoveTop,
-                ConsoleKey.RightArrow => Command.MoveRight,
-                ConsoleKey.DownArrow => Command.MoveBottom,
-                ConsoleKey.LeftArrow => Command.MoveLeft,
-                ConsoleKey.Enter => Command.Interaction,
-                ConsoleKey.X => Command.Exit,
-                _ => Command.Nothing
+                _ => Command.Exit
             };
-            //int selectedAction = CheckValidInput(0, 0);
-
-            //switch (selectedAction)
-            //{
-            //    case 0:
-            //        _backStack.Push(ScreenType.Main); // 상태보기 화면으로 이동
-            //        break;
-
-            //}
-
-            return true;
-        }
-
-        static int CheckValidInput(int min, int max) //입력된 숫자가 valid한지를 체크
-        {
-            while (true)
+            switch (key.Key)
             {
-                string input = Console.ReadLine();
-
-                bool parseSuccess = int.TryParse(input, out var ret);
-                if (parseSuccess)
-                {
-                    if (ret >= min && ret <= max)
-                        return ret;
-                }
-
-
-                Console.WriteLine("잘못된 입력입니다.");
+                case ConsoleKey.D0:
+                    _navToMain();
+                    break;
             }
+
+            return false;
         }
     }
 }

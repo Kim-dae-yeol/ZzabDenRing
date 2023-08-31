@@ -53,6 +53,11 @@ namespace ZzabDenRing.Screens.Dungeon
             CreateMonsters();
         }
 
+        public DungeonEntranceScreen()
+        {
+
+        }
+
         private void CreateMonsters()
         {
             monsters.Clear();
