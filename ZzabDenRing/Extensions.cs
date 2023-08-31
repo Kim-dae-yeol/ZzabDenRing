@@ -78,6 +78,7 @@ public static class Extensions
 
     public static void DrawBorder(this BaseScreen s, int left, int top, int width, int height)
     {
+        
         Console.SetCursorPosition(left, top);
         for (var i = 0; i < height; i++)
         {
@@ -118,6 +119,18 @@ public static class Extensions
             ItemGrade.Epic => ConsoleColor.Magenta,
             ItemGrade.Legendary => ConsoleColor.Yellow,
             _ => Console.ForegroundColor
+        };
+    }
+
+    public static string String(this ItemGrade g)
+    {
+        return g switch
+        {
+            ItemGrade.Normal => "일반",
+            ItemGrade.Rare => "희귀",
+            ItemGrade.Epic => "서사",
+            ItemGrade.Legendary => "전설",
+            _ => ""
         };
     }
 }
