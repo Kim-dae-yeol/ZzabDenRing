@@ -291,8 +291,20 @@ public class ShopViewModel
             return;
         }
 
+
+        var shopperItems = ShopFilterType switch
+        {
+            ShopScreen.ShopTabs.Equip => new List<IItem>(_repository.Shopper.SellingItems),
+            ShopScreen.ShopTabs.Use => new List<IItem>(_repository.Shopper.SellingUse),
+            ShopScreen.ShopTabs.Material => new List<IItem>(_repository.Shopper.SellingMaterial),
+            ShopScreen.ShopTabs.Enhancement => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         _state = _state with
         {
+
+            SellingItems = shopperItems,
             Inventory = _repository.Character.Inventory
                 .Select(it =>
                 {
@@ -312,28 +324,6 @@ public class ShopViewModel
                             return false;
                     }
                 }).ToList(),
-
-            //todo selling Items 로 변경 
-            SellingItems = _repository.Shopper.SellingItems
-                .Select(it =>
-                {
-                    IItem item = it;
-                    return item;
-                })
-                .Where(item =>
-                {
-                    switch (ShopFilterType)
-                    {
-                        case ShopScreen.ShopTabs.Equip:
-                            return item is EquipItem;
-                        case ShopScreen.ShopTabs.Use:
-                            return item is UseItem;
-                        case ShopScreen.ShopTabs.Material:
-                            return item is MaterialItem;
-                        default:
-                            return false;
-                    }
-                }).ToList()
         };
     }
 }

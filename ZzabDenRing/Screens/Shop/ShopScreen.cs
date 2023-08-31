@@ -282,7 +282,9 @@ public class ShopScreen : BaseScreen
         if (!_vm.EnhanceSlotItem.IsEmptyItem())
         {
             SetCursorPosition(EnhancementSlotLeft + 1, EnhancementSlotTop + 1);
+            ForegroundColor = _vm.EnhanceSlotItem.Grade.Color(); 
             WriteLine(_vm.EnhanceSlotItem.Name);
+            ResetColor();
             SetCursorPosition(EnhancementSlotLeft + 1, CursorTop);
             Write("강화확률 : ");
             var percent = _vm.EnhancePercent;
@@ -308,8 +310,10 @@ public class ShopScreen : BaseScreen
                     Write(' ');
                 }
             }
-
+            
             ResetColor();
+            
+            WriteLine("강화하시려면 Y키를 누르세요.");
         }
         else
         {

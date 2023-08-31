@@ -1,12 +1,26 @@
+using System.Text.Json.Serialization;
+
 namespace ZzabDenRing.Model;
 
 public class UseItem : IItem
 {
-    public string Name { get; }
-    public string Desc { get; }
-    public int Price { get; }
-    public ItemType Type { get; }
-    public ItemGrade Grade { get; }
+    public UseItem(string name, string desc, int price, ItemType type, ItemGrade grade)
+    {
+        Name = name;
+        Desc = desc;
+        Price = price;
+        Type = type;
+        Grade = grade;
+    }
 
-    public Action<Character> Use;
+    [JsonInclude]
+    public string Name { get; }
+    [JsonInclude]
+    public string Desc { get; }
+    [JsonInclude]
+    public int Price { get; }
+    [JsonInclude]
+    public ItemType Type { get; }
+    [JsonInclude]
+    public ItemGrade Grade { get; }
 }
