@@ -11,7 +11,7 @@ public class Game
     private ScreenDisplay _display = new();
 
 
-    public async void Start()
+    public void Start()
     {
         _display.Display();
         Container.GetRepository().SaveData();
