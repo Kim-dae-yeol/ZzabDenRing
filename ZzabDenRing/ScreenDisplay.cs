@@ -100,5 +100,9 @@ public enum Command
     Skill,
     Attack,
     Run,
-    Wrong
+    Wrong,
+    SelectMonster,
+    AttackMonster,
+    AttackCharacter,
+    BallteStart,
 }
