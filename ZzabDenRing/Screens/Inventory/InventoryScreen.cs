@@ -91,8 +91,10 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
-
-            SelectIndex -= 1;
+            if (SelectIndex > 0)
+            {
+                SelectIndex -= 1;
+            }           
         }
 
         public void SelectMoveRight()
@@ -105,8 +107,10 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
-
-            SelectIndex += 1;
+            if (SelectIndex < 99)
+            {
+                SelectIndex += 1;
+            }
         }
 
         public void SelectMoveUp()
@@ -119,8 +123,10 @@ namespace ZzabDenRing.Screens.Inventory
             {
                 return;
             }
-
-            SelectIndex -= itemX;
+            if (SelectIndex > 9)
+            {
+                SelectIndex -= itemX;
+            }
         }
 
         public void SelectMoveDown()
@@ -134,7 +140,10 @@ namespace ZzabDenRing.Screens.Inventory
                 return;
             }
 
-            SelectIndex += itemX;
+            if (SelectIndex < 90)
+            {
+                SelectIndex += itemX;
+            }
         }
 
         public void Render()
