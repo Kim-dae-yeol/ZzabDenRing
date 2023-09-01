@@ -2,22 +2,26 @@
 
 스파르타 코딩클럽 내일배움캠프 C# 심화주차 팀 프로젝트입니다.
 
-## 프로젝트 참여 인원
-<팀장> 김대열
-<br>
-<팀원> 김어진
-<br>
-<팀원> 장현교
-<br>
-<팀원> 최장범
-<br>
+## 👥 프로젝트 참여 인원
+김대열, 장현교, 최장범, 김어진
 
-## 개발환경
+## ⚙️ 개발환경
 + .NET 7.0
 + C# 11.0
 + Json 통신
-  
-## 와이어 프레임
+
+## ▶️ 플레이
+  <img width="70%" alt="status" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/5554d5fb-508f-4163-82e7-61a4629978b2">
+![splash](https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/d849c496-69a6-47e7-8a49-6bf5812e3383)
+![shop](https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/eba7ccfc-53d3-46bd-8f9e-859b759ab82c)
+<img width="70%" alt="select" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/5d69c3ff-8e56-4146-ab9c-098254dce0d8">
+<img width="70%" alt="main" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/032188f7-0fdb-4319-8df4-9c4a14fef1d9">
+<img width="70%" alt="equipment" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/2b6ed65b-0184-414a-88af-9c0837b1747b">
+<img width="70%" alt="entrance" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/a7065427-88d9-4d23-9a00-fefebbbe971b">
+![enhance](https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/6399b804-b9b8-4adc-a274-8f42363d221a)
+![create](https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/f532248b-74f2-4765-a2e0-b13362629f58)
+
+## 🖼️ 와이어 프레임
 
 <img width="70%" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/141602161/c1dec199-40fe-4aa6-b6e3-73c1743fe96a"/>
 <img width="70%" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/141602161/f444373f-1492-45e0-849b-7cddf1b9f9b6"/>
