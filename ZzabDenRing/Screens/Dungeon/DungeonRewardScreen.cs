@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 using static System.Console;
 
@@ -25,11 +26,8 @@ namespace ZzabDenRing.Screens.Dungeon
         {
             _navToMain = navToMain;
             _navToDungeonEntrance = navToDungeonEntrance;
-            player = new Character("이름", "직업", 200, 100, 10, 1, 5, 1500, 15, new List<IItem>(),
-                new Model.Equipment());
+            player = Container.GetRepository().Character;
             _reward = reward;
-            
-            
         }
 
         protected override void DrawContent()
