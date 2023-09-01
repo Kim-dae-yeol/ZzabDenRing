@@ -42,15 +42,13 @@ namespace ZzabDenRing.Screens.Status
             Console.WriteLine($"Lv.{player.Level} ");
             Console.WriteLine($"이름 : {player.Name} ");
             Console.WriteLine($"직업 : {player.Job} ");
-            Console.WriteLine($"공격력 : {player.Atk + player.Equipment.AddedAtk()}");
-            Console.WriteLine($"방어력 : {player.Def + player.Equipment.AddedDef()}");
+            //Console.WriteLine($"공격력 : {player.Atk + player.Equipment.AddedAtk()}");
+            //Console.WriteLine($"방어력 : {player.Def + player.Equipment.AddedDef()}");
+            Console.WriteLine($"공격력 : {player.Atk} + ({player.Equipment.AddedAtk()})");
+            Console.WriteLine($"방어력 : {player.Def} + ({player.Equipment.AddedDef()})");
+
             Console.WriteLine($"크리티컬 : {player.Critical + player.Equipment.AddedCritical()}");
             Console.WriteLine($"체력 : {player.Hp + player.Equipment.AddedHp()}");
-
-            //Console.WriteLine($"공격력 : {player.Atk}    ");
-            //Console.WriteLine($"방어력 : {player.Def}    ");            
-            //Console.WriteLine($"크리티컬 : {player.Critical}");
-            //Console.WriteLine($"체력 : {player.Hp}");
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine($"Gold : {player.Gold}");
@@ -65,23 +63,7 @@ namespace ZzabDenRing.Screens.Status
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">>>");
         }
-
-        //private string GetEquippedItemStat(EquipItem equipedItem, string stat)
-        //{
-        //    if (equipedItem != null)
-        //    {
-        //        var propertyInfo = equipedItem.GetType().GetProperty(stat);
-        //        if (propertyInfo != null)
-        //        {
-        //            var value = propertyInfo.GetValue(equipedItem);
-        //            if (value != null)
-        //            {
-        //                return value.ToString();
-        //            }
-        //        }
-        //    }
-        //    return "0";
-        //}
+      
 
 
         protected override bool ManageInput()
