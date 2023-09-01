@@ -17,8 +17,8 @@
 </p>
 <img width="50%" alt="main" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/032188f7-0fdb-4319-8df4-9c4a14fef1d9">
 <p align="center">
-  <img width="50%" alt="equipment" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/2b6ed65b-0184-414a-88af-9c0837b1747b">
-  <img width="50%" alt="entrance" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/a7065427-88d9-4d23-9a00-fefebbbe971b">
+  <img width="49%" alt="equipment" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/2b6ed65b-0184-414a-88af-9c0837b1747b">
+  <img width="49%" alt="entrance" src="https://github.com/Kim-dae-yeol/ZzabDenRing/assets/115692722/a7065427-88d9-4d23-9a00-fefebbbe971b">
 </p>
 
 ## 🖼️ 와이어 프레임
