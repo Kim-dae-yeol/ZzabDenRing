@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZzabDenRing.Data;
+using ZzabDenRing.Di;
 using ZzabDenRing.Model;
 using static System.Console;
 
@@ -15,18 +16,7 @@ namespace ZzabDenRing.Screens.Dungeon
         public const string ArgMonster = "arg_monster";
         private List<Monster> _monsters;
 
-        // 임의의 캐릭터 설정
-        public Character _character = new Character(
-            "테스트",
-            "테스트 직업",
-            300,
-            1000,
-            20000,
-            10,
-            3,
-            150,
-            15,
-            new());
+        public Character _character;
 
         private Action<Reward> _navToReward;
         private Action _navToMain;
@@ -169,6 +159,7 @@ namespace ZzabDenRing.Screens.Dungeon
 
         public DungeonBattleScreen(List<Monster> monsters, Action navToMain, Action<Reward> navToReward)
         {
+            _character = Container.GetRepository().Character!;
             _monsters = monsters;
             _navToMain = navToMain;
             _navToReward = navToReward;
@@ -208,7 +199,7 @@ namespace ZzabDenRing.Screens.Dungeon
             // 캐릭터 정보 가져와야됨
             WriteLine(" [내정보]");
             WriteLine($" Lv.{_character.Level} {_character.Name} ({_character.Job})");
-            WriteLine($" HP {_character.MaxHp}/{_character.Hp}");
+            WriteLine($" HP {_character.Hp}/{_character.MaxHp}");
             WriteLine();
 
             WriteLine(" 1. 공격");
@@ -245,7 +236,7 @@ namespace ZzabDenRing.Screens.Dungeon
 
             WriteLine(" [내정보]");
             WriteLine($" Lv.{_character.Level} {_character.Name} ({_character.Job})");
-            WriteLine($" HP {_character.MaxHp}/{_character.Hp}");
+            WriteLine($" HP {_character.Hp}/{_character.MaxHp}");
             WriteLine();
 
             WriteLine(" X. 행동 다시 고르기");
