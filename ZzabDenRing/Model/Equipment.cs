@@ -12,6 +12,8 @@ public class Equipment
         var slots = Enum.GetValues<EquipmentSlot>();
         foreach (var slot in slots)
         {
+            if (_equipped.GetValueOrDefault(slot) != null) continue;
+            
             _equipped[slot] = EquipItem.Empty;
         }
     }
