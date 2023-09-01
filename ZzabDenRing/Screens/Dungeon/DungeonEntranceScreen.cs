@@ -80,16 +80,32 @@ namespace ZzabDenRing.Screens.Dungeon
 
         private void DungeonEntranceScreenShow()
         {
+            Clear();
+            ForegroundColor = ConsoleColor.Red;
+            WriteLine(
+                "\r\n  ____        _   _   _      _\r\n |  _ \\      | | | | | |    | |\r\n | |_) | __ _| |_| |_| | ___| |\r\n |  _ < / _` | __| __| |/ _ \\ |\r\n | |_) | (_| | |_| |_| |  __/_|\r\n |____/ \\__,_|\\__|\\__|_|\\___(_)\r\n                                                                      \r\n                                                                      \r\n");
+            ResetColor();
+
             for (int i = 0; i < monsters.Count; i++)
             {
-                WriteLine($"▶\tLv.{monsters[i].Level}");
-                WriteLine($"\t{monsters[i].Name}");
-                WriteLine($"\tHP {monsters[i].MaxHp}");
+                WriteLine($" ▶ Lv.{monsters[i].Level}");
+                WriteLine($" {monsters[i].Name}");
+                WriteLine($" HP {monsters[i].MaxHp}");
+                WriteLine();
             }
 
-            WriteLine("1. 전투하기");
-            WriteLine("2. 다른 곳 둘러보기");
-            WriteLine("3. 도망하기");
+            for (int i = 2; i >= monsters.Count; i--)
+            {
+                WriteLine();
+                WriteLine();
+                WriteLine();
+                WriteLine();
+            }
+            WriteLine();
+
+            WriteLine(" 1. 전투하기");
+            WriteLine(" 2. 다른 곳 둘러보기");
+            WriteLine(" 3. 도망하기");
         }
     }
 }
