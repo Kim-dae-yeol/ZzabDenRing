@@ -206,7 +206,15 @@ public class ShopViewModel
                     }
                     else if (IsInShopWindow)
                     {
-                        BuyItem();
+                        if (CurrentShopTab != (int)ShopScreen.ShopTabs.Use)
+                        {
+                            BuyItem();
+                        }
+                        else
+                        {
+                            var item = _state.SellingItems[CurrentShopIdx] as UseItem;
+                            UseItem(item);
+                        }
                     }
                 }
 
@@ -298,8 +306,6 @@ public class ShopViewModel
         {
             _state = _state with { EnhanceItem = selected ?? EquipItem.Empty };
         }
-
-        Message = "아직 구현중이에영";
     }
 
     private void OnTabChanged()
@@ -377,6 +383,58 @@ public class ShopViewModel
         {
             Message = "실패했습니다...ㅠㅠ";
         }
+    }
+
+    private void UseItem(UseItem item)
+    {
+        if (Gold < item.Price)
+        {
+            Message = "돈이 부족합니다.";
+            return;
+        }
+
+        _repository.Character.Gold -= item.Price;
+
+        if (item.Grade != ItemGrade.Legendary)
+        {
+            int randomAdded;
+            switch (item.Grade)
+            {
+                case ItemGrade.Normal:
+                    Message = "체력을 회복합니다.";
+                    _repository.Character.Hp = _repository.Character.MaxHp;
+                    break;
+                case ItemGrade.Rare:
+                    randomAdded = Random.Shared.Next(1, 6);
+                    _repository.Character.Atk += randomAdded;
+                    Message = $"공격력이 {randomAdded}만큼 증가했습니다.";
+                    break;
+                case ItemGrade.Epic:
+                    randomAdded = Random.Shared.Next(1, 6);
+                    _repository.Character.Def += randomAdded;
+                    Message = $"방어력이 {randomAdded}만큼 증가했습니다.";
+                    break;
+            }
+        }
+        else
+        {
+            var income = Random.Shared.Next(-1000000, 1000000);
+
+            //coin investment
+            Message = income switch
+            {
+                >= 50000 => "일 왜 함?~~~~",
+                >= 10000 => "ㅋㅋㅋㅋ",
+                >= 1000 => "음?",
+                >= 0 => "음?",
+                >= -10000 => "...",
+                >= -50000 => "..........",
+                _ => "죽은자의 온기가 느껴집니다."
+            };
+            _repository.Character.Gold += income;
+        }
+
+        _state = _state with { Gold = _repository.Character.Gold };
     }
 }
 

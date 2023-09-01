@@ -13,7 +13,7 @@ public class Equipment
         foreach (var slot in slots)
         {
             if (_equipped.GetValueOrDefault(slot) != null) continue;
-            
+
             _equipped[slot] = EquipItem.Empty;
         }
     }
