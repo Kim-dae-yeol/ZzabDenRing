@@ -85,12 +85,8 @@ public class LocalDataSource : IDataSource
 
         var parent = Environment.CurrentDirectory;
         var filePath = Path.Combine(parent, FileName);
-        using var file = File.Exists(filePath)
-            ? File.OpenWrite(filePath)
-            : File.Open(filePath, FileMode.Create);
-
-        JsonSerializer.SerializeAsync(file, saveData);
-        file.Dispose();
+        var json = JsonSerializer.Serialize(saveData);
+        File.WriteAllText(filePath, json);
     }
 
     public Shopper GetSellingItems()
